@@ -1,7 +1,9 @@
 import React, { Component } from 'react';
-import { AgGridReact } from 'ag-grid-react';
 import { Menu } from 'semantic-ui-react'
 import { $ } from 'jquery';
+
+//Componentes
+import util from './Js/util'
 
 //Css
 import 'semantic-ui-css/semantic.min.css'
@@ -13,120 +15,35 @@ class Compras extends Component {
         super(props);
         this.state = {
             activeItem: "true",
-            columnDefs: [
-                {
-                    headerName: 'No. Factura',
-                    field: 'NoFactura',
-                    width: 120,
-                    checkboxSelection: function (params) {
-                        return params.columnApi.getRowGroupColumns().length === 0;
-                    },
-                    headerCheckboxSelection: function (params) {
-                        return params.columnApi.getRowGroupColumns().length === 0;
-                    },
-                },
-                { headerName: 'Contacto', field: 'Contacto', filter: 'agTextColumnFilter', width: 250, resizable: true, sortable: true, editable: true },
-                { headerName: 'Fecha Factura', field: 'FechaFactura', filter: 'agTextColumnFilter', width: 140, sortable: true, editable: true, cellEditor: 'datePicker' },
-                { headerName: 'Fecha Aprobación', field: 'FechaAplicacion', filter: 'agTextColumnFilter', width: 170, sortable: true, editable: true, cellEditor: 'datePicker' },
-                { headerName: 'Base Imponible', field: 'CaseImponible', width: 160, sortable: true },
-                { headerName: 'IVA', field: 'IVA', width: 80, sortable: true },
-                { headerName: 'IVA Retenido', field: 'IVARetenido', width: 120, sortable: true },
-                { headerName: 'SubTotal Factura', field: 'SubTotalFactura', width: 140, sortable: true },
-                { headerName: 'Total Factura', field: 'TotalFactura', width: 140, sortable: true },
-                { headerName: '%', field: 'Averige', width: 80, sortable: true },
-                { headerName: 'Doc', field: 'Link', width: 120, resizable: true }
-            ],
-            rowData: [
-                {
-                    NoFactura: '1', Contacto: 'Gustavo', FechaFactura: '01/01/2020', FechaAplicacion: '01/01/2020',
-                    CaseImponible: '123', IVA: '16%', IVARetenido: '50%', SubTotalFactura: '$55,000.00',
-                    TotalFactura: '$63,300.00', Averige: 10, Link: 'Link'
-                },
-                {
-                    NoFactura: '2', Contacto: 'Gustavo', FechaFactura: '01/01/2020', FechaAplicacion: '01/01/2020',
-                    CaseImponible: '123', IVA: '16%', IVARetenido: '50%', SubTotalFactura: '$55,000.00',
-                    TotalFactura: '$63,300.00', Averige: 10, Link: 'Link'
-                },
-                {
-                    NoFactura: '3', Contacto: 'Gustavo', FechaFactura: '01/01/2020', FechaAplicacion: '01/01/2020',
-                    CaseImponible: '123', IVA: '16%', IVARetenido: '50%', SubTotalFactura: '$55,000.00',
-                    TotalFactura: '$63,300.00', Averige: 10, Link: 'Link'
-                },
-                {
-                    NoFactura: '4', Contacto: 'Gustavo', FechaFactura: '01/01/2020', FechaAplicacion: '01/01/2020',
-                    CaseImponible: '123', IVA: '16%', IVARetenido: '50%', SubTotalFactura: '$55,000.00',
-                    TotalFactura: '$63,300.00', Averige: 10, Link: 'Link'
-                },
-                {
-                    NoFactura: '5', Contacto: 'Gustavo', FechaFactura: '01/01/2020', FechaAplicacion: '01/01/2020',
-                    CaseImponible: '123', IVA: '16%', IVARetenido: '50%', SubTotalFactura: '$55,000.00',
-                    TotalFactura: '$63,300.00', Averige: 10, Link: 'Link'
-                },
-                {
-                    NoFactura: '6', Contacto: 'Gustavo', FechaFactura: '01/01/2020', FechaAplicacion: '01/01/2020',
-                    CaseImponible: '123', IVA: '16%', IVARetenido: '50%', SubTotalFactura: '$55,000.00',
-                    TotalFactura: '$63,300.00', Averige: 10, Link: 'Link'
-                },
-                {
-                    NoFactura: '7', Contacto: 'Gustavo', FechaFactura: '01/01/2020', FechaAplicacion: '01/01/2020',
-                    CaseImponible: '123', IVA: '16%', IVARetenido: '50%', SubTotalFactura: '$55,000.00',
-                    TotalFactura: '$63,300.00', Averige: 10, Link: 'Link'
-                },
-                {
-                    NoFactura: '8', Contacto: 'Gustavo', FechaFactura: '01/01/2020', FechaAplicacion: '01/01/2020',
-                    CaseImponible: '123', IVA: '16%', IVARetenido: '50%', SubTotalFactura: '$55,000.00',
-                    TotalFactura: '$63,300.00', Averige: 10, Link: 'Link'
-                },
-                {
-                    NoFactura: '9', Contacto: 'Gustavo', FechaFactura: '01/01/2020', FechaAplicacion: '01/01/2020',
-                    CaseImponible: '123', IVA: '16%', IVARetenido: '50%', SubTotalFactura: '$55,000.00',
-                    TotalFactura: '$63,300.00', Averige: 10, Link: 'Link'
-                },
-                {
-                    NoFactura: '10', Contacto: 'Gustavo', FechaFactura: '01/01/2020', FechaAplicacion: '01/01/2020',
-                    CaseImponible: '123', IVA: '16%', IVARetenido: '50%', SubTotalFactura: '$55,000.00',
-                    TotalFactura: '$63,300.00', Averige: 10, Link: 'Link'
-                }
-            ],
-            components: { datePicker: this.getDatePicker() },
-            checkboxSelection: function (params) {
-                return params.columnApi.getRowGroupColumns().length === 0;
-            },
+            columnDefs: [],
+            rowData: [],
+            headerCheckboxSelection: true,
             cellRenderer: 'agGroupCellRenderer',
             cellRendererParams: { checkbox: true },
             rowSelection: 'multiple',
             rowGroupPanelShow: 'always',
             pivotPanelShow: 'always',
+            defaultColDef: {
+                editable: true,
+                enableRowGroup: true,
+                enablePivot: true,
+                enableValue: true,
+                sortable: true,
+                resizable: true,
+                filter: true,
+                flex: 1,
+                minWidth: 100,
+            },
         }
     }
 
-    getDatePicker() {
-        function Datepicker() { }
-        Datepicker.prototype.init = function (params) {
-            this.eInput = document.createElement('input');
-            this.eInput.value = params.value;
-            this.eInput.classList.add('ag-input');
-            this.eInput.style.height = '100%';
-            $(this.eInput).datepicker({ dateFormat: 'dd/mm/yy' });
-        };
-        Datepicker.prototype.getGui = function () {
-            return this.eInput;
-        };
-        Datepicker.prototype.afterGuiAttached = function () {
-            this.eInput.focus();
-            this.eInput.select();
-        };
-        Datepicker.prototype.getValue = function () {
-            return this.eInput.value;
-        };
-        Datepicker.prototype.destroy = function () { };
-        Datepicker.prototype.isPopup = function () {
-            return false;
-        };
-        return Datepicker;
-    }
-
     handleItemClick = (e, { name }) => this.setState({ activeItem: name })
+
+    async componentWillMount() {
+        let columnDefs = util.returnHeaderPurchase();
+        let rowData = util.returnPurchase();
+        this.setState({ rowData: rowData, columnDefs: columnDefs })
+    }
 
     render() {
         const { activeItem } = this.state
@@ -152,20 +69,18 @@ class Compras extends Component {
                         Archivados
                     </Menu.Item>
                 </Menu>
-                <br />
-                <div className="ag-theme-alpine" style={{ height: '500px', width: '100%' }}>
-                    <AgGridReact
-                        pagination={true}
-                        enableRangeSelection={true}
-                        paginationAutoPageSize={true}
-                        suppressRowClickSelection={true}
-                        groupSelectsChildren={true}
-                        animateRows={true}
-                        sortingOrder={['desc', 'asc', null]}
-                        columnDefs={this.state.columnDefs}
-                        rowData={this.state.rowData}>
-                    </AgGridReact>
-                </div >
+                <div style={{ width: '100%', height: '100%' }}>
+                    <div id="purchaseGrid" style={{ height: '530px', width: '100%', }} className="ag-theme-alpine" >
+                        {activeItem === "Aprobados" ?
+                            util.createDataDrid(this.state.columnDefs, this.state.rowData, this.state.rowSelection, this.state.defaultColDef, this.onGridReady) :
+                            activeItem === "Anulados" ?
+                                util.createDataDrid(this.state.columnDefs, null, this.state.rowSelection, this.state.defaultColDef, this.onGridReady) :
+                                activeItem === "Archivados" ?
+                                    util.createDataDrid(this.state.columnDefs, null, this.state.rowSelection, this.state.defaultColDef, this.onGridReady) :
+                                    util.createDataDrid(this.state.columnDefs, this.state.rowData, this.state.rowSelection, this.state.defaultColDef, this.onGridReady)
+                        }
+                    </div>
+                </div>
             </div>
         );
     }
