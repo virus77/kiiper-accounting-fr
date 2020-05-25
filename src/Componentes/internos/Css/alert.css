@@ -1,0 +1,33 @@
+html,
+body {
+  font-family: "Muli" !important;
+}
+
+.alert-success {
+    background-color: #232c51 !important;
+    border-radius: 10px !important;
+    color: white !important;
+    font-size: 12pt;
+    text-align: center;
+}
+/*Coloca un padding en el div del apert para que se vea centrada la alerta*/
+#idDivAlert {
+    padding-left: 22%;
+    padding-right: 22%;
+    z-index: -1;
+}
+.close
+{
+    color: #5efff2 !important;
+    opacity: .50;
+}
+
+#idButtonDiv
+{
+    display: above;
+    height: 30px;
+    position: relative;
+    top: 40px;
+    z-index: 1;
+    width: 95%;
+}

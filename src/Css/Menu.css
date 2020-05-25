@@ -1,0 +1,113 @@
+html,
+body {
+  font-family: "Muli" !important;
+}
+
+/* asigna el tamaño de la lista desplegable*/
+.rw-list {
+    font-size: 11pt !important;
+    max-height: 300px !important;
+}
+
+/* asigna color y borde del dllprincipal */
+.rw-widget > .rw-widget-container {
+    border-radius: 14px !important;
+    height: 45px !important;
+    background-color: #232c51 !important;
+    color: white !important;
+    border-color: #232c51 !important;
+}
+
+.rw-list-option.rw-state-selected,
+.rw-list-option.rw-state-selected:hover {
+    background-color: #e6defd !important;
+    color: #5540c2 !important;
+}
+
+.rw-input {
+    color: white !important;
+}
+
+.rw-filter-input .rw-select,
+.rw-filter-input .rw-btn {
+    color: black !important;
+    background-color: #eceded;
+}
+
+/* asigna estilo del input */
+.rw-filter-input {
+    color: #232c51 !important;
+    background-color: #eceded;
+}
+
+.rw-btn {
+    color: white !important;
+}
+
+#basic-navbar-nav {
+    color: #232c51 !important;
+    font-size: 10pt !important;
+}
+
+.rw-list-empty,
+.rw-list-option,
+.rw-list-optgroup {
+    padding-top: 10px !important;
+    padding-bottom: 7px !important;
+}
+
+#basic-navbar-nav a:hover {
+    color: #5540c2 !important;
+}
+
+.dropdown-item {
+    color: #232c51 !important;
+    font-size: 10pt !important;
+    border-color: #232c51 !important;
+}
+
+.dropdown-item.active,
+.dropdown-item:active {
+    border-color: #5540c2 !important;
+    background-color: #e6defd !important;
+    font-size: 11pt !important;
+}
+
+.navbar-expand-lg .navbar-nav .dropdown-menu {
+    margin: 10px !important;
+}
+
+.dropdown-item,
+.dropdown-item {
+    border-color: #5540c2 !important;
+    font-size: 10pt !important;
+    width: 100%;
+}
+
+.navbar-light .navbar-nav .nav-link {
+    font-size: 11pt;
+    font-weight: bold;
+}
+.makeStyles-container-13 {
+    padding-top: 15px !important;
+    padding-bottom: 15px !important;
+}
+
+.MuiTypography-gutterBottom {
+    margin-bottom: 10px !important;
+}
+
+/* estilo del boton que se encuentra a un lado delddl principal */
+.MuiButtonBase-root {
+    border-radius: 10px !important;
+    border-style: solid !important;
+    color: #5540c2 !important;
+    font-size: xx-large !important;
+    border-color: thistle !important;
+}
+.MuiIconButton-root  {
+    border-radius: 10px !important;
+    border-style: solid !important;
+    border-color: thistle !important;
+}
+

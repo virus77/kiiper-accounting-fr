@@ -1,0 +1,267 @@
+html,
+body {
+    font-family: "Muli" !important;
+}
+
+/* estilo del contenido del grid */
+.ag-theme-alpine .ag-row {
+    font-size: 9pt !important;
+    color: #232c51 !important;
+}
+/* estilo de las columnas del grid */
+.ag-root-wrapper-body.ag-layout-normal {
+    font-size: 9pt !important;
+    color: #232c51 !important;
+}
+
+/* estilo de los label */
+label {
+    font-size: 10pt;
+    color: #7158e2;
+}
+
+/* estilo de los h */
+h1:last-child,
+h2:last-child,
+h3:last-child,
+h4:last-child,
+h5:last-child {
+    font-size: 14pt;
+    color: #232c51;
+    font-weight: bold;
+}
+
+/* estilo del mení horizontal*/
+.dropdown,
+.dropleft,
+.dropright,
+.dropup {
+    font-size: 13pt;
+    font-weight: bold;
+    height: 15px !important;
+}
+
+/* combobox de la selección del iva/ISR compras*/
+#ddlCompras {
+    font-size: 14pt !important;
+    font-weight: bold;
+    border-radius: 10px;
+    color: #7158e2 !important;
+    width: 28%;
+    border-style: solid;
+    border-width: 1px;
+    border-color: lightgray;
+    background-color: white;
+    padding-top: 8px !important;
+    padding-bottom: 8px !important;
+    white-space: pre;
+}
+#ddlCompras:hover {
+    color: #232c51 !important;
+    white-space: pre;
+}
+
+/* combobox de la selección del iva/ISR ventas*/
+#ddlVentas {
+    font-size: 14pt !important;
+    font-weight: bold;
+    border-radius: 10px;
+    color: #7158e2 !important;
+    width: 28%;
+    border-style: solid;
+    border-width: 1px;
+    border-color: lightgray;
+    background-color: white;
+    padding-top: 8px !important;
+    padding-bottom: 8px !important;
+    white-space: pre;
+}
+
+#ddlVentas:hover {
+    color: #232c51 !important;
+    white-space: pre;
+}
+
+.ddlComVenLabel {
+    font-size: 13pt !important;
+    color: #232c51 !important;
+    padding-left: 3%;
+    width: 500px !important;
+    text-align: right;
+    white-space: pre;
+}
+.ddlComVenLabel:hover {
+    color: #7158e2 !important;
+    white-space: pre;
+}
+
+/* Div botón a la derecha*/
+#idItemRight {
+    flex: 1;
+    flex-direction: row;
+    justify-content: flex-end;
+}
+
+/* Estilo del div botón a la derecha Deshabilitado*/
+.idDibvDisabledsmall {
+    border-radius: 11px !important;
+    background-color: white !important;
+    border-color: #e5e5e5 !important;
+    border-style: solid;
+    width: 120px !important;
+    text-align: center !important;
+    color: #e5e5e5 !important;
+    height: 30px !important;
+    padding-top: 4px;
+}
+
+/* Estilo del div botón a la derecha Habilitado*/
+.idDivEnabledSmall {
+    border-radius: 11px !important;
+    background-color: #7158e2 !important;
+    border-color: #7158e2 !important;
+    border-style: solid;
+    width: 120px !important;
+    text-align: center !important;
+    color: white !important;
+    height: 30px !important;
+    padding-top: 4px;
+    cursor: pointer;
+}
+
+/* Estilo del div botón a la derecha Habilitado*/
+.idDivEnabledSmall:hover {
+    background-color: #232c51 !important; /* Change the value to with anchors hover color*/
+    border-color: #232c51 !important;
+}
+
+/* Estilo del div botón a la derecha Deshabilitado*/
+.idDibvDisabled {
+    border-radius: 11px !important;
+    background-color: white !important;
+    border-color: #e5e5e5 !important;
+    border-style: solid;
+    width: 150px !important;
+    text-align: center !important;
+    color: #e5e5e5 !important;
+    height: 30px !important;
+    padding-top: 4px;
+}
+
+/* Estilo del div botón a la derecha Habilitado*/
+.idDibvEnabled {
+    border-radius: 11px !important;
+    background-color: #7158e2 !important;
+    border-color: #7158e2 !important;
+    border-style: solid;
+    width: 150px !important;
+    text-align: center !important;
+    color: white !important;
+    height: 30px !important;
+    padding-top: 4px;
+    cursor: pointer;
+}
+/* Estilo del div botón a la derecha Habilitado*/
+.idDibvEnabled:hover {
+    background-color: #232c51 !important; /* Change the value to with anchors hover color*/
+    border-color: #232c51 !important;
+}
+
+/* Estilo del div botón a la derecha*/
+#idDibv {
+    border-radius: 11px !important;
+    background-color: #7158e2;
+    width: 120px;
+    text-align: center !important;
+    color: white !important;
+    height: 30px !important;
+    padding-top: 6px;
+    cursor: pointer;
+}
+#idDibv:hover {
+    background-color: #232c51; /* Change the value to with anchors hover color*/
+}
+
+/* Títilo de comprobante de ret */
+.MuiTypography-h6 {
+    font-size: 1.6rem !important;
+    font-weight: bold;
+    color: #232c51;
+}
+
+/* Change checks style*/
+.ag-row-hover {
+    /* putting in !important so it overrides the theme's styling as it hovers the row also */
+    background-color: #e6defd !important;
+    box-shadow: #7158e2 !important;
+}
+
+.ag-theme-balham .ag-icon-pin {
+    font-family: "Font Awesome 5 Free";
+    /* FontAwesome uses font-weight bold */
+    font-weight: bold;
+}
+
+/* Button right */
+.ag-theme-alpine .ag-checkbox-input-wrapper.ag-checked::after {
+    font-family: "Font Awesome 5 Free";
+    font-weight: bold;
+    font-size: 20px;
+    border-color: #e6defd !important;
+    border-radius: 4px;
+    color: white !important;
+    background-color: #7158e2 !important;
+}
+
+.ag-row-selected {
+    background-color: #e6defd !important;
+    color: #232c51 !important;
+}
+
+/* cels border and font color */
+.ag-theme-alpine .ag-ltr .ag-has-focus .ag-cell-focus:not(.ag-cell-range-selected),
+.ag-theme-alpine .ag-ltr .ag-has-focus .ag-cell-focus.ag-cell-range-single-cell,
+.ag-theme-alpine .ag-ltr .ag-cell-range-single-cell.ag-cell-range-handle,
+.ag-theme-alpine .ag-rtl .ag-has-focus .ag-cell-focus:not(.ag-cell-range-selected),
+.ag-theme-alpine .ag-rtl .ag-has-focus .ag-cell-focus.ag-cell-range-single-cell,
+.ag-theme-alpine .ag-rtl .ag-cell-range-single-cell.ag-cell-range-handle {
+    border-color: #7158e2 !important;
+    color: #232c51 !important;
+}
+
+.ui.menu {
+    border: none;
+}
+
+/* modifica el alto de la barra de paginación*/
+.ag-theme-alpine .ag-paging-panel {
+    height: 38px !important;
+}
+
+/* Marca el espacio entre el grid y el menú*/
+.ui.menu {
+    margin: 1.5rem 0px 0px 0px !important;
+}
+
+/* fileUpload Gridr */
+.file-upload {
+    opacity: 0;
+    position: absolute;
+    text-align: center;
+    cursor: pointer;
+    top: 0;
+    left: 0;
+    height: 75px;
+    width: 100%;
+}
+.file-container {
+    position: relative;
+    text-align: center;
+    cursor: pointer;
+}
+.custom-file-upload {
+    position: absolute;
+    text-align: center;
+    top: 0;
+    left: 15px;
+}

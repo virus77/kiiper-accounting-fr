@@ -1,13 +1,14 @@
 html,
 body {
-  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen, Ubuntu, Cantarell, "Open Sans",
-    "Helvetica Neue", sans-serif;
-  color: #ffffff;
-  height: 100%;
+  font-family: "Muli" !important;
 }
 
 .row {
   margin: 0 !important;
+}
+
+p {
+  margin-bottom: 15px !important;
 }
 
 .App {
@@ -21,29 +22,35 @@ body {
   animation-timing-function: linear;
 }
 
-.accessToken {
-  word-wrap: break-word;
-}
-
-@keyframes rotate {
-  100% {
-    transform: rotate(360deg);
-  }
+.formulario {
+  background-color: #ffffff !important;
+  position: fixed;
+  top: 19%;
+  left: 50%;
+  margin-top: -5%;
+  margin-left: -21.7%;
+  width: 38%;
+  height: 82%;
+  border-radius: 3%;
 }
 
 /*Botón inicial*/
 #xeroSyncAnchor {
-  background: url(Imagenes/connect_xero_button_blue.png) no-repeat;
+  background-color: #7158e2;
   cursor: pointer;
+  width: 210px;
+  height: 45px;
   border: none;
-  width: 148px;
-  height: 39px;
-  border: none;
+  border-radius: 11px;
+}
+#xeroSyncAnchor:hover {
+  background-color: #232c51; /* Change the value to with anchors hover color*/
 }
 
 /*Color del header*/
 .MuiAppBar-colorPrimary {
-  background-color: #312b7e !important;
+  background-color: #232c51 !important;
+  color: #5efff2 !important;
 }
 
 /*Tamaño del contenido*/
@@ -52,13 +59,100 @@ body {
 }
 
 /*ajusta el borde del grid*/
-.MuiGrid-spacing-xs-2 > .MuiGrid-item
-{
+.MuiGrid-spacing-xs-2 > .MuiGrid-item {
   padding: 0px !important;
 }
 
 /*ajusta el borde del grid*/
-.makeStyles-paper-14
-{
+.makeStyles-paper-14 {
   padding: 0px !important;
+}
+
+/*Color inicial del body para visualizar el formulario*/
+.bodycolor {
+  background: url(Imagenes/Kiiper_lineasSm.png) 0 -200px #232c51;
+  background-size: 100%;
+  /*-webkit-animation: imgFade 3s;
+  animation: imgFade 3s;*/
+}
+
+/* Safari and Chrome */
+@-webkit-keyframes imgFade {
+  from {
+    background: #232c51;
+  }
+  to {
+    background: url(Imagenes/Kiiper_lineasSm.png) 0 -200px #232c51;
+    background-size: 100%;
+  }
+}
+
+@keyframes imgFade {
+  from {
+    background: #232c51;
+  }
+  to {
+    background: url(Imagenes/Kiiper_lineasSm.png) 0 -200px #232c51;
+    background-size: 100%;
+  }
+}
+
+/*Alinea el logo inical de Kipepr*/
+.alinearLogo {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 650px;
+}
+
+/* Style input text */
+input[type="email"] {
+  background-color: white;
+  background-repeat: no-repeat;
+  padding: 4%;
+  color: #232c51;
+  border-radius: 7px;
+  border-color: #7158e2 !important;
+  box-shadow: #7158e2 !important;
+}
+
+/* Style input password */
+input[type="password"] {
+  background-color: white;
+  padding: 4%;
+  color: #232c51;
+  border-radius: 9px;
+  border-color: #7158e2 !important;
+  box-shadow: #7158e2 !important;
+}
+
+/* Style input checkbox */
+input[type="checkbox"] {
+  cursor: pointer !important;
+  font-weight: bold !important;
+  font-size: 20px !important;
+  border-color: #7158e2 !important;
+  border-radius: 4px;
+  color: white !important;
+  background-color: #7158e2 !important;
+  box-shadow: #7158e2 !important;
+}
+
+input[type="password"]::-ms-reveal {
+  background-image: url(Imagenes/kiiper_eyee.png);
+}
+
+input[type="password"]::-ms-reveal:hover {
+  background-image: url(Imagenes/kiiper_eyeeClic.png);
+}
+
+/* Labels como link */
+.label {
+  cursor: pointer;
+  color: #7158e2;
+  text-decoration: underline;
+}
+
+.label:hover {
+  color: #232c51; /* Change the value to with anchors hover color*/
 }
