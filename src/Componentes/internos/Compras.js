@@ -55,7 +55,7 @@ class Compras extends Component {
     componentWillMount() {
 
         // Getting data from Xero and building data grid
-        util.getAndBuildGridData(null, "Recibidos").then( result => {
+        util.getAndBuildGridData(null, "Recibidos", "Cliente").then( result => {
             
             // Setting component state
             this.setState({
@@ -72,7 +72,7 @@ class Compras extends Component {
     handleListItemClick = (e, index) => {
 
         // Getting data from Xero and building data grid
-        util.getAndBuildGridData(null, "Recibidos").then( result => {
+        util.getAndBuildGridData(null, "Recibidos", "Cliente").then( result => {
             
             // Setting component state
             this.setState({
@@ -90,7 +90,7 @@ class Compras extends Component {
     handleItemClick = (e, name) => {
 
         // Getting data from Xero and building data grid
-        util.getAndBuildGridData(this.state.event, name.name).then( result => {
+        util.getAndBuildGridData(this.state.event, name.name, "Cliente").then( result => {
             
             // Setting component state
             this.setState({

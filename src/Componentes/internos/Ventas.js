@@ -47,7 +47,8 @@ class Ventas extends Component {
             texto: "",
             Tipo: "IVA",
             event: 4.2,
-            eventKey: 0
+            eventKey: 0,
+            gridRowsSelectedToRegister : []
         }
     };
 
@@ -70,7 +71,7 @@ class Ventas extends Component {
     handleListItemClick = (e, index) => {
 
         // Getting data from Xero and building data grid
-        util.getAndBuildGridData(index, this.state.activeItem).then( result => {
+        util.getAndBuildGridData(index, this.state.activeItem, "Proveedor").then( result => {
             
             // Setting component state
             this.setState({
@@ -88,7 +89,7 @@ class Ventas extends Component {
     handleItemClick = (e, name) => {
 
         // Getting data from Xero and building data grid
-        util.getAndBuildGridData(this.state.event, name.name).then( result => {
+        util.getAndBuildGridData(this.state.event, name.name, "Proveedor").then( result => {
             
             // Setting component state
             this.setState({
@@ -139,7 +140,60 @@ class Ventas extends Component {
         else
             this.setState({ activeItem: activeItem.toString().substring(0, activeItem.length - 3), show: false })
 
-        //'row ' + event.node.data.athlete + ' selected = ' + event.node.selected
+        // ------------------------------------
+
+        /* Start proccess to gather all information from grid items selected */
+
+        // Getting grid selected rows
+        const selectedRows = event.api.getSelectedRows();
+
+        // Gathering items selected information
+        selectedRows.forEach( (selectedRow, index) =>{
+
+            const itemVoucherDate = selectedRow.FechaComprobante;
+            const itemVoucherNumber = selectedRow.Comprobante;
+            const ItemDocument = selectedRow.Link
+
+            switch(true){
+
+                // Storing data from items selected in Ventas grid
+                case (itemVoucherDate && itemVoucherNumber && ItemDocument) :
+    
+                    // Storing data from items selected in Ventas grid
+                    this.state.gridRowsSelectedToRegister.push({
+                        voucherDate : itemVoucherDate,
+                        voucher : itemVoucherNumber,
+                        document : ItemDocument
+                    });
+                    break;
+    
+                // When voucher date was not captured in column field
+                case  (!itemVoucherDate) :
+                    this.setState({ 
+                        show: true, 
+                        texto: "Falta capturar la fecha de comprobante." 
+                    })
+                    return false;
+                    break;
+    
+                // When voucher date was not captured in column field
+                case  (!itemVoucherNumber) :
+                    this.setState({ 
+                        show: true, 
+                        texto: "Falta capturar el número de comprobante." 
+                    })
+                    return false;
+                    break;
+    
+                case  (!ItemDocument) :
+                    this.setState({ 
+                        show: true, 
+                        texto: "No ha elegido un documento para el registro." 
+                    })
+                    return false;
+                    break;
+            }
+        });
     };
 
     //Función onchange del grid

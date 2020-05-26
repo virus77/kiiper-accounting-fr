@@ -10,7 +10,7 @@ var moment = require('moment'); // require
 const util = {
     /// Start a process to request information from Xero to build
     /// the structure data to render in the grid of the component Ventas and Compras
-    getAndBuildGridData : (dropDownListEvent, status) => {
+    getAndBuildGridData: (dropDownListEvent, status, ProvCli) => {
 
         // Retrieving and setting data to perform a request to Xero
         const statusInfo = util.getStatusInfoConcept(status);
@@ -24,13 +24,13 @@ const util = {
 
                 // Build grid data structured with editable columns
                 const structure = util.fillWorkspaceGrid(
-                    result.data, taxInfo, editableGrid
+                    result.data, taxInfo, editableGrid, ProvCli
                 );
 
                 return {
-                    structure : structure,
-                    taxInfo : taxInfo,
-                    statusInfo : statusInfo
+                    structure: structure,
+                    taxInfo: taxInfo,
+                    statusInfo: statusInfo
                 }
             })
         );
@@ -42,7 +42,7 @@ const util = {
     /// @param {string} conceptType - concept type: sales, purchases...
     /// @param {integer} taxInfo - tax info with id and name
     /// @param {integer} statusInfo - status info with id and name
-    getOrgConceptsInfo : (conceptType, taxInfo, statusInfo) => {
+    getOrgConceptsInfo: (conceptType, taxInfo, statusInfo) => {
 
         // Organization selected by user previously
         let orgIdDefault = "5ea086c97cc16250b45f82e1"; //this.props.orgIdSelected
@@ -61,9 +61,9 @@ const util = {
                 .then(res => res.json())
                 .then(data => {
                     return {
-                        data : data,
-                        conceptType : conceptType,
-                        taxInfo : taxInfo
+                        data: data,
+                        conceptType: conceptType,
+                        taxInfo: taxInfo
                     }
                 })
         );
@@ -73,15 +73,15 @@ const util = {
     /// @param {array} items - data requested from server
     /// @param {string} taxInfo - tax info with id and name
     /// @param {boolean} isAnEditableGrid - If the grid will have editable columns
-    fillWorkspaceGrid : (items, taxInfo, isAnEditableGrid) => {
+    fillWorkspaceGrid: (items, taxInfo, isAnEditableGrid, ProvCli) => {
 
         let gridItems = [];
 
         // Deciding which kind of headers use depending on parameters
-        let headersTemplate = 
-            isAnEditableGrid ? 
-            util.returnHeader(taxInfo.name) : 
-            util.returnHeaderFlow(taxInfo.name);
+        let headersTemplate =
+            isAnEditableGrid ?
+                util.returnHeader(taxInfo.name, ProvCli) :
+                util.returnHeaderFlow(taxInfo.name, ProvCli);
 
         // ---------------------------------------
 
@@ -107,22 +107,22 @@ const util = {
                         // In case itemValue is a float. 
                         // This value comes different from Xero. It is an 
                         // object with a $numberDecimal property inside
-                        case (itemValue.hasOwnProperty("$numberDecimal")) :
+                        case (itemValue.hasOwnProperty("$numberDecimal")):
                             itemValue = itemValue["$numberDecimal"];
                             break;
 
                         // In case itemValue is a date
-                        case (moment(itemValue).isValid()) :
+                        case (moment(itemValue).isValid()):
                             itemValue = moment(itemValue).format("DD/MM/YYYY");
                             break;
 
                         // In case the data needs a specific value based in a formula
-                        case (header.hasOwnProperty("calculated")) :
+                        case (header.hasOwnProperty("calculated")):
 
-                            switch(header.formulaName){
+                            switch (header.formulaName) {
 
                                 // Base taxable calculation
-                                case "base_taxable" :
+                                case "base_taxable":
 
                                     // Invoice subtotal
                                     let subtotal = item["invoice_subtotal"]["$numberDecimal"];
@@ -131,11 +131,11 @@ const util = {
                                     // Invoice exempt amount
                                     let exempt = item["invoice_exempt_amount"]["$numberDecimal"];
                                     exempt = exempt ? exempt : 0;
-                                    
+
                                     itemValue = Number.parseFloat(subtotal) - Number.parseFloat(exempt);
                                     break;
 
-                                case "retention_percentage" :
+                                case "retention_percentage":
                                     // Invoice total tax
                                     let totalTax = item["invoice_total_tax"]["$numberDecimal"];
                                     totalTax = totalTax ? totalTax : 0;
@@ -169,7 +169,7 @@ const util = {
     },
     /// Helps to determine the status of a concept
     /// @param {string} statusName - the name of the status
-    getStatusInfoConcept : (statusName) => {
+    getStatusInfoConcept: (statusName) => {
 
         // Deciding concept type. Pending by default
         // Pending [Borrador] = 1
@@ -177,23 +177,23 @@ const util = {
         // Nulified [Anulado] = 3
         // Stored [Archivado] = 4
         let statusInfo = {
-            id : 1,
-            name : "Pendientes"
+            id: 1,
+            name: "Pendientes"
         };
 
-        switch(statusName){
+        switch (statusName) {
 
-            case "Recibidos" :
+            case "Recibidos":
                 statusInfo.id = 2;
                 statusInfo.name = "Recibidos";
                 break;
-            
-            case "Anulados" :
+
+            case "Anulados":
                 statusInfo.id = 3;
                 statusInfo.name = "Anulados";
                 break;
-            
-            case "Archivados" :
+
+            case "Archivados":
                 statusInfo.id = 4;
                 statusInfo.name = "Archivados";
                 break;
@@ -203,22 +203,22 @@ const util = {
     },
     /// Helps to get the kind of tax of a concept
     /// @param {float} taxIndex - The index configured by tax in DropDownList events property
-    getTaxInfoConcept : (taxIndex) => {
+    getTaxInfoConcept: (taxIndex) => {
 
         // Defining tax info depending on index configured in the DropDownList
         // taxinfo.id - its the internal id Xero gives the tax, in order to request
         // taxinfo.name - its used to rendering porpuses in Ventas component
         let taxInfo = {};
 
-        switch(taxIndex){
-            case 4.1 : 
+        switch (taxIndex) {
+            case 4.1:
                 taxInfo.id = 2;
                 taxInfo.name = "ISRL";
                 taxInfo.event = 4.1;
                 break;
-            
-            case 4.2 :
-            default :
+
+            case 4.2:
+            default:
                 taxInfo.id = 1;
                 taxInfo.name = "IVA";
                 taxInfo.event = 4.2;
@@ -230,27 +230,16 @@ const util = {
     /// Helps to know when a grid data needs to have editable columns
     /// @param {object} conceptsStatus - status info of the concept (sales, purchases)
     /// @param {object} conceptsTax - tax info of the concept (sales, purchases)
-    knowIfGridHeadersEditable : (conceptsStatus, conceptsTax) => {
-        
+    knowIfGridHeadersEditable: (conceptsStatus, conceptsTax) => {
+
         let editableGrid = false;
 
         // Validating concept status equal to Pending [Borrador]
-        if(conceptsStatus.id === 1){
+        if (conceptsStatus.id === 1) {
             editableGrid = true;
         }
 
         return editableGrid;
-    },
-    //Crea el Copyright
-    Copyright: function () {
-        return (
-            <Typography variant="body2" color="textSecondary" align="center">
-                {'Copyright © '}
-                <Link color="inherit" href="/">kiiper</Link>{' '}
-                {new Date().getFullYear()}
-                {'.'}
-            </Typography>
-        );
     },
     //Crea el componente generidco del grid
     createDataDrid: function (columnDefs, rowData, defaultColDef, components, onRowSelected, onSelectionChanged) {
@@ -286,7 +275,8 @@ const util = {
         )
     },
     //Crea el header del componente de ventas
-    returnHeader: function (Tipo) {
+    /// @param {object} Tipo - Idebtifica si es iva o isr
+    returnHeader: function (Tipo, VenCom) {
         var columnDefs = [
             {
                 headerName: 'No. Factura', field: 'NoFactura', xeroField: 'id_invoice_xero', width: 118,
@@ -298,21 +288,22 @@ const util = {
                 },
             },
             { headerName: 'No. Control', field: 'Control', xeroField: 'invoice_control', filter: 'agTextColumnFilter', width: 120, resizable: true, sortable: true },
-            { headerName: 'Cliente', field: 'Contacto', xeroField: 'contact_name', filter: 'agTextColumnFilter', width: 240, resizable: true, sortable: true },
+            { headerName: VenCom, xeroField: 'contact_name', filter: 'agTextColumnFilter', width: 240, resizable: true, sortable: true },
             { headerName: 'Fecha factura', field: 'FechaFactura', xeroField: 'invoice_date', filter: 'agTextColumnFilter', width: 128, sortable: true },
-            { headerName: 'Base imponible', field: 'SubTotalFactura', calculated: true, formulaName: 'base_taxable',  width: 123, sortable: true },
+            { headerName: 'Base imponible', field: 'SubTotalFactura', calculated: true, formulaName: 'base_taxable', width: 123, sortable: true },
             { headerName: 'Total ' + Tipo, field: 'TotalIVA', xeroField: 'invoice_total_tax', width: 120, sortable: true },
-            { headerName: '% retenido', field: 'Retencion', calculated: true, formulaName: 'retention_percentage', width: 104, sortable: true },
+            Tipo === "IVA" ? { headerName: '% retenido', field: 'Retencion', calculated: true, formulaName: 'retention_percentage', width: 104, sortable: true } : "",
             { headerName: 'Monto retenido', field: 'MontoRetenido', width: 129, sortable: true },
-            { headerName: 'Fecha comprobante', field: 'FechaComprobante', width: 149, sortable: true, cellRenderer: this.CellRendererCalendar },
+            { headerName: 'Fecha comprobante', field: 'id_invoice_xero', width: 149, sortable: true, cellRenderer: this.CellRendererCalendar },
             { headerName: 'No. Comprobante', field: 'Comprobante', width: 140, sortable: true, editable: true },
-            { headerName: 'Doc', field: 'Link', width: 80, cellRenderer: this.CellRendererUp }
+            { headerName: '', field: 'id_invoice_xero', width: 80, cellRenderer: this.CellRendererUp }
         ]
 
         return (columnDefs)
     },
     //Crea el header del componente de ventas
-    returnHeaderFlow: function (Tipo) {
+    /// @param {object} Tipo - Idebtifica si es iva o isr
+    returnHeaderFlow: function (Tipo, VenCom) {
         var columnDefs = [
             {
                 headerName: 'No. Factura', field: 'NoFactura', xeroField: 'id_invoice_xero', width: 118,
@@ -324,23 +315,23 @@ const util = {
                 },
             },
             { headerName: 'No. Control', field: 'Control', xeroField: 'invoice_control', filter: 'agTextColumnFilter', width: 120, resizable: true, sortable: true },
-            { headerName: 'Cliente', field: 'Contacto', xeroField: 'contact_name', filter: 'agTextColumnFilter', width: 240, resizable: true, sortable: true },
+            { headerName: VenCom, xeroField: 'contact_name', filter: 'agTextColumnFilter', width: 240, resizable: true, sortable: true },
             { headerName: 'Fecha factura', field: 'FechaFactura', xeroField: 'invoice_date', filter: 'agTextColumnFilter', width: 128, sortable: true },
             { headerName: 'Base imponible', field: 'SubTotalFactura', xeroField: 'invoice_subtotal', width: 123, sortable: true },
             { headerName: 'Total ' + Tipo, field: 'TotalIVA', xeroField: 'invoice_total_tax', width: 120, sortable: true },
-            { headerName: '% retenido', field: 'Retencion', width: 104, sortable: true },
+            Tipo === "IVA" ? { headerName: '% retenido', field: 'Retencion', calculated: true, formulaName: 'retention_percentage', width: 104, sortable: true } : "",
             { headerName: 'Monto retenido', field: 'MontoRetenido', width: 129, sortable: true },
             { headerName: 'Fecha comprobante', field: 'FechaComprobante', width: 149, sortable: true },
             { headerName: 'No. Comprobante', field: 'Comprobante', width: 140, sortable: true },
-            { headerName: 'Doc', field: 'Link', width: 80, cellRenderer: this.CellRendererP }
+            { headerName: '', field: 'Link', width: 80, cellRenderer: this.CellRendererP }
         ]
         return (columnDefs)
     },
     // Renderiza columna fecha para elegir una fecha de calendario
     CellRendererCalendar: function (params) {
         var eDiv = document.createElement('div');
-        eDiv.innerHTML = '<input type="date" id="start" name="trip-start" value=' + params.value + ' min="2000-01-01" max="2050-12-31">'
-        
+        eDiv.innerHTML = '<input type="date" id=date_' + params.value + '  name="trip-start" value="" min="2000-01-01" max="2050-12-31">'
+
         return eDiv;
     },
     //Coloca icono de carga en el grid
@@ -349,7 +340,7 @@ const util = {
         eDiv.class = "file-container";
         eDiv.innerHTML = '<div class="custom-file-upload">' +
             '<img border="0" width="18" height="21" src="http://desacrm.quierocasa.com.mx:7002/Images/kiiper_Upload.png"></img>' +
-            '<input id="' + params.value + '" type="file" class="file-upload" id="file-upload" />' +
+            '<input id=file_"' + params.value + '" type="file" class="file-upload" id="file-upload" />' +
             '   </div>' +
             '</div>';
         return eDiv;
@@ -374,7 +365,18 @@ const util = {
             }
             return v.indexOf(v2) > -1;
         }
-    }
+    },
+    //Crea el Copyright
+    Copyright: function () {
+        return (
+            <Typography variant="body2" color="textSecondary" align="center">
+                {'Copyright © '}
+                <Link color="inherit" href="/">kiiper</Link>{' '}
+                {new Date().getFullYear()}
+                {'.'}
+            </Typography>
+        );
+    },
 }
 
 export default util;

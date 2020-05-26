@@ -97,17 +97,17 @@ class App extends Component {
             <div className="formulario">
               <div className="col-12">
                 <br />
-                <div style={{ padding: "40px 0px 0px 35px", fontSize: "30pt", color: "#232C51", fontWeight: "bold" }}>
+                <div style={{ padding: "30% 0px 0px 35px", fontSize: "30pt", color: "#232C51", fontWeight: "bold" }}>
                   Bienvenidos a kiiper
                   </div>
-                <div style={{ padding: "25px 0px 0px 35px", fontSize: "18pt", color: "#232C51" }}>
+                <div style={{ padding: "30px 0px 0px 35px", fontSize: "18pt", color: "#232C51" }}>
                   Accounting routines done!
                   </div>
-                <div style={{ padding: "45px 35px 0px 35px", fontSize: "12pt", color: "#232C51" }}>
+                <div style={{ padding: "50px 35px 0px 35px", fontSize: "12pt", color: "#232C51" }}>
                   Para continuar debes ingresar tus datos e iniciar sesión
                   </div>
-                <Form style={{ padding: "20px 35px 0px 35px", fontSize: "11pt", color: "#232C51" }}>
-                  <Form.Group controlId="formBasicEmail">
+                <Form style={{ padding: "50px 35px 0px 35px", fontSize: "11pt", color: "#232C51" }}>
+                 {/* <Form.Group controlId="formBasicEmail">
                     <Form.Label >Correo electrónico: </Form.Label>
                     <Form.Control type="email" placeholder="ej. nombre@corrreo.com" />
                     <Form.Text className="text-muted">
@@ -132,19 +132,19 @@ class App extends Component {
                         </Form.Group>
                       </Col>
                     </Row>
-                  </div>
+                  </div>*/}
                   <div style={{ padding: "10px 0px 0px 0px" }}>
                     <Button type="submit" id="xeroSyncAnchor" onClick={() => { this.onIniciarProceso() }}>
                       Iniciar sesión
                     </Button>
                   </div>
-                  <Row style={{ padding: "10px 0px 0px 0px" }}>
+                   {/* <Row style={{ padding: "10px 0px 0px 0px" }}>
                     <Col>
                       <Form.Group controlId="formBasicCheckbox">
                         <Form.Label className="label">¿No tienes cuenta con kiiper?</Form.Label>
                       </Form.Group>
                     </Col>
-                  </Row>
+                  </Row>*/}
                   {/* <p className="accessToken text-center"><b style={{ fontSize: "11pt", color: "gray" }} >Access Token: </b>{accessToken}</p>
                     <a id="xeroSyncAnchor2" href="/getConsentUrl"><img src="connect_xero_button_blue.png" className="img-fluid" alt="" /></a>*/}
                 </Form>
