@@ -36,6 +36,7 @@ import Compras from './internos/Compras';
 import Ventas from './internos/Ventas';
 import Title from './internos/Title';
 import IframeComponent from './internos/iFrame';
+import BanksConvert from '../Componentes/internos/Banks/BanksConvert';
 
 //#region estilo
 const drawerWidth = 240;
@@ -260,8 +261,9 @@ export default function Dashboard(props) {
                   <NavDropdown.Item eventKey={1.2} onClick={(event) => handleListItemClick(event, 1.2)} href="#Negocio/Compras">Compras</NavDropdown.Item>
                 </NavDropdown>
                 <NavDropdown style={{ width: "145px" }} title="Contabilidad" id="ddlContabilidadId">
-                  <NavDropdown.Item eventKey={2.1} href="#Contabilidad/Action">Action</NavDropdown.Item>
-                  <NavDropdown.Divider />
+                  <NavDropdown.Item eventKey={2.1} onClick={(event) => handleListItemClick(event, 2.1)} href="#Contabilidad/Bancos">Bancos</NavDropdown.Item>
+                  <NavDropdown.Item eventKey={2.2} href="#Contabilidad/Impuestos">Impuestos</NavDropdown.Item>
+                  {/* <NavDropdown.Divider /> */}
                   {/* <NavDropdown.Item href="#action/3.4">Separated link</NavDropdown.Item> */}
                 </NavDropdown>
                 <NavDropdown title="Reportes" id="ddlReportesId">
@@ -303,6 +305,15 @@ export default function Dashboard(props) {
                     <Compras token={props.token} orgIdSelected={orgIdSelected} />
                   </Grid>
                 </Grid> :
+                 event === "xeroOrgName" || event === 2.1 ?
+                 <Grid container spacing={2}>
+                  <Title>Bancos</Title>
+                  <Grid item xs={12}>
+                    <Paper className={classes.paper}>
+                      < BanksConvert/>
+                    </Paper>
+                  </Grid>
+                 </Grid>:
                 null}
           {/* Copyright */}
           <Box pt={4}>

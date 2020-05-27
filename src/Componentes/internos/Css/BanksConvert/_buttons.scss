@@ -1,0 +1,23 @@
+.button-pill-blue {
+    display: flex;
+    padding: 10px 25px;
+    margin: 0 auto;
+    background: #232c51;
+    color: #ffffffff;
+    border-radius: 18px;
+    border: none;
+
+    & .text {
+        font-weight: bold;
+        margin: 0 auto;
+    }
+}
+
+.button-load-file {
+    background: #232c51 !important;
+    color: white !important;
+}
+
+.margin-left-button {
+    margin-left: 42px !important;
+}
