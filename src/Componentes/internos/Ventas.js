@@ -117,7 +117,7 @@ class Ventas extends Component {
                 break;
             case "Archivados":
             case "Recibidos":
-                result = calls.setDataVoidWidthHoldings(arrayWithholdings);
+                let result = calls.setDataVoidWidthHoldings(arrayWithholdings);
                 if (result === true)
                     this.setState({ show: val, texto: "El comprobante de retención ha sido anulado en Xero y cambió su estatus a ‘anulado’." })
                 break;
