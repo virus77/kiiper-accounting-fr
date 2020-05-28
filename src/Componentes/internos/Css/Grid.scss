@@ -8,6 +8,7 @@ body {
     font-size: 9pt !important;
     color: #232c51 !important;
 }
+
 /* estilo de las columnas del grid */
 .ag-root-wrapper-body.ag-layout-normal {
     font-size: 9pt !important;
@@ -16,8 +17,9 @@ body {
 
 /* estilo de los label */
 label {
-    font-size: 10pt;
+    font-size: 12pt;
     color: #7158e2;
+    font-weight: bold !important;
 }
 
 /* estilo de los h */
@@ -41,13 +43,13 @@ h5:last-child {
     height: 15px !important;
 }
 
-/* combobox de la selección del iva/ISR compras*/
+/* combobox de la selección del iva/ISRL compras*/
 #ddlCompras {
     font-size: 14pt !important;
     font-weight: bold;
     border-radius: 10px;
     color: #7158e2 !important;
-    width: 28%;
+    width: 29%;
     border-style: solid;
     border-width: 1px;
     border-color: lightgray;
@@ -67,7 +69,7 @@ h5:last-child {
     font-weight: bold;
     border-radius: 10px;
     color: #7158e2 !important;
-    width: 28%;
+    width: 29%;
     border-style: solid;
     border-width: 1px;
     border-color: lightgray;
@@ -90,6 +92,7 @@ h5:last-child {
     text-align: right;
     white-space: pre;
 }
+
 .ddlComVenLabel:hover {
     color: #7158e2 !important;
     white-space: pre;
@@ -161,6 +164,7 @@ h5:last-child {
     padding-top: 4px;
     cursor: pointer;
 }
+
 /* Estilo del div botón a la derecha Habilitado*/
 .idDibvEnabled:hover {
     background-color: #232c51 !important; /* Change the value to with anchors hover color*/
@@ -202,15 +206,18 @@ h5:last-child {
     font-weight: bold;
 }
 
-/* Button right */
-.ag-theme-alpine .ag-checkbox-input-wrapper.ag-checked::after {
+/* diseño del checkbox del grid cuando se selecciona el elemento */
+.ag-theme-alpine .ag-checkbox-input-wrapper.ag-checked:after {
     font-family: "Font Awesome 5 Free";
     font-weight: bold;
-    font-size: 20px;
+    font-size: 30px;
     border-color: #e6defd !important;
     border-radius: 4px;
-    color: white !important;
-    background-color: #7158e2 !important;
+    color: transparent !important;
+    background-image: url("http://desacrm.quierocasa.com.mx:7002/Images/kiiper_OK.png");
+    background-size: 15px 12px;
+    background-repeat: no-repeat !important;
+    margin: 2px 0px 0px 1px !important;
 }
 
 .ag-row-selected {
@@ -243,7 +250,7 @@ h5:last-child {
     margin: 1.5rem 0px 0px 0px !important;
 }
 
-/* fileUpload Gridr */
+/* fileUpload Grid */
 .file-upload {
     opacity: 0;
     position: absolute;
@@ -264,4 +271,9 @@ h5:last-child {
     text-align: center;
     top: 0;
     left: 15px;
+}
+
+/* Espacio entre el menu inicial y el grid */
+.jss13 {
+    padding-top: 20px !important;
 }

@@ -126,7 +126,7 @@ function fillDropDownList(props) {
       type: res.xeroOrgName ? "xeroOrgName" : "xeroGroupName",
       name: res.xeroOrgName ? res.xeroOrgName : res.xeroGroupName,
       id: res.organisationId ? res.organisationId : res.groupId,
-      Grupo: res.xeroGroupName ? '_____________________________________________' : "",
+      //Grupo: res.xeroGroupName ? '_____________________________________________' : "",
     }
   });
 
