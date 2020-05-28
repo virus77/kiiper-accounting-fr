@@ -22,10 +22,10 @@ p {
   animation-timing-function: linear;
 }
 
-.formulario {
+.formularioResp {
   background-color: #ffffff !important;
   position: fixed;
-  top: 19%;
+  top: 18%;
   left: 50%;
   margin-top: -5%;
   margin-left: -21.7%;
@@ -34,12 +34,27 @@ p {
   border-radius: 3%;
 }
 
+.formulario {
+  background-color: #ffffff !important;
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  margin: auto;
+  width: 38%;
+  height: 82%;
+  border-radius: 3%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
 /*Botón inicial*/
 #xeroSyncAnchor {
   background-color: #7158e2;
   cursor: pointer;
-  width: 180px;
-  height: 40px;
+  padding: 12px 20px;
   border: none;
   border-radius: 11px;
 }

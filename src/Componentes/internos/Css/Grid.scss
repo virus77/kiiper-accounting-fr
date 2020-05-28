@@ -41,6 +41,7 @@ h5:last-child {
     font-size: 13pt;
     font-weight: bold;
     height: 15px !important;
+    display: inline-block;
 }
 
 /* combobox de la selección del iva/ISRL compras*/
@@ -49,7 +50,6 @@ h5:last-child {
     font-weight: bold;
     border-radius: 10px;
     color: #7158e2 !important;
-    width: 29%;
     border-style: solid;
     border-width: 1px;
     border-color: lightgray;
@@ -69,7 +69,6 @@ h5:last-child {
     font-weight: bold;
     border-radius: 10px;
     color: #7158e2 !important;
-    width: 29%;
     border-style: solid;
     border-width: 1px;
     border-color: lightgray;

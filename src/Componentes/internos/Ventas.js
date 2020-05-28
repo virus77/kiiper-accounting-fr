@@ -107,7 +107,7 @@ class Ventas extends Component {
     //Función utilizada para mover los datos de un estatus a otro
     onMoveData = (name, val) => {
 
-        const {gridRowsSelectedToRegister, arrayWithholdings } = this.state
+        const { gridRowsSelectedToRegister, arrayWithholdings } = this.state
 
         switch (name) {
             case "Pendientes":
@@ -117,8 +117,7 @@ class Ventas extends Component {
                 break;
             case "Archivados":
             case "Recibidos":
-                let result = calls.setDataVoidWidthHoldings(arrayWithholdings);
-                if (result === true)
+                if (calls.setDataVoidWidthHoldings(arrayWithholdings) === true)
                     this.setState({ show: val, texto: "El comprobante de retención ha sido anulado en Xero y cambió su estatus a ‘anulado’." })
                 break;
             default:
@@ -154,7 +153,7 @@ class Ventas extends Component {
             this.setState({ activeItem: activeItem.toString().substring(0, activeItem.length - 3), show: false })
     };
 
-    //Llena el estado dependiendo delestatus seleccionado
+    /// Llena el estado dependiendo delestatus seleccionado
     /// @param {object} gridSelectedRows - Object of selected items in grid
     onFillstate = (gridSelectedRows) => {
 
@@ -163,13 +162,15 @@ class Ventas extends Component {
         gridSelectedRows.forEach((selectedRow, rowIndex) => {
 
             // Voucher data to be send or used in validation         
-            const itemVoucherDate = selectedRow.FechaComprobante ? selectedRow.FechaComprobante : "01/01/2000";
             const itemVoucherNumber = selectedRow.Comprobante ? selectedRow.Comprobante : "012000";
             //const itemClientName = selectedRow.Contacto;
-            //const itemRetentionPercentage = selectedRow.Retencion;
+            const itemRetentionPercentage = selectedRow.Retencion;
             const id_status = selectedRow.id_status.id
-            //const id_tax_typeName = selectedRow.id_tax_type.name
+            const id_tax_typeName = selectedRow.id_tax_type.name
             const withholdingId = selectedRow._id
+
+            // Finding file uploaded to voucher
+            let itemVoucherDate = document.querySelector(`[id=date_${withholdingId}]`).value;
 
             // Finding file uploaded to voucher
             let voucherFile = document.querySelector(`[id=file_${withholdingId}]`);
@@ -185,6 +186,8 @@ class Ventas extends Component {
                             this.state.gridRowsSelectedToRegister.push({
                                 voucherDate: itemVoucherDate,
                                 voucher: itemVoucherNumber,
+                                Percentage: itemRetentionPercentage,
+                                files: voucherFile,
                                 files: voucherFile,
                                 _id: withholdingId
                             });

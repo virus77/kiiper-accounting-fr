@@ -57,7 +57,7 @@ class Compras extends Component {
     componentWillMount() {
 
         // Getting data from Xero and building data grid
-        util.getAndBuildGridData(null, "Aprobado", "Proveedor").then(result => {
+        util.getAndBuildGridData(null, "Aprobados", "Proveedor").then(result => {
 
             // Setting component state
             this.setState({
@@ -74,7 +74,7 @@ class Compras extends Component {
     handleListItemClick = (e, index) => {
 
         // Getting data from Xero and building data grid
-        util.getAndBuildGridData(index, "Aprobado", "Proveedor").then(result => {
+        util.getAndBuildGridData(index, "Aprobados", "Proveedor").then(result => {
 
             // Setting component state
             this.setState({
@@ -110,7 +110,12 @@ class Compras extends Component {
         const { arrayWithholdings } = this.state
         switch (name) {
             case "Archivados":
-            case "Aprobado":
+                let result2 = "";
+                result2 = calls.setDataVoidWidthHoldings(arrayWithholdings);
+                if (result === true)
+                    this.setState({ show: val, texto: "El comprobante de retención ha sido anulado en Xero y cambió su estatus a ‘anulado’." })
+                break;
+            case "Aprobados":
                 let result = "";
                 result = calls.setDataVoidWidthHoldings(arrayWithholdings);
                 if (result === true)
@@ -132,7 +137,7 @@ class Compras extends Component {
         if (event.api.getSelectedNodes().length > 0) {
             switch (activeItem) {
                 case "Archivados":
-                case "Aprobado":
+                case "Aprobados":
                     this.onFillstate(gridSelectedRows);
                     this.setState({ activeItem: activeItem + "Sel", show: false, texto: "El comprobante de retención ha sido anulado en Xero y cambió su estatus a ‘anulado’." })
                     break;
@@ -196,12 +201,12 @@ class Compras extends Component {
                 {/*Pintado de grid dependiendo del menu superior del grid*/}
                 <Menu>
                     <Menu.Item
-                        name='Aprobado'
-                        active={activeItem === 'Aprobado' ? true : false}
+                        name='Aprobados'
+                        active={activeItem === 'Aprobados' ? true : false}
                         onClick={this.handleItemClick}>
-                        {activeItem === 'Aprobado' ? <span style={{ color: "#7158e2" }} >Aprobado</span> :
-                            activeItem === 'AprobadoSel' ? <span style={{ color: "#7158e2" }} >Aprobado</span> :
-                                <span >Aprobado</span>}
+                        {activeItem === 'Aprobados' ? <span style={{ color: "#7158e2" }} >Aprobados</span> :
+                            activeItem === 'AprobadosSel' ? <span style={{ color: "#7158e2" }} >Aprobados</span> :
+                                <span >Aprobados</span>}
                     </Menu.Item>
                     <Menu.Item
                         name='Anulados'
@@ -222,12 +227,12 @@ class Compras extends Component {
                         id="idItemRight">
                     </Menu.Item>
                     <div style={{ paddingTop: "5px", paddingRight: "5px", borderStyle: "none" }}>
-                        {activeItem === 'Aprobado' || activeItem === 'Archivados' ?
+                        {activeItem === 'Aprobados' || activeItem === 'Archivados' ?
                             <div className="idDibvDisabled">
                                 <span>Mover a anulados 㐅</span>
                             </div>
-                            : activeItem === 'AprobadoSel' ?
-                                <div className="idDibvEnabled" onClick={() => this.onMoveData("Aprobado", true)} >
+                            : activeItem === 'AprobadosSel' ?
+                                <div className="idDibvEnabled" onClick={() => this.onMoveData("Aprobados", true)} >
                                     <span>Mover a anulados 㐅</span>
                                 </div>
                                 : activeItem === 'ArchivadosSel' ?
@@ -241,7 +246,7 @@ class Compras extends Component {
                 <div style={{ width: '100%', height: '100%' }}>
                     <div id="salesGrid" style={{ height: '446px', width: '100%' }}
                         className="ag-theme-alpine">
-                        {activeItem === "Aprobado" ?
+                        {activeItem === "Aprobados" ?
                             util.createDataDrid(this.state.columnDefs, this.state.rowData, this.state.rowSelection, this.state.defaultColDef,
                                 this.state.components, this.onRowSelected.bind(this), this.onSelectionChanged.bind(this)) :
                             activeItem === "Anulados" ?

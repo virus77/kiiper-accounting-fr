@@ -337,7 +337,7 @@ const util = {
     // Renderiza columna fecha para elegir una fecha de calendario
     CellRendererCalendar: function (params) {
         var eDiv = document.createElement('div');
-        eDiv.innerHTML = '<input id="date_' + params.value + '"  type="date" id="start" name="trip-start" value="" min="2000-01-01" max="2050-12-31">'
+        eDiv.innerHTML = '<input id="date_' + params.value + '"  type="date" name="trip-start" value="" min="2000-01-01" max="2050-12-31">'
 
         return eDiv;
     },
