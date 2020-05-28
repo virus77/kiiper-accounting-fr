@@ -12,8 +12,8 @@ body {
 }
 /*Coloca un padding en el div del apert para que se vea centrada la alerta*/
 #idDivAlert {
-    padding-left: 22%;
-    padding-right: 22%;
+    display: inline-block;
+    margin: 0 auto ;
     z-index: -1;
 }
 .close
@@ -22,6 +22,7 @@ body {
     opacity: .50;
 }
 
+/*Coloca el botón sobre la linea azul del div*/
 #idButtonDiv
 {
     display: above;
@@ -29,5 +30,5 @@ body {
     position: relative;
     top: 40px;
     z-index: 1;
-    width: 95%;
+    width: 97%;
 }

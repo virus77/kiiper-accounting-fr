@@ -89,64 +89,64 @@ class App extends Component {
       <div>
         {/* Acción utilizada ocultar el formulario de inicio de sesión y darle paso al contenido */}
         {this.state.isInActive ?
-          /*  Acción utilizada ocultar el logo de kiiper para darle paso al formulario de inicio de sesion */
+          /* Acción utilizada ocultar el logo de kiiper para darle paso al formulario de inicio de sesion */
           <div className="App">
-            <div style={{ padding: "30px" }}>
+            <div style={{ padding: "35px" }}>
               <img src={kiiperLogoSm} alt="img-logokiiper" />
             </div>
             <div className="formulario">
-              <div className="col-12" style={{ display: "flex", flexDirection: "column", alignItems: "center" }}>
+              <div className="col-12">
                 <br />
-                <div style={{ padding: "30px 0px 0px 0px", fontSize: "30pt", color: "#232C51", fontWeight: "bold" }}>
+                <div style={{ padding: "40px 0px 0px 35px", fontSize: "30pt", color: "#232C51", fontWeight: "bold" }}>
                   Bienvenidos a kiiper
-                    </div>
-                <div style={{ padding: "25px 0px 0px 0px", fontSize: "18pt", color: "#232C51" }}>
-                  Accounting routines done!
-                    </div>
-                {/* <div style={{ padding: "45px 35px 0px 35px", fontSize: "12pt", color: "#232C51" }}>
-                  Para continuar debes ingresar tus datos e iniciar sesión
-                    </div>*/}
-                <Form style={{ padding: "50px 0px 0px 0px", fontSize: "11pt", color: "#232C51" }}>
-                  {/* <Form.Group controlId="formBasicEmail">
-                      <Form.Label >Correo electrónico: </Form.Label>
-                      <Form.Control type="email" placeholder="ej. nombre@corrreo.com" />
-                      <Form.Text className="text-muted">
-                      </Form.Text>
-                    </Form.Group>
-                    <div style={{ padding: "10px 0px 0px 0px" }}>
-                      <Form.Group controlId="formBasicPassword">
-                        <Form.Label>Contraseña: </Form.Label>
-                        <Form.Control type="password" placeholder="Password" />
-                      </Form.Group>
-                    </div>
-                    <div style={{ padding: "10px 0px 0px 0px" }}>
-                      <Row>
-                        <Col>
-                          <Form.Group controlId="formBasicCheckbox">
-                            <Form.Check type="checkbox" label="No cerrar sesión" />
-                          </Form.Group>
-                        </Col>
-                        <Col>
-                          <Form.Group controlId="formBasicCheckbox">
-                            <Form.Label className="label">Olvidé mi contraseña</Form.Label>
-                          </Form.Group>
-                        </Col>
-                      </Row>
-                    </div>*/}
-                  <div style={{ padding: "0px 0px 0px 0px" }}>
-                    <Button type="submit" id="xeroSyncAnchor" onClick={() => { this.onIniciarProceso() }}>
-                      Iniciar sesión
-                      </Button>
                   </div>
-                  {/*<Row style={{ padding: "10px 0px 0px 0px" }}>
+                <div style={{ padding: "25px 0px 0px 35px", fontSize: "18pt", color: "#232C51" }}>
+                  Accounting routines done!
+                  </div>
+                <div style={{ padding: "45px 35px 0px 35px", fontSize: "12pt", color: "#232C51" }}>
+                  Para continuar debes ingresar tus datos e iniciar sesión
+                  </div>
+                <Form style={{ padding: "20px 35px 0px 35px", fontSize: "11pt", color: "#232C51" }}>
+                  <Form.Group controlId="formBasicEmail">
+                    <Form.Label >Correo electrónico: </Form.Label>
+                    <Form.Control type="email" placeholder="ej. nombre@corrreo.com" />
+                    <Form.Text className="text-muted">
+                    </Form.Text>
+                  </Form.Group>
+                  <div style={{ padding: "10px 0px 0px 0px" }}>
+                    <Form.Group controlId="formBasicPassword">
+                      <Form.Label>Contraseña: </Form.Label>
+                      <Form.Control type="password" placeholder="Password" />
+                    </Form.Group>
+                  </div>
+                  <div style={{ padding: "10px 0px 0px 0px" }}>
+                    <Row>
                       <Col>
                         <Form.Group controlId="formBasicCheckbox">
-                          <Form.Label className="label">¿No tienes cuenta con kiiper?</Form.Label>
+                          <Form.Check type="checkbox" label="No cerrar sesión" />
                         </Form.Group>
                       </Col>
-                    </Row>*/}
+                      <Col>
+                        <Form.Group controlId="formBasicCheckbox">
+                          <Form.Label className="label">Olvidé mi contraseña</Form.Label>
+                        </Form.Group>
+                      </Col>
+                    </Row>
+                  </div>
+                  <div style={{ padding: "10px 0px 0px 0px" }}>
+                    <Button type="submit" id="xeroSyncAnchor" onClick={() => { this.onIniciarProceso() }}>
+                      Iniciar sesión
+                    </Button>
+                  </div>
+                  <Row style={{ padding: "10px 0px 0px 0px" }}>
+                    <Col>
+                      <Form.Group controlId="formBasicCheckbox">
+                        <Form.Label className="label">¿No tienes cuenta con kiiper?</Form.Label>
+                      </Form.Group>
+                    </Col>
+                  </Row>
                   {/* <p className="accessToken text-center"><b style={{ fontSize: "11pt", color: "gray" }} >Access Token: </b>{accessToken}</p>
-                      <a id="xeroSyncAnchor2" href="/getConsentUrl"><img src="connect_xero_button_blue.png" className="img-fluid" alt="" /></a>*/}
+                    <a id="xeroSyncAnchor2" href="/getConsentUrl"><img src="connect_xero_button_blue.png" className="img-fluid" alt="" /></a>*/}
                 </Form>
               </div>
             </div>
