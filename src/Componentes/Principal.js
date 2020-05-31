@@ -153,7 +153,7 @@ export default function Dashboard(props) {
 
   //Cambia el estatus del evento del clic en el DeopDownList
   let handleClick = (item) => {
-    
+
     //Obtiene el elemento div del ddl principal
     rw_2_input = document.querySelector('[id*=rw_]').getElementsByTagName("div")[0];
 
@@ -163,7 +163,7 @@ export default function Dashboard(props) {
       // Setting organization selected in React to component
       setorgIdSelected(item.id);
       setValue(item.name)
-      
+
       //Cambia el color en el ddlPrincipal dependiendo la selección
       rw_2_input.style = "background-color: #5540c2 !important; border-color: #5540c2 !important;";
     }

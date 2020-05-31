@@ -9,10 +9,11 @@ body {
     color: white !important;
     font-size: 12pt;
     text-align: center;
+    padding-right: 60px;
 }
 /*Coloca un padding en el div del apert para que se vea centrada la alerta*/
 #idDivAlert {
-    display: inline-block;
+    display: table;
     margin: 0 auto ;
     z-index: -1;
 }
@@ -25,10 +26,9 @@ body {
 /*Coloca el botón sobre la linea azul del div*/
 #idButtonDiv
 {
-    display: above;
     height: 30px;
     position: relative;
     top: 40px;
     z-index: 1;
-    width: 97%;
+    padding-right: 15px;
 }

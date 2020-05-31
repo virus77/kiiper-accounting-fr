@@ -96,17 +96,16 @@ class App extends Component {
             </div>
             <div className="formulario">
               <div className="col-12" style={{ display: "flex", flexDirection: "column", alignItems: "center" }}>
-                <br />
-                <div style={{ padding: "30px 0px 0px 0px", fontSize: "30pt", color: "#232C51", fontWeight: "bold" }}>
+              <div style={{ padding: "0", fontSize: "2.5em", color: "#232C51", fontWeight: "bold" }}>
                   Bienvenidos a kiiper
                     </div>
-                <div style={{ padding: "25px 0px 0px 0px", fontSize: "18pt", color: "#232C51" }}>
+                <div style={{ padding: "25px 0px 0px 0px", fontSize: "1.5em", color: "#232C51" }}>
                   Accounting routines done!
                     </div>
                 {/* <div style={{ padding: "45px 35px 0px 35px", fontSize: "12pt", color: "#232C51" }}>
                   Para continuar debes ingresar tus datos e iniciar sesión
                     </div>*/}
-                <Form style={{ padding: "50px 0px 0px 0px", fontSize: "11pt", color: "#232C51" }}>
+                <Form style={{ padding: "50px 0px 0px 0px", fontSize: "0.9em", color: "#232C51" }}>
                   {/* <Form.Group controlId="formBasicEmail">
                       <Form.Label >Correo electrónico: </Form.Label>
                       <Form.Control type="email" placeholder="ej. nombre@corrreo.com" />
