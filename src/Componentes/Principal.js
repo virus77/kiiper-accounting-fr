@@ -36,6 +36,7 @@ import Compras from './internos/Compras';
 import Ventas from './internos/Ventas';
 import Title from './internos/Title';
 import IframeComponent from './internos/iFrame';
+import BanksConvert from '../Componentes/internos/Banks/BanksConvert';
 
 //#region estilo
 const drawerWidth = 240;
@@ -153,7 +154,7 @@ export default function Dashboard(props) {
 
   //Cambia el estatus del evento del clic en el DeopDownList
   let handleClick = (item) => {
-    
+
     //Obtiene el elemento div del ddl principal
     rw_2_input = document.querySelector('[id*=rw_]').getElementsByTagName("div")[0];
 
@@ -163,7 +164,7 @@ export default function Dashboard(props) {
       // Setting organization selected in React to component
       setorgIdSelected(item.id);
       setValue(item.name)
-      
+
       //Cambia el color en el ddlPrincipal dependiendo la selección
       rw_2_input.style = "background-color: #5540c2 !important; border-color: #5540c2 !important;";
     }
@@ -186,7 +187,7 @@ export default function Dashboard(props) {
       <AppBar>
         <Toolbar className={classes.toolbar}>
           <Typography component="h1" variant="h6" color="inherit" noWrap className={classes.title}>
-            {event === -1 ? "Kipper" :
+            {event === -1 ? "Kiiper" :
               <img src={K} alt="img-K" />}
           </Typography>
           {/* icon Busqueda*/}
@@ -251,7 +252,7 @@ export default function Dashboard(props) {
             </table>
           </Navbar.Brand>
           <Navbar.Toggle aria-controls="basic-navbar-nav" />
-          {event === 0.1 || event === "xeroOrgName" || event === 1.1 || event === 1.2 ?
+          {event === 0.1 || event === "xeroOrgName" || event === 1.1 || event === 1.2 || event === 2.1 ?
             <Navbar.Collapse id="basic-navbar-nav">
               <Nav className="mr-auto">
                 <Nav.Link style={{ width: "135px" }} eventKey={0.1} onClick={(event) => handleListItemClick(event, 0.1)} href="#home">Dashboard</Nav.Link>
@@ -260,8 +261,9 @@ export default function Dashboard(props) {
                   <NavDropdown.Item eventKey={1.2} onClick={(event) => handleListItemClick(event, 1.2)} href="#Negocio/Compras">Compras</NavDropdown.Item>
                 </NavDropdown>
                 <NavDropdown style={{ width: "145px" }} title="Contabilidad" id="ddlContabilidadId">
-                  <NavDropdown.Item eventKey={2.1} href="#Contabilidad/Action">Action</NavDropdown.Item>
-                  <NavDropdown.Divider />
+                  <NavDropdown.Item eventKey={2.1} onClick={(event) => handleListItemClick(event, 2.1)} href="#Contabilidad/Bancos">Bancos</NavDropdown.Item>
+                  <NavDropdown.Item eventKey={2.2} href="#Contabilidad/Impuestos">Impuestos</NavDropdown.Item>
+                  {/* <NavDropdown.Divider /> */}
                   {/* <NavDropdown.Item href="#action/3.4">Separated link</NavDropdown.Item> */}
                 </NavDropdown>
                 <NavDropdown title="Reportes" id="ddlReportesId">
@@ -303,7 +305,16 @@ export default function Dashboard(props) {
                     <Compras token={props.token} orgIdSelected={orgIdSelected} />
                   </Grid>
                 </Grid> :
-                null}
+                event === "xeroOrgName" || event === 2.1 ?
+                  <Grid container spacing={2}>
+                    <Title>Bancos</Title>
+                    <Grid item xs={12}>
+                      <Paper className={classes.paper}>
+                        < BanksConvert orgIdSelected={orgIdSelected} />
+                      </Paper>
+                    </Grid>
+                  </Grid> :
+                  null}
           {/* Copyright */}
           <Box pt={4}>
             <util.Copyright />

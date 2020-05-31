@@ -57,7 +57,7 @@ class Compras extends Component {
     componentWillMount() {
 
         // Getting data from Xero and building data grid
-        util.getAndBuildGridData(null, "Aprobados", "Proveedor").then(result => {
+        util.getAndBuildGridData(null, "Aprobados", "Proveedor", this.props.orgIdSelected).then(result => {
 
             // Setting component state
             this.setState({
@@ -74,7 +74,7 @@ class Compras extends Component {
     handleListItemClick = (e, index) => {
 
         // Getting data from Xero and building data grid
-        util.getAndBuildGridData(index, "Aprobados", "Proveedor").then(result => {
+        util.getAndBuildGridData(index, this.state.activeItem, "Proveedor", this.props.orgIdSelected).then(result => {
 
             // Setting component state
             this.setState({
@@ -91,8 +91,11 @@ class Compras extends Component {
     //Función utilizada para cambiar el estado y llenado del frid delendiendo del clic en el menu superior del mismo
     handleItemClick = (e, name) => {
 
+        // Cleaning rows selected on grid
+        this.refs.agGrid.api.deselectAll();
+
         // Getting data from Xero and building data grid
-        util.getAndBuildGridData(this.state.event, name.name, "Proveedor").then(result => {
+        util.getAndBuildGridData(this.state.event, name.name, "Proveedor", this.props.orgIdSelected).then(result => {
 
             // Setting component state
             this.setState({
@@ -107,19 +110,23 @@ class Compras extends Component {
 
     //Función utilizada para mover los datos de un estatus a otro
     onMoveData = (name, val) => {
-        const { arrayWithholdings } = this.state
+
+        let arrayToSend = "";
+
         switch (name) {
             case "Archivados":
-                let result2 = "";
-                result2 = calls.setDataVoidWidthHoldings(arrayWithholdings);
-                if (result === true)
-                    this.setState({ show: val, texto: "El comprobante de retención ha sido anulado en Xero y cambió su estatus a ‘anulado’." })
-                break;
             case "Aprobados":
-                let result = "";
-                result = calls.setDataVoidWidthHoldings(arrayWithholdings);
-                if (result === true)
-                    this.setState({ show: val, texto: "El comprobante de retención ha sido anulado en Xero y cambió su estatus a ‘anulado’." })
+            case "Recibidos":
+                // Getting ros selected and building a JSON to send
+                arrayToSend = this.onFillstate(this.refs.agGrid.api.getSelectedRows(), name);
+
+                if (arrayToSend.length > 0) {
+
+                    // Moving received or stored vouchers to cancelled
+                    if (calls.setDataVoidWidthHoldings(arrayToSend) === true) {
+                        this.setState({ show: val, texto: "El comprobante de retención ha sido anulado en Xero y cambió su estatus a ‘anulado’." })
+                    }
+                }
                 break;
             default:
                 this.setState({ show: false, texto: "" })
@@ -134,15 +141,14 @@ class Compras extends Component {
 
         // Getting grid selected rows
         const gridSelectedRows = event.api.getSelectedRows();
-        if (event.api.getSelectedNodes().length > 0) {
+        if (gridSelectedRows.length > 0) {
             switch (activeItem) {
+
                 case "Archivados":
                 case "Aprobados":
-                    this.onFillstate(gridSelectedRows);
                     this.setState({ activeItem: activeItem + "Sel", show: false, texto: "El comprobante de retención ha sido anulado en Xero y cambió su estatus a ‘anulado’." })
                     break;
                 default:
-                    this.setState({ activeItem: activeItem.toString().substring(0, activeItem.length - 3), show: false, texto: "" })
                     break;
             }
         }
@@ -150,35 +156,39 @@ class Compras extends Component {
             this.setState({ activeItem: activeItem.toString().substring(0, activeItem.length - 3), show: false })
     };
 
-    //Llena el estado dependiendo delestatus seleccionado
+    /// Llena el estado dependiendo delestatus seleccionado
     /// @param {object} gridSelectedRows - Object of selected items in grid
-    onFillstate = (gridSelectedRows) => {
+    /// @param {string} statusName - name of status
+    onFillstate = (gridSelectedRows, statusName) => {
+
+        let arrayToSend = [];
 
         // Start proccess to gather all information from grid items selected /
         // Gathering items selected information
-        gridSelectedRows.forEach((selectedRow, rowIndex) => {
+        gridSelectedRows.forEach(selectedRow => {
 
-            const withholdingId = selectedRow._id
-            const id_status = selectedRow.id_status.id
+            // Voucher data to be send or used in validation
+            const withHoldingId = selectedRow.withHoldingId;
 
-            switch (id_status) {
-                case 2:
-                    // Storing data from items selected in purchase grid
-                    this.state.arrayWithholdings.push({
-                        _id: withholdingId
+            // Defining JSON oject to add to list of voucher to send
+            // in voucher view action button 
+            switch (statusName) {
+
+                case "Recibidos":      // Received voucher
+                case "Archivados":     // Stored voucher
+
+                    // Storing data from items selected in Sales grid
+                    arrayToSend.push({
+                        _id: withHoldingId
                     });
                     break;
 
-                case 4:
-                    // Storing data from items selected in purchase grid
-                    this.state.arrayWithholdings.push({
-                        _id: withholdingId
-                    });
-                    break;
                 default:
                     break;
             }
         });
+
+        return arrayToSend;
     };
 
     //Función onchange del grid
@@ -199,7 +209,7 @@ class Compras extends Component {
                     </NavDropdown>
                 </div>
                 {/*Pintado de grid dependiendo del menu superior del grid*/}
-                <Menu>
+                <Menu style={{ display: "flex" }}>
                     <Menu.Item
                         name='Aprobados'
                         active={activeItem === 'Aprobados' ? true : false}
@@ -223,10 +233,7 @@ class Compras extends Component {
                             activeItem === 'ArchivadosSel' ? <span style={{ color: "#7158e2" }} >Archivados</span> :
                                 <span >Archivados</span>}
                     </Menu.Item>
-                    <Menu.Item
-                        id="idItemRight">
-                    </Menu.Item>
-                    <div style={{ paddingTop: "5px", paddingRight: "5px", borderStyle: "none" }}>
+                    <div style={{ paddingTop: "5px", paddingRight: "5px", borderStyle: "none", flex: "1", display: "flex", justifyContent: "flex-end" }}>
                         {activeItem === 'Aprobados' || activeItem === 'Archivados' ?
                             <div className="idDibvDisabled">
                                 <span>Mover a anulados 㐅</span>

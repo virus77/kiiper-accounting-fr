@@ -1,6 +1,5 @@
 import React, { Component } from 'react';
-//import { $ } from 'jquery/dist/jquery';
-import { Menu } from 'semantic-ui-react'
+import { Menu } from 'semantic-ui-react';
 
 //Componentes
 import util from '../Js/util'
@@ -15,6 +14,9 @@ import 'ag-grid-community/dist/styles/ag-theme-alpine.css';
 import 'ag-grid-community/dist/styles/ag-grid.css';
 import '../internos/Css/Grid.scss'
 import '../internos/Css/alert.css'
+
+// Declaring momenty object
+var moment = require('moment'); // require
 
 class Ventas extends Component {
     constructor(props) {
@@ -31,6 +33,7 @@ class Ventas extends Component {
             rowSelection: 'multiple',
             rowGroupPanelShow: 'always',
             pivotPanelShow: 'always',
+            components: {},
             defaultColDef: {
                 editable: true,
                 enableRowGroup: true,
@@ -57,7 +60,7 @@ class Ventas extends Component {
     componentWillMount() {
 
         // Getting data from Xero and building data grid
-        util.getAndBuildGridData("", "", "Cliente").then(result => {
+        util.getAndBuildGridData("", "", "Cliente", this.props.orgIdSelected).then(result => {
 
             // Setting component state
             this.setState({
@@ -72,7 +75,7 @@ class Ventas extends Component {
     handleListItemClick = (e, index) => {
 
         // Getting data from Xero and building data grid
-        util.getAndBuildGridData(index, this.state.activeItem, "Cliente").then(result => {
+        util.getAndBuildGridData(index, this.state.activeItem, "Cliente", this.props.orgIdSelected).then(result => {
 
             // Setting component state
             this.setState({
@@ -86,12 +89,14 @@ class Ventas extends Component {
         });
     }
 
-    /////////////////////////////////////////////////////////En este punto es donde debe limpiar los checks del grid
     //Función utilizada para cambiar el estado y llenado del frid delendiendo del clic en el menu superior del mismo
     handleItemClick = (e, name) => {
 
+        // Cleaning rows selected on grid
+        this.refs.agGrid.api.deselectAll();
+
         // Getting data from Xero and building data grid
-        util.getAndBuildGridData(this.state.event, name.name, "Cliente").then(result => {
+        util.getAndBuildGridData(this.state.event, name.name, "Cliente", this.props.orgIdSelected).then(result => {
 
             // Setting component state
             this.setState({
@@ -105,20 +110,42 @@ class Ventas extends Component {
     }
 
     //Función utilizada para mover los datos de un estatus a otro
-    onMoveData = (name, val) => {
+    onMoveData = async (name, val) => {
 
-        const { gridRowsSelectedToRegister, arrayWithholdings } = this.state
+        let arrayToSend = "";
 
         switch (name) {
             case "Pendientes":
-                let iterationCounter = 0;
-                if (calls.setDataWidthHoldings(this.state.Tipo, gridRowsSelectedToRegister, iterationCounter) === true)
-                    this.setState({ show: val, texto: "El comprobante de retención ha sido registrado en Xero y cambió su estatus a 'recibido'." })
+
+                // Getting ros selected and building a JSON to send
+                arrayToSend = this.onFillstate(this.refs.agGrid.api.getSelectedRows(), name);
+
+                if (arrayToSend.length > 0) {
+
+                    // Moving pending vouchers to received
+                    let result = await calls.setDataWidthHoldings(this.state.Tipo, arrayToSend);
+                    if (result === true) {
+                        this.setState({ show: val, texto: "El comprobante de retención ha sido registrado en Xero y cambió su estatus a 'recibido'." })
+                        this.onRemoveSelected();
+                    }
+                }
                 break;
+
             case "Archivados":
             case "Recibidos":
-                if (calls.setDataVoidWidthHoldings(arrayWithholdings) === true)
-                    this.setState({ show: val, texto: "El comprobante de retención ha sido anulado en Xero y cambió su estatus a ‘anulado’." })
+
+                // Getting ros selected and building a JSON to send
+                arrayToSend = this.onFillstate(this.refs.agGrid.api.getSelectedRows(), name);
+
+                if (arrayToSend.length > 0) {
+
+                    // Moving received or stored vouchers to cancelled
+                    let result1 = await calls.setDataVoidWidthHoldings(arrayToSend);
+                    if (result1 === true) {
+                        this.setState({ show: val, texto: "El comprobante de retención ha sido anulado en Xero y cambió su estatus a ‘anulado’." })
+                        this.onRemoveSelected();
+                    }
+                }
                 break;
             default:
                 this.setState({ show: false, texto: "" })
@@ -126,113 +153,129 @@ class Ventas extends Component {
         }
     }
 
-    //Función on row selected del grid
-    onRowSelected = event => {
-
-        const { activeItem } = this.state
-        // Getting grid selected rows
-        const gridSelectedRows = event.api.getSelectedRows();
-        this.onFillstate(gridSelectedRows);
-        if (event.api.getSelectedNodes().length > 0) {
-            switch (activeItem) {
-                case "Pendientes":
-                    this.onFillstate(gridSelectedRows);
-                    this.setState({ activeItem: activeItem + "Sel", show: false, texto: "El comprobante de retención ha sido registrado en Xero y cambió su estatus a 'recibido'." })
-                    break;
-                case "Archivados":
-                case "Recibidos":
-                    this.onFillstate(gridSelectedRows);
-                    this.setState({ activeItem: activeItem + "Sel", show: false, texto: "El comprobante de retención ha sido anulado en Xero y cambió su estatus a ‘anulado’." })
-                    break;
-                default:
-                    this.setState({ activeItem: activeItem.toString().substring(0, activeItem.length - 3), show: false, texto: "" })
-                    break;
-            }
-        }
-        else
-            this.setState({ activeItem: activeItem.toString().substring(0, activeItem.length - 3), show: false })
-    };
-
     /// Llena el estado dependiendo delestatus seleccionado
     /// @param {object} gridSelectedRows - Object of selected items in grid
-    onFillstate = (gridSelectedRows) => {
+    /// @param {string} statusName - name of status
+    onFillstate = (gridSelectedRows, statusName) => {
+
+        let arrayToSend = [];
 
         // Start proccess to gather all information from grid items selected /
         // Gathering items selected information
         gridSelectedRows.forEach((selectedRow, rowIndex) => {
 
             // Voucher data to be send or used in validation         
-            const itemVoucherNumber = selectedRow.Comprobante ? selectedRow.Comprobante : "012000";
-            //const itemClientName = selectedRow.Contacto;
-            const itemRetentionPercentage = selectedRow.Retencion;
-            const id_status = selectedRow.id_status.id
-            const id_tax_typeName = selectedRow.id_tax_type.name
-            const withholdingId = selectedRow._id
+            const clientName = selectedRow.Contacto;
+            const retentionPercentage = selectedRow.Retencion;
+            const withHoldingId = selectedRow.withHoldingId;
+           
+            // Finding date added to voucher
+            let voucherDate = selectedRow.approval_date != "" ? moment(selectedRow.approval_date) : "";
 
             // Finding file uploaded to voucher
-            let itemVoucherDate = document.querySelector(`[id=date_${withholdingId}]`).value;
+            let voucherFile = document.querySelector(`[id=file_${withHoldingId}]`);
+            voucherFile = voucherFile ? voucherFile.files[0] : "";
 
-            // Finding file uploaded to voucher
-            let voucherFile = document.querySelector(`[id=file_${withholdingId}]`);
-            voucherFile = voucherFile.files[0] === undefined ? voucherFile.files[0] : new File();
+            // Formatting voucher number
+            let voucherNumber = selectedRow.Comprobante ? selectedRow.Comprobante : "";
 
-            switch (id_status) {
-                case 1:
+            // --------------------------------------
+
+            // Defining JSON oject to add to list of voucher to send
+            // in voucher view action button 
+            switch (statusName) {
+
+                // Pending voucher
+                case "Pendientes":
                     switch (true) {
-                        // Storing data from items selected in Ventas grid
-                        case (itemVoucherDate && itemVoucherNumber && voucherFile):
-
-                            // Storing data from items selected in Ventas grid
-                            this.state.gridRowsSelectedToRegister.push({
-                                voucherDate: itemVoucherDate,
-                                voucher: itemVoucherNumber,
-                                Percentage: itemRetentionPercentage,
-                                files: voucherFile,
-                                files: voucherFile,
-                                _id: withholdingId
-                            });
 
                         // When voucher date was not captured in column field
-                        case (!itemVoucherDate):
+                        case (!voucherDate):
                             this.setState({
                                 show: true,
-                                texto: "Falta capturar la fecha de comprobante."
+                                texto: `La fecha de comprobante está vacía en ${clientName}.`
                             })
                             return false;
 
                         // When voucher date was not captured in column field
-                        case (!itemVoucherNumber):
+                        case (!voucherNumber):
                             this.setState({
                                 show: true,
-                                texto: "Falta capturar el número de comprobante."
+                                texto: `El número de comprobante está vacío en ${clientName}.`
                             })
                             return false;
 
                         case (!voucherFile):
                             this.setState({
                                 show: true,
-                                texto: "No ha elegido un documento para el registro."
+                                texto: `El documento está vacío en ${clientName}.`
                             })
                             return false;
+
+                        default:
+
+                            // Storing data from items selected in Ventas grid
+                            arrayToSend.push({
+                                withholdingId: withHoldingId,
+                                retentionPercentage: retentionPercentage,
+                                withholdingNumber: voucherNumber,
+                                withholdingDate: voucherDate.format("DD/MM/YYYY"),
+                                file: voucherFile
+                            });
+                            break;
                     }
                     break;
-                case 2:
+
+                case "Recibidos":      // Received voucher
+                case "Archivados":     // Stored voucher
+
                     // Storing data from items selected in Sales grid
-                    this.state.arrayWithholdings.push({
-                        _id: withholdingId
+                    arrayToSend.push({
+                        _id: withHoldingId
                     });
                     break;
 
-                case 4:
-                    // Storing data from items selected in Sales grid
-                    this.state.arrayWithholdings.push({
-                        _id: withholdingId
-                    });
-                    break;
                 default:
                     break;
             }
         });
+
+        return arrayToSend;
+    };
+
+    /// Clear selected elements in the grid
+    onRemoveSelected = () => {
+        var selectedData = this.refs.agGrid.api.getSelectedRows();
+        var res = this.refs.agGrid.api.applyTransaction({ remove: selectedData });
+        util.printResult(res);
+    };
+
+    //Función onRowSelected del grid
+    onRowSelected = event => {
+
+        const { activeItem } = this.state;
+
+        // Getting grid selected rows
+        const gridSelectedRows = event.api.getSelectedRows();
+
+        if (gridSelectedRows.length > 0) {
+            switch (activeItem) {
+
+                case "Pendientes":
+                    this.setState({ activeItem: activeItem + "Sel", show: false, texto: "El comprobante de retención ha sido registrado en Xero y cambió su estatus a 'recibido'." })
+                    break;
+
+                case "Archivados":
+                case "Recibidos":
+                    this.setState({ activeItem: activeItem + "Sel", show: false, texto: "El comprobante de retención ha sido anulado en Xero y cambió su estatus a ‘anulado’." })
+                    break;
+
+                default:
+                    break;
+            }
+        }
+        else
+            this.setState({ activeItem: activeItem.toString().substring(0, activeItem.length - 3), show: false })
     };
 
     //Función onchange del grid
@@ -246,14 +289,14 @@ class Ventas extends Component {
         return (
             <div>
                 {/*Pintado del dropdownlist de iva/isrl*/}
-                <div style={{ paddingBottom: "20px" }}>
+                <div style={{ paddingBottom: "10px" }}>
                     <NavDropdown id="ddlVentas" title={this.state.event === 4.2 ? '≡  Comprobante de retención de IVA  ' : this.state.event === 4.1 ? '≡  Comprobante de retención de ISLR  ' : '≡  Comprobante de retención de IVA  '} >
                         <NavDropdown.Item eventKey={4.1} onClick={(event) => this.handleListItemClick(event, 4.1)} href="#Reportes/ISLR"><span className="ddlComVenLabel"> Comprobante de retención de ISLR </span></NavDropdown.Item>
                         <NavDropdown.Item eventKey={4.2} onClick={(event) => this.handleListItemClick(event, 4.2)} href="#Reportes/IVA"><span className="ddlComVenLabel"> Comprobante de retención de IVA </span></NavDropdown.Item>
                     </NavDropdown>
                 </div>
                 {/*Pintado de grid dependiendo del menu superior del grid*/}
-                <Menu>
+                <Menu style={{ display: "flex" }}>
                     <Menu.Item
                         name='Pendientes'
                         active={activeItem === 'Pendientes' ? true : false}
@@ -284,10 +327,7 @@ class Ventas extends Component {
                             activeItem === 'ArchivadosSel' ? <span style={{ color: "#7158e2" }} >Archivados</span> :
                                 <span >Archivados</span>}
                     </Menu.Item>
-                    <Menu.Item
-                        id="idItemRight">
-                    </Menu.Item>
-                    <div style={{ paddingTop: "5px", paddingRight: "5px", borderStyle: "none" }}>
+                    <div style={{ paddingTop: "5px", paddingRight: "5px", borderStyle: "none", flex: "1", display: "flex", justifyContent: "flex-end" }}>
                         {activeItem === 'Pendientes' ?
                             <div className="idDibvDisabledsmall">
                                 <span>Registrar ⇨</span>
@@ -312,31 +352,31 @@ class Ventas extends Component {
                 </Menu>
                 {/*Pintado de grid dependiendo del flujo de los botones*/}
                 <div style={{ width: '100%', height: '100%' }}>
-                    <div id="salesGrid" style={{ height: '446px', width: '100%' }}
-                        className="ag-theme-alpine">
+                    <div id="salesGrid" style={{ height: '400px', width: '100%' }} className="ag-theme-alpine">
                         {activeItem === "Pendientes" ?
-                            util.createDataDrid(this.state.columnDefs, this.state.rowData, this.state.rowSelection, this.state.defaultColDef,
+                            util.createDataDrid(this.state.columnDefs, this.state.rowData, {},
                                 this.state.components, this.onRowSelected.bind(this), this.onSelectionChanged.bind(this)) :
                             activeItem === "Recibidos" ?
-                                util.createDataDrid(this.state.columnDefs, this.state.rowData, this.state.rowSelection, this.state.defaultColDef,
+                                util.createDataDrid(this.state.columnDefs, this.state.rowData, {},
                                     this.state.components, this.onRowSelected.bind(this), this.onSelectionChanged.bind(this)) :
                                 activeItem === "Anulados" ?
-                                    util.createDataDrid(this.state.columnDefs, this.state.rowData, this.state.rowSelection, this.state.defaultColDef,
+                                    util.createDataDrid(this.state.columnDefs, this.state.rowData, {},
                                         this.state.components, this.onRowSelected.bind(this), this.onSelectionChanged.bind(this)) :
                                     activeItem === "Archivados" ?
-                                        util.createDataDrid(this.state.columnDefs, this.state.rowData, this.state.rowSelection, this.state.defaultColDef,
+                                        util.createDataDrid(this.state.columnDefs, this.state.rowData, {},
                                             this.state.components, this.onRowSelected.bind(this), this.onSelectionChanged.bind(this)) :
-                                        util.createDataDrid(this.state.columnDefs, this.state.rowData, this.state.rowSelection, this.state.defaultColDef,
+                                        util.createDataDrid(this.state.columnDefs, this.state.rowData, {},
                                             this.state.components, this.onRowSelected.bind(this), this.onSelectionChanged.bind(this))
                         }
+                        <div id="idDivAlert">
+                            {this.state.show === true ?
+                                <div id="idButtonDiv">
+                                    <button style={{ zIndex: "-1" }} type="button" className="close" onClick={(event) => this.onMoveData(event, false)}><span aria-hidden="true">OK</span></button>
+                                </div> : null}
+                            <AlertDismissible valor={this.state.show} texto={this.state.texto} />
+                        </div>
                     </div>
-                    <div id="idDivAlert">
-                        {this.state.show === true ?
-                            <div id="idButtonDiv">
-                                <button style={{ zIndex: "-1" }} type="button" className="close" onClick={(event) => this.onMoveData(event, false)}><span aria-hidden="true">OK</span></button>
-                            </div> : null}
-                        <AlertDismissible valor={this.state.show} texto={this.state.texto} />
-                    </div>
+
                 </div>
             </div>
         );
