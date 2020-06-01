@@ -99,7 +99,31 @@ const calls = {
                 }
             })
         )
-    }
+    },
+
+      // Petición para obtener cuentas bancarias de una empresa en Xero
+    // @param {integer} id_organisation - organisation id
+    getBankAccounts: (id_organisation) => {
+        console.log("entreee", id_organisation);
+        const fetchConfig = {
+            method: 'GET',
+            headers: {
+              'Accept': 'application/json',
+              'Content-Type': 'application/json'
+            }
+        };
+
+        return fetch(`/getBankAccounts?id_organisation=${id_organisation}`, fetchConfig)
+            .then(res => res.json())
+            .then(data => {
+                return {
+                    data: data
+                }
+            }).catch(err => {
+                console.log(err)
+            });
+    
+    },
 }
 
 export default calls;

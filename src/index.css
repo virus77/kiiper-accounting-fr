@@ -11,3 +11,24 @@ code {
   font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
     monospace;
 }
+
+@font-face {
+  font-family: 'MuliRegular';
+  src: local('MuliRegular'), url(./fonts/muli/Muli-Regular.ttf) format('truetype');
+}
+
+@font-face {
+  font-family: 'MuliLight';
+  src: local('MuliLight'), url(./fonts/muli/Muli-Light.ttf) format('truetype');
+}
+
+@font-face {
+  font-family: 'MuliLightItalic';
+  src: local('MuliLightItalic'), url(./fonts/muli/Muli-LightItalic.ttf) format('truetype');
+}
+
+@font-face {
+  font-family: 'MuliItalic';
+  src: local('MuliItalic'), url(./fonts/muli/Muli-Italic.ttf) format('truetype');
+}
+
