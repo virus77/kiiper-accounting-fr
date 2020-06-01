@@ -1,24 +1,24 @@
-//import React from "react";
-//import ReactDOM from "react-dom"
-//import Link from '@material-ui/core/Link';
-//import Typography from '@material-ui/core/Typography';
-//import { AgGridReact } from 'ag-grid-react';
-//import { $ } from 'jquery/dist/jquery';
-//var moment = require('moment'); // require
 
+/* Script que contiene las llamadas a funciones */
 const calls = {
 
     /// Helps to request and build the data structure to render it
     /// inside the workspace grid. The information represented 
     /// corresponds to the different concepts from the organization
     /// selected like: sales, purchases, banks, etc.
-    /// @param {string} conceptType - concept type: sales, purchases...
     /// @param {integer} taxInfo - tax info with id and name
     /// @param {integer} statusInfo - status info with id and name
-    getOrgConceptsInfo: (conceptType, taxInfo, statusInfo) => {
+    /// @param {string} orgIdSelected - organization id from Xero
+    getOrgConceptsInfo: (taxInfo, statusInfo, orgIdSelected) => {
 
         // Organization selected by user previously
-        let orgIdDefault = "5ea086c97cc16250b45f82e1"; //this.props.orgIdSelected
+        let orgIdDefault = orgIdSelected ? orgIdSelected : "5ea086c97cc16250b45f82e1";
+
+        // Testing validation purposes
+        orgIdDefault =
+            orgIdDefault === "5ec440712075680004eff014" ?
+                "5ea086c97cc16250b45f82e1" :
+                orgIdDefault;
 
         // Fetch URL with parameters
         const fetchURL =
@@ -35,66 +35,73 @@ const calls = {
                 .then(data => {
                     return {
                         data: data,
-                        conceptType: conceptType,
-                        taxInfo: taxInfo
+                        taxInfo: taxInfo,
+                        statusInfo: statusInfo
                     }
+                }).catch((error) => {
+                    console.log(error);
+                    return false;
                 })
         );
     },
     /// Start a process to request information from Xero to build
     /// Insert data when change status to "Archivados" or "Recibidos":
     /// @param {id} id_invoice_xero - idXero
-    setDataVoidWidthHoldings: (arrayWithholdings) => {
+    setDataVoidWidthHoldings: async (WithholdingsArr) => {
 
-        return fetch('/voidWithholding', {
-            method: 'POST',
-            body: { arrayWithholdings: arrayWithholdings },
-            headers: {
-                'X-Mashape-Key': 'required',
-                'Content-Type': 'application/x-www-form-urlencoded',
-                'Accept': 'application/json'
-            }
-        })//.then(res => {
-            //  console.log(res)
-            //  return true;
-            //})
-            .catch(err => {
-                console.log(err)
-            });
+        let arrayWithholding = { "arrayWithholding": WithholdingsArr };
+
+        return (
+            await fetch('/voidWithholding', {
+                method: 'POST',
+                body: JSON.stringify(arrayWithholding),
+                headers: {
+                    "Content-type": "application/json; charset=UTF-8",
+                    "Access-Control-Allow-Origin": "*",
+                },
+            }).then(res => {
+                if (res.ok) {
+                    console.log("request sucess");
+                    return true;
+                } else {
+                    console.log("request fail");
+                    return false;
+                }
+            })
+        )
     },
-    /// Start a process to request information from Xero to build
-    /// Insert data when change status to "Archivados" or "Recibidos":
-    /// @param {id} id_invoice_xero - idXero
-    setDataWidthHoldings: (Tipo, rowsSelected, iterationCounter) => {
+    /// Start a process to send information to Xero to 
+    /// change vouchers from pending to received status
+    /// @param {string} taxType - tax type from the voucher
+    /// @param {array} rowsSelected - rows selected by user in vouchers grid
+    setDataWidthHoldings: async (taxType, rowsSelected) => {
 
         // Knowing endpoint to fetch for an approval based on tax type
-        let fetchEndpoint =
-            Tipo === "ISLR" ?
-                "approveWithholdingISLR" :
-                "/approveWithholdingIVA";
+        let fetchEndpoint = `/approveWithholding${taxType}`;
+        let arrayWithholding = { "arrayWithholding": rowsSelected };
 
-        // Changing status from each rowsSelected
-        rowsSelected.forEach(item => {
-
-            const fetchInit = {
-                body: JSON.stringify(item)
-            };
-
-            fetch(fetchEndpoint, fetchInit)
-                .then(res => res.json())
-                .then(res => {
-                    if (iterationCounter === rowsSelected.length) {
-                        return true;
-                    }
-                    else
-                        iterationCounter++;
-                }).catch(err => {
-                    console.log(err)
-                });;
-        });
+        // Knowing endpoint to fetch for an approval based on tax type
+        return (
+            await fetch(fetchEndpoint, {
+                method: 'POST',
+                body: JSON.stringify(arrayWithholding),
+                headers: {
+                    "Content-type": "application/json; charset=UTF-8",
+                    "Access-Control-Allow-Origin": "*",
+                },
+            }).then(res  => {
+                if (res.ok) {
+                    console.log("request sucess");
+                    return true;
+                } else {
+                    console.log("request fail");
+                    return false;
+                }
+            })
+        )
     },
 
-    // Petición para obtener cuentas bancarias de una empresa en Xero
+      // Petición para obtener cuentas bancarias de una empresa en Xero
     // @param {integer} id_organisation - organisation id
     getBankAccounts: (id_organisation) => {
         console.log("entreee", id_organisation);
