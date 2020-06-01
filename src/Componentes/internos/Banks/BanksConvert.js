@@ -3,6 +3,8 @@ import PropTypes from 'prop-types';
 import '../Css/styles.scss';
 import Accordion from '../accordion/Accordion';
 import FileTransformationInformation from '../accordion/FileTransformationInformation';
+import calls from '../../Js/calls';
+import util from '../../Js/util';
 
 class BanksConvert extends Component {
     
@@ -15,7 +17,20 @@ class BanksConvert extends Component {
         var openConvert = false;
         const openSections = {};
 
-        this.state = { openSections, openConvert };
+        this.state = { 
+            openSections, 
+            openConvert,
+            accounts: []
+        };
+    }
+
+    componentDidMount() {
+        console.log("entree", this.props.orgIdSelected);
+        //Getting data from Xero and building data grid
+        calls.getBankAccounts(this.props.orgIdSelected).then(result => {
+            console.log("data", result.data);
+            this.setState({ accounts: result.data });
+        });
     }
 
     onClick = label => {
@@ -32,13 +47,16 @@ class BanksConvert extends Component {
         });
     };
 
-    onClickConvert = label => {
+    onClickConvert = bank => label => {
+        console.log("bank", bank);
         const {
             state: { openConvert },
         } = this;
 
+        util.bankType(bank);
+
         this.setState({
-            openConvert: !openConvert
+            openConvert: !openConvert,
         });
     }
 
@@ -50,31 +68,22 @@ class BanksConvert extends Component {
 
         return (
             <div className="padding-accordion-bank">
-                { !openConvert? 
-                <Accordion>
-                    <div label='Banco de Venezuela #6835'>
-                        <p className="color-blue-background">Estado de Cuenta</p>
-                        <div className="accordion-flex">
-                            <a className="color-blue-background underline"  onClick={onClickConvert}> Convertir </a>
-                            <a className="color-blue-background underline"> Consultar </a>
-                        </div>
-                    </div> 
-                    <div label='Banco Mercantil #0413'>
-                        <p className="color-blue-background">Estado de Cuenta</p>
-                        <div className="accordion-flex">
-                            <a className="color-blue-background underline" onClick={onClickConvert}> Convertir </a>
-                            <a className="color-blue-background underline"> Consultar </a>
-                        </div>
-                    </div>
-                    <div label='Banco Nacional de Credito #2694'>
-                        <p className="color-blue-background">Estado de Cuenta</p>
-                        <div className="accordion-flex">
-                            <a className="color-blue-background underline" onClick={onClickConvert}> Convertir </a>
-                            <a className="color-blue-background underline"> Consultar </a>
-                        </div>
-                    </div>
-                </Accordion>:
-                <FileTransformationInformation/>
+                { !openConvert?
+                    <Accordion>
+                        {this.state.accounts.map( (mapping, index) => (
+                            <div label={index + ". " + mapping.name}>
+                                <p className="color-blue-background">Estado de Cuenta</p>
+                                <div className="accordion-flex">
+                                    <a className="color-blue-background underline"  
+                                        onClick={onClickConvert(mapping.name)}> 
+                                        Convertir 
+                                    </a>
+                                    <a className="color-blue-background underline"> Consultar </a>
+                                </div>
+                            </div> 
+                        ))}    
+                    </Accordion>:
+                    <FileTransformationInformation/>
                 }
             </div>
         );

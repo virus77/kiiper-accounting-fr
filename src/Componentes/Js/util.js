@@ -404,6 +404,47 @@ const util = {
             </Typography>
         );
     },
+
+    bankType: function(_bank) {
+        console.log("Entreeee bank", _bank)
+        var bankName = _bank.toLowerCase();
+
+        const banks = [ 
+            {id: 1,  name: 'mercantil natural'},
+            {id: 2,  name: 'mercantil juridica'},
+            {id: 3,  name: 'bod'},
+            {id: 4,  name: 'banesco'},
+            {id: 5,  name: 'commerce bank'},
+            {id: 6,  name: 'bicentenario'},
+            {id: 7,  name: 'mibanco'},
+            {id: 8,  name: 'bvc'},
+            {id: 9,  name: 'bancaribe'},
+            {id: 10, name: 'safra'},
+            {id: 11, name: 'plaza'},
+            {id: 12, name: 'caroni'},
+            {id: 13, name: 'venezuela'},
+            {id: 14, name: 'santader'},
+            {id: 15, name: 'exterior'},
+            {id: 16, name: 'bnc'},
+            {id: 17, name: 'provincial'},
+            {id: 18, name: 'banplus'},
+            {id: 19, name: 'mercadopago'},
+            {id: 20, name: 'deutsche'},
+            {id: 21, name: 'multibank'},
+            {id: 22, name: 'banesco panama'},
+            {id: 23, name: 'chase'},
+            {id: 24, name: 'wellfargo'},
+            {id: 25, name: 'rigdewood'},
+            {id: 26, name: 'kearny'},
+            {id: 27, name: 'tdbank'}
+        ];
+
+        var bankSelected = banks.filter(function(bank) {
+            return bankName.indexOf(bank.name) > -1
+        });
+
+        console.log("bank selected", bankSelected);
+    }
 }
 
 export default util;

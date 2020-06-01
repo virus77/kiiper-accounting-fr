@@ -310,7 +310,7 @@ export default function Dashboard(props) {
                   <Title>Bancos</Title>
                   <Grid item xs={12}>
                     <Paper className={classes.paper}>
-                      < BanksConvert/>
+                      < BanksConvert orgIdSelected={orgIdSelected} />
                     </Paper>
                   </Grid>
                  </Grid>:
