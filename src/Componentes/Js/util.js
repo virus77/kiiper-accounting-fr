@@ -82,64 +82,8 @@ const util = {
                     // Value formatting
                     switch (true) {
 
-                        // In case itemValue is empty just break
-                        case itemValue === "":
-                            if (header.hasOwnProperty("calculated") && header.formulaName === "Monto_Retenido") {
-                                // If retention amount came from request to Xero
-                                let retentionAmount = item["retention_amount"];
-                                retentionAmount = retentionAmount ? retentionAmount["$numberDecimal"] : "";
-
-                                if (retentionAmount) {
-                                    itemValue = retentionAmount;
-                                }
-                                else {
-
-                                    // If retention amount did not come from Xero
-                                    // Invoice total tax
-                                    let invoiceTotalTax = item["invoice_total_tax"]["$numberDecimal"];
-                                    invoiceTotalTax = invoiceTotalTax ? invoiceTotalTax : 0;
-
-                                    itemValue = parseFloat(invoiceTotalTax) * 0.75;
-                                    itemValue = util.formatMoney(itemValue.toFixed(2));
-                                }
-                            }
-                            break;
-
-                        default:
-                            break;
-
-                        // In case itemValue is a float. 
-                        // This value comes different from Xero. It is an 
-                        // object with a $numberDecimal property inside
-                        case (itemValue.hasOwnProperty("$numberDecimal")):
-                            itemValue = util.formatMoney(parseFloat(itemValue["$numberDecimal"]))
-                            break;
-
-                        // In case itemValue is a int
-                        case (typeof itemValue === 'number'):
-
-                            switch (itemProp) {
-
-                                case "id_status":
-                                    itemValue = util.getStatusInfoConcept(itemValue, kindOfPeople);
-                                    break;
-
-                                case "id_tax_type":
-                                    itemValue = util.getTaxInfoConcept(itemValue, kindOfPeople);
-                                    break;
-
-                                default:
-                                    break;
-                            }
-                            break;
-
-                        // In case itemValue is a date
-                        case (moment(itemValue).isValid()):
-                            itemValue = moment(itemValue).format("DD/MM/YYYY");
-                            break;
-
                         // In case the data needs a specific value based in a formula
-                        case (header.hasOwnProperty("calculated")):
+                        case (header.hasOwnProperty("calculated")) :
 
                             switch (header.formulaName) {
 
@@ -147,32 +91,38 @@ const util = {
                                 case "base_taxable":
 
                                     // Invoice subtotal
-                                    let subtotal = item["invoice_subtotal"]["$numberDecimal"];
-                                    subtotal = subtotal ? subtotal : 75;
+                                    let invoiceSubTotal = item["invoice_subtotal"]["$numberDecimal"];
+                                    invoiceSubTotal = invoiceSubTotal ? invoiceSubTotal : 0;
 
                                     // Invoice exempt amount
-                                    let exempt = item["invoice_exempt_amount"]["$numberDecimal"];
-                                    exempt = exempt ? exempt : 75;
-                                    itemValue = util.formatMoney(Number.parseFloat(subtotal) - Number.parseFloat(exempt));
+                                    let exemptAmount = item["invoice_exempt_amount"];
+                                    exemptAmount = exemptAmount ? exemptAmount["$numberDecimal"] : 75;
+                                   
+                                    itemValue = parseFloat(invoiceSubTotal) - parseFloat(exemptAmount);
+                                    itemValue = util.formatMoney(itemValue.toFixed(2));
                                     break;
 
                                 case "retention_percentage":
                                     // Invoice total tax
-                                    //  let totalTax = item["invoice_total_tax"]["$numberDecimal"];
-                                    //  totalTax = totalTax ? totalTax : 75;
+                                    /*let invoiceTotalTax = item["invoice_total_tax"]["$numberDecimal"];
+                                    invoiceTotalTax = invoiceTotalTax ? invoiceTotalTax : 0;
 
                                     // Retention percentage
-                                    //   let retention = 0; //item["retention_percentage"]["$numberDecimal"];
-                                    //  retention = retention ? retention : 75;
+                                    let retentionPer = item["retention_percentage"];
+                                    retentionPer = retentionPer ? retentionPer["$numberDecimal"] : 0.75;
 
+                                    itemValue = (parseFloat(invoiceTotalTax) * parseFloat(retentionPer)) / 100;
+                                    itemValue = util.formatMoney(itemValue.toFixed(2));
+                                    */
                                     itemValue = 75;
                                     break;
 
-                                case "Monto_Retenido":
+                                case "retention_amount":
+
                                     // If retention amount came from request to Xero
                                     let retentionAmount = item["retention_amount"];
                                     retentionAmount = retentionAmount ? retentionAmount["$numberDecimal"] : "";
-
+                                    
                                     if (retentionAmount) {
                                         itemValue = retentionAmount;
                                     }
@@ -188,11 +138,50 @@ const util = {
                                     }
                                     break;
 
-                                default:
+                                default :
                                     break;
                             }
                             break;
+
+                        // In case itemValue is empty just break
+                        case itemValue === "" :
+                        default :
+                            break;
+
+                        // In case itemValue is a float. 
+                        // This value comes different from Xero. It is an 
+                        // object with a $numberDecimal property inside
+                        case (itemValue.hasOwnProperty("$numberDecimal")) :
+                            itemValue = util.formatMoney(parseFloat(itemValue["$numberDecimal"]))
+                            break;
+
+                        // In case itemValue is a integer
+                        case (typeof itemValue === 'number') :
+
+                            switch (itemProp) {
+
+                                case "id_status" :
+                                    itemValue = util.getStatusInfoConcept(itemValue);
+                                    break;
+
+                                case "id_tax_type" :
+                                    itemValue = util.getTaxInfoConcept(itemValue);
+                                    break;
+
+                                default :
+                                    break;
+                            }
+                            break;
+
+                        case (typeof itemValue === "string") :
+
+                            // In case itemValue is a date
+                            if(moment(itemValue).isValid() && itemValue.indexOf("-") >= 4) {
+                                itemValue = moment(itemValue).format("DD/MM/YYYY");
+                            }
+                            break;
                     }
+
 
                     // Creating property in JSON object
                     itemNode[itemProp] = itemValue;
@@ -242,8 +231,9 @@ const util = {
                 statusInfo.name = "Archivados";
                 break;
 
+            // No cambiar por 2 chinga
             case "Aprobados":
-                statusInfo.id = 2;
+                statusInfo.id = 1;
                 statusInfo.name = "Aprobados";
                 break;
 
@@ -352,16 +342,16 @@ const util = {
                 },
             },
             { headerName: 'No. Control', field: 'Control', xeroField: 'invoice_control', filter: 'agTextColumnFilter', width: 120, resizable: true, sortable: true },
-            { headerName: kindOfPeople, field: 'Contacto', xeroField: 'contact_name', filter: 'agTextColumnFilter', width: 240, resizable: true, sortable: true },
+            { headerName: kindOfPeople, field: 'Contacto', xeroField: 'contact_name', headerClass: "centerHeader", filter: 'agTextColumnFilter', width: 240, resizable: true, sortable: true },
             { headerName: 'Fecha factura', field: 'FechaFactura', xeroField: 'invoice_date', filter: 'agTextColumnFilter', width: 128, sortable: true },
-            { headerName: 'Base imponible', field: 'invoice_subtotal', xeroField: 'invoice_subtotal', type: 'rightAligned', calculated: true, formulaName: 'base_taxable', width: 123, sortable: true },
+            { headerName: 'Base imponible', field: 'invoice_subtotal', type: 'rightAligned', xeroField: true, calculated: true, formulaName: 'base_taxable', width: 123, sortable: true },
             { headerName: 'Total ' + Tipo, field: 'TotalIVA', xeroField: 'invoice_total_tax', type: 'rightAligned', width: 120, sortable: true },
             Tipo === "IVA" ? {
                 headerName: '% retenido', field: 'Retencion', valueGetter: function () {
                     return 75;
                 }, calculated: true, formulaName: 'retention_percentage', width: 100, sortable: true,
             } : { headerName: '', field: '', hide: true },
-            { headerName: 'Monto retenido', field: 'MontoRetenido', calculated: true, type: 'rightAligned', formulaName: 'Monto_Retenido', width: 129, sortable: true },
+            { headerName: 'Monto retenido', field: 'MontoRetenido', xeroField: true, calculated: true, formulaName: 'retention_amount', type: 'rightAligned', width: 129, sortable: true },
             { headerName: 'Fecha de comprobante', field: 'approval_date', width: 149, sortable: true, editable: true, cellEditor: Datepicker },
             { headerName: 'No. Comprobante', field: 'Comprobante', width: 160, sortable: true, editable: true, cellEditor: NumberValidation },
             { headerName: '', field: '_id', width: 100, cellRenderer: this.CellRendererUp }
@@ -392,16 +382,16 @@ const util = {
                 },
             },
             { headerName: 'No. Control', field: 'Control', xeroField: 'invoice_control', filter: 'agTextColumnFilter', width: 120, resizable: true, sortable: true },
-            { headerName: kindOfPeople, field: 'Contacto', xeroField: 'contact_name', filter: 'agTextColumnFilter', width: 240, resizable: true, sortable: true },
+            { headerName: kindOfPeople, field: 'Contacto', xeroField: 'contact_name', headerClass: "centerHeader", filter: 'agTextColumnFilter', width: 240, resizable: true, sortable: true },
             { headerName: 'Fecha factura', field: 'FechaFactura', xeroField: 'invoice_date', filter: 'agTextColumnFilter', width: 128, sortable: true },
             { headerName: 'Base imponible', field: 'invoice_subtotal', xeroField: 'invoice_subtotal', width: 123, sortable: true, type: 'rightAligned' },
             { headerName: 'Total ' + Tipo, field: 'TotalIVA', xeroField: 'invoice_total_tax', width: 120, sortable: true, type: 'rightAligned' },
             Tipo === "IVA" ? {
                 headerName: '% retenido', field: 'Retencion', type: 'centerAligned', valueGetter: function () {
                     return 75;
-                }, xeroField: 'retention_percentage', width: 104, sortable: true,
+                }, calculated: true, formulaName: 'retention_percentage', width: 104, sortable: true,
             } : { headerName: '', field: '', width: 0, hide: true },
-            { headerName: 'Monto retenido', field: 'MontoRetenido', calculated: true, type: 'rightAligned', formulaName: 'Monto_Retenido', width: 129, sortable: true },
+            { headerName: 'Monto retenido', field: 'MontoRetenido', type: 'rightAligned', xeroField: true, calculated: true, formulaName: 'retention_amount', width: 129, sortable: true },
             { headerName: 'Fecha de comprobante', field: 'date', xeroField: 'approval_date', width: 149, sortable: true },
             { headerName: 'No. Comprobante', field: 'Comprobante', xeroField: 'invoice_number', width: 160, sortable: true },
             { headerName: '', field: 'file', width: 100, cellRenderer: this.CellRendererP }
@@ -411,7 +401,7 @@ const util = {
     //Coloca icono de carga en el grid
     CellRendererUp: function (params) {
         var eDiv = document.createElement('div');
-        eDiv.class = "file-container";
+        eDiv.className = "file-container";
         eDiv.innerHTML = '<div class="custom-file-upload">' +
             '<img border="0" width="18" height="21" src="http://desacrm.quierocasa.com.mx:7002/Images/kiiper_Upload.png"></img>' +
             '<input id="file_' + params.data.withHoldingId + '" type="file" class="file-upload" id="file-upload" />' +
@@ -422,9 +412,10 @@ const util = {
     //Coloca icono de descarga en el grid
     CellRendererP: function (params) {
         var flag = '<img border="0" width="18" height="21" src="http://desacrm.quierocasa.com.mx:7002/Images/kiiper_Download.png"></img>';
-        return (
-            '<a href="' + params.data.withHoldingId + '"><span style="cursor: pointer; " >' + flag + '</span></a>'
-        );
+        var eDiv = document.createElement('div');
+        eDiv.className = "file-container";
+        eDiv.innerHTML = '<a href="' + params.data.withHoldingId + '"><span style="cursor: pointer; " >' + flag + '</span></a>';
+        return eDiv;
     },
     //Action log in ag-grid
     printResult: function (res) {
