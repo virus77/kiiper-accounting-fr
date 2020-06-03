@@ -13,22 +13,36 @@ code {
 }
 
 @font-face {
-  font-family: 'MuliRegular';
-  src: local('MuliRegular'), url(./fonts/muli/Muli-Regular.ttf) format('truetype');
+  font-family: 'Muli';
+  font-style: normal;
+  font-weight: 400;
+  src: local('Muli-Regular'), url(./fonts/muli/Muli-Regular.ttf) format('truetype');
 }
 
 @font-face {
-  font-family: 'MuliLight';
-  src: local('MuliLight'), url(./fonts/muli/Muli-Light.ttf) format('truetype');
+  font-family: 'Muli';
+  font-style: normal;
+  font-weight: 300;
+  src: local('Muli-Light'), url(./fonts/muli/Muli-Light.ttf) format('truetype');
 }
 
 @font-face {
-  font-family: 'MuliLightItalic';
-  src: local('MuliLightItalic'), url(./fonts/muli/Muli-LightItalic.ttf) format('truetype');
+  font-family: 'Muli';
+  font-style: italic;
+  font-weight: 300;
+  src: local('Muli-LightItalic'), url(./fonts/muli/Muli-LightItalic.ttf) format('truetype');
 }
 
 @font-face {
-  font-family: 'MuliItalic';
-  src: local('MuliItalic'), url(./fonts/muli/Muli-Italic.ttf) format('truetype');
+  font-family: 'Muli';
+  font-style: italic;
+  font-weight: normal;
+  src: local('Muli-Italic'), url(./fonts/muli/Muli-Italic.ttf) format('truetype');
 }
 
+@font-face {
+  font-family: 'Goldplay';
+  font-style: normal;
+  font-weight: normal;
+  src: local('Goldplay-Light'), url(./fonts/goldplay/Goldplay-Light.otf) format('opentype');
+}

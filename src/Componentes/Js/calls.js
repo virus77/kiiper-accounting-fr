@@ -104,7 +104,6 @@ const calls = {
       // Petición para obtener cuentas bancarias de una empresa en Xero
     // @param {integer} id_organisation - organisation id
     getBankAccounts: (id_organisation) => {
-        console.log("entreee", id_organisation);
         const fetchConfig = {
             method: 'GET',
             headers: {
@@ -124,6 +123,29 @@ const calls = {
             });
     
     },
+
+    convertBankStatement: (fetchEndpoint, data) => {
+        console.log("endpoint", fetchEndpoint)
+        return (
+            fetch(fetchEndpoint, {
+                mode: 'no-cors',
+                method: 'POST',
+                body: data,
+                headers: {
+                    'Accept': 'application/json',
+                    'Content-Type': 'multipart/form-data'
+                },
+            }).then(res  => {
+                if (res.ok) {
+                    console.log("request sucess");
+                    return true;
+                } else {
+                    console.log("request fail");
+                    return false;
+                }
+            })
+        );
+    }
 }
 
 export default calls;

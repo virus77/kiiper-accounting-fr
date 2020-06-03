@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import '../Css/styles.scss';
+import calls from '../../Js/calls';
 
 class FileTransformationInformation extends Component {
     static propTypes = {
@@ -14,7 +15,7 @@ class FileTransformationInformation extends Component {
         this.inputReference = React.createRef();
         this.state = { 
             openSections,
-            fileUploadState:"",
+            selectedFile: null
         };
     }
 
@@ -32,9 +33,57 @@ class FileTransformationInformation extends Component {
         });
     };
 
-    fileUploadAction = () => this.inputReference.current.click();
+    onChangeHandler = event =>{
+        // this.setState({
+        //   selectedFile: event.target.files[0],
+        // });
+    }
 
-    fileUploadInputChange = (e) =>this.setState({fileUploadState:e.target.value});
+    uploadAction = e => {
+        const data = new FormData();
+        const file = e.target.files[0];
+        console.log("file", file)
+        data.append('file', file);
+        data.append('id_bank_xero', this.props.bankData[0].id_bank_xero);
+        data.append('organisationId', this.props.orgIdSelected);
+
+            
+        fetch('/convertBankStatement/BOD', {
+            method: 'POST',
+            body: data
+        }).then(res => res.json()).then(result => console.log(result));
+    }
+
+    onClickHandler = () => {
+
+        // var data = new FormData()
+        // data.append('file',  this.state.selectedFile);
+        // data.append('id_bank_xero', this.props.bankData[0].id_bank_xero);
+        // data.append('organisationId', this.props.orgIdSelected);
+
+        // var _bankInfo = this.props.bankInfo;
+        // console.log(data.get('file'))
+
+        var data = new FormData();
+        data.append('file', this.state.selectedFile);
+        data.append('id_bank_xero', this.props.bankData[0].id_bank_xero);
+        data.append('organisationId', this.props.orgIdSelected);
+    
+        fetch('/convertBankStatement/BOD', {
+          method: 'POST',
+          body: data
+        }).then(res => res.json()).then(result => console.log(result));
+
+
+        // fetch('/convertBankStatement/BOD', {
+        //     method: 'POST',
+        //     body: JSON.stringify({'id_bank_xero': this.props.bankData[0].id_bank_xero, 'organisationId':  this.props.orgIdSelected})
+        // }).then(res => res.json()).then(result => console.log(result));
+
+        // calls.convertBankStatement(_bankInfo[0]['url'], data).then(result => {
+        //     console.log("data", result.data);
+        // });
+    }
 
     render() {
         const {
@@ -45,7 +94,7 @@ class FileTransformationInformation extends Component {
 
         return (
             <div className="container-transformation">
-                <h3>Chase Bank</h3>
+                <h3>{this.props.bankData[0].name}</h3>
                 <div>Siga estas instrucciones para transformar el archivo:</div>
                 <br/>
                 <div>
@@ -67,15 +116,10 @@ class FileTransformationInformation extends Component {
                             </ul>
                             <br/>
                             <div className="container-button-load">
-                                <input type="file" hidden ref={this.inputReference} 
-                                    onChange={this.fileUploadInputChange} />
-                                <button className="margin-left-button button-pill-blue" onClick={this.fileUploadAction}>
-                                    <div className="text"> Cargar imagen</div>
-                                </button>
-
-                                <button className="button-pill-blue">
+                                <input className="margin-left-button" type="file" name="file" onChange={this.uploadAction}/>
+                                {/* <button type="button" className="button-pill-blue" onClick={this.onClickHandler}>
                                     <div className="text"> Transformar Archivo </div>
-                                </button>
+                                </button> */}
                             </div>
                             <br/>
                             <div className="margin-left-button file-path">

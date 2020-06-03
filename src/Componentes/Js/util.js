@@ -444,13 +444,12 @@ const util = {
     },
 
     bankType: function(_bank) {
-        console.log("Entreeee bank", _bank)
         var bankName = _bank.toLowerCase();
 
         const banks = [ 
             {id: 1,  name: 'mercantil natural'},
             {id: 2,  name: 'mercantil juridica'},
-            {id: 3,  name: 'bod'},
+            {id: 3,  name: 'bod', fileType: 'pdf', url: '/convertBankStatement/BOD'},
             {id: 4,  name: 'banesco'},
             {id: 5,  name: 'commerce bank'},
             {id: 6,  name: 'bicentenario'},
@@ -480,8 +479,7 @@ const util = {
         var bankSelected = banks.filter(function(bank) {
             return bankName.indexOf(bank.name) > -1
         });
-
-        console.log("bank selected", bankSelected);
+        return bankSelected;
     }
 }
 
