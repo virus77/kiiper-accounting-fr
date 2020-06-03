@@ -125,16 +125,11 @@ const calls = {
     },
 
     convertBankStatement: (fetchEndpoint, data) => {
-        console.log("endpoint", fetchEndpoint)
+        
         return (
             fetch(fetchEndpoint, {
-                mode: 'no-cors',
                 method: 'POST',
                 body: data,
-                headers: {
-                    'Accept': 'application/json',
-                    'Content-Type': 'multipart/form-data'
-                },
             }).then(res  => {
                 if (res.ok) {
                     console.log("request sucess");
@@ -145,6 +140,26 @@ const calls = {
                 }
             })
         );
+    },
+
+    getConversions: (id_organisation, id_bank_xero) => {
+        const fetchConfig = {
+            method: 'GET',
+            headers: {
+              'Accept': 'application/json',
+              'Content-Type': 'application/json'
+            }
+        };
+
+        return fetch(`/getConversions?id_organisation=${id_organisation}&id_bank_xero=${id_bank_xero}`, fetchConfig)
+            .then(res => res.json())
+            .then(data => {
+                return {
+                    data: data
+                }
+            }).catch(err => {
+                console.log(err)
+            });
     }
 }
 

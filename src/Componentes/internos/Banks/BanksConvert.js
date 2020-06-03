@@ -83,9 +83,8 @@ class BanksConvert extends Component {
                                 <div className="accordion-flex">
                                     <a className="color-blue-background underline"  
                                         onClick={onClickConvert(mapping.name)}> 
-                                        Convertir 
+                                        Convertir/Consultar
                                     </a>
-                                    <a className="color-blue-background underline"> Consultar </a>
                                 </div>
                             </div> 
                         ))}    
