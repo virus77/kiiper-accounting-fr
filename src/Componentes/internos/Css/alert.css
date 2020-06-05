@@ -17,15 +17,14 @@ body {
     margin: 0 auto ;
     z-index: -1;
 }
-.close
-{
-    color: #5efff2 !important;
-    opacity: .50;
+.close {
+    color: #e6defd!important;
+    opacity: 1!important;
+    text-shadow: none!important;
 }
 
 /*Coloca el botón sobre la linea azul del div*/
-#idButtonDiv
-{
+#idButtonDiv {
     height: 30px;
     position: relative;
     top: 40px;

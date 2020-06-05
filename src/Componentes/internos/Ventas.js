@@ -168,10 +168,9 @@ class Ventas extends Component {
             const clientName = selectedRow.Contacto;
             const retentionPercentage = selectedRow.Retencion;
             const withHoldingId = selectedRow.withHoldingId;
-
+           
             // Finding date added to voucher
-            let voucherDate = document.querySelector(`[id=date_${withHoldingId}]`);
-            voucherDate = voucherDate ? moment(voucherDate.value) : "";
+            let voucherDate = selectedRow.approval_date != "" ? moment(selectedRow.approval_date) : "";
 
             // Finding file uploaded to voucher
             let voucherFile = document.querySelector(`[id=file_${withHoldingId}]`);

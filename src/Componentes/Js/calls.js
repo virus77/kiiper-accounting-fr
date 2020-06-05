@@ -89,7 +89,7 @@ const calls = {
                     "Content-type": "application/json; charset=UTF-8",
                     "Access-Control-Allow-Origin": "*",
                 },
-            }).then(res  => {
+            }).then(res => {
                 if (res.ok) {
                     console.log("request sucess");
                     return true;
@@ -100,8 +100,7 @@ const calls = {
             })
         )
     },
-
-      // Petición para obtener cuentas bancarias de una empresa en Xero
+    // Petición para obtener cuentas bancarias de una empresa en Xero
     // @param {integer} id_organisation - organisation id
     getBankAccounts: (id_organisation) => {
         const fetchConfig = {

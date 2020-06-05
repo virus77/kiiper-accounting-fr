@@ -187,7 +187,7 @@ export default function Dashboard(props) {
       <AppBar>
         <Toolbar className={classes.toolbar}>
           <Typography component="h1" variant="h6" color="inherit" noWrap className={classes.title}>
-            {event === -1 ? "Kipper" :
+            {event === -1 ? "Kiiper" :
               <img src={K} alt="img-K" />}
           </Typography>
           {/* icon Busqueda*/}
@@ -252,7 +252,7 @@ export default function Dashboard(props) {
             </table>
           </Navbar.Brand>
           <Navbar.Toggle aria-controls="basic-navbar-nav" />
-          {event === 0.1 || event === "xeroOrgName" || event === 1.1 || event === 1.2 || event === 2.1?
+          {event === 0.1 || event === "xeroOrgName" || event === 1.1 || event === 1.2 || event === 2.1 ?
             <Navbar.Collapse id="basic-navbar-nav">
               <Nav className="mr-auto">
                 <Nav.Link style={{ width: "135px" }} eventKey={0.1} onClick={(event) => handleListItemClick(event, 0.1)} href="#home">Dashboard</Nav.Link>
@@ -305,16 +305,16 @@ export default function Dashboard(props) {
                     <Compras token={props.token} orgIdSelected={orgIdSelected} />
                   </Grid>
                 </Grid> :
-                 event === "xeroOrgName" || event === 2.1 ?
-                 <Grid container spacing={2}>
-                  <Title>Bancos</Title>
-                  <Grid item xs={12}>
-                    <Paper className={classes.paper}>
-                      < BanksConvert orgIdSelected={orgIdSelected} />
-                    </Paper>
-                  </Grid>
-                 </Grid>:
-                null}
+                event === "xeroOrgName" || event === 2.1 ?
+                  <Grid container spacing={2}>
+                    <Title>Bancos</Title>
+                    <Grid item xs={12}>
+                      <Paper className={classes.paper}>
+                        < BanksConvert orgIdSelected={orgIdSelected} />
+                      </Paper>
+                    </Grid>
+                  </Grid> :
+                  null}
           {/* Copyright */}
           <Box pt={4}>
             <util.Copyright />

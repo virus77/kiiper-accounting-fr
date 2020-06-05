@@ -102,7 +102,7 @@ body {
 .MuiButtonBase-root {
     border-radius: 10px !important;
     border-style: solid !important;
-    color: #5540c2 !important;
+    color: #b6c4ec!important;
     font-size: xx-large !important;
     border-color: thistle !important;
 }
@@ -112,3 +112,15 @@ body {
     border-color: thistle !important;
 }
 
+/* Notification icon (bell) style */
+.MuiBadge-colorSecondary {
+    color: #232c51 !important;
+    background-color: #5af2e8 !important;
+    border: 1px solid #232c51;
+    font-weight: bold !important;
+}
+
+/* Notification number location from notification icon (bell) from menu */
+.MuiBadge-anchorOriginTopRightRectangle {
+    transform: scale(1) translate(58%, -17%)!important;
+}

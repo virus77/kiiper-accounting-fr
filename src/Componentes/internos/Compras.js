@@ -40,7 +40,8 @@ class Compras extends Component {
                 resizable: true,
                 filter: true,
                 flex: 1,
-                minWidth: 100,
+                minWidth: 100
+
             },
             show: false,
             setShow: true,
@@ -108,24 +109,22 @@ class Compras extends Component {
     };
 
     //Función utilizada para mover los datos de un estatus a otro
-    onMoveData = async (name, val) => {
+    onMoveData = (name, val) => {
 
         let arrayToSend = "";
 
         switch (name) {
             case "Archivados":
             case "Aprobados":
-
+            case "Recibidos":
                 // Getting ros selected and building a JSON to send
                 arrayToSend = this.onFillstate(this.refs.agGrid.api.getSelectedRows(), name);
 
                 if (arrayToSend.length > 0) {
 
                     // Moving received or stored vouchers to cancelled
-                    let Result = await calls.setDataVoidWidthHoldings(arrayToSend);
-                    if (Result === true) {
+                    if (calls.setDataVoidWidthHoldings(arrayToSend) === true) {
                         this.setState({ show: val, texto: "El comprobante de retención ha sido anulado en Xero y cambió su estatus a ‘anulado’." })
-                        this.onRemoveSelected();
                     }
                 }
                 break;
@@ -157,13 +156,6 @@ class Compras extends Component {
             this.setState({ activeItem: activeItem.toString().substring(0, activeItem.length - 3), show: false })
     };
 
-    /// Clear selected elements in the grid
-    onRemoveSelected = () => {
-        var selectedData = this.refs.agGrid.api.getSelectedRows();
-        var res = this.refs.agGrid.api.applyTransaction({ remove: selectedData });
-        util.printResult(res);
-    };
-
     /// Llena el estado dependiendo delestatus seleccionado
     /// @param {object} gridSelectedRows - Object of selected items in grid
     /// @param {string} statusName - name of status
@@ -184,7 +176,6 @@ class Compras extends Component {
 
                 case "Recibidos":      // Received voucher
                 case "Archivados":     // Stored voucher
-                case "Aprobados":     // Stored voucher
 
                     // Storing data from items selected in Sales grid
                     arrayToSend.push({
@@ -211,7 +202,7 @@ class Compras extends Component {
         return (
             <div>
                 {/*Pintado del dropdownlist de iva/isrl*/}
-                <div style={{ paddingBottom: "10px" }}>
+                <div style={{ paddingBottom: "20px" }}>
                     <NavDropdown id="ddlVentas" title={this.state.event === 4.2 ? '≡  Comprobante de retención de IVA  ' : this.state.event === 4.1 ? '≡  Comprobante de retención de ISLR  ' : '≡  Comprobante de retención de IVA  '} >
                         <NavDropdown.Item eventKey={4.1} onClick={(event) => this.handleListItemClick(event, 4.1)} href="#Reportes/ISLR"><span className="ddlComVenLabel"> Comprobante de retención de ISLR </span></NavDropdown.Item>
                         <NavDropdown.Item eventKey={4.2} onClick={(event) => this.handleListItemClick(event, 4.2)} href="#Reportes/IVA"><span className="ddlComVenLabel"> Comprobante de retención de IVA </span></NavDropdown.Item>
@@ -260,7 +251,7 @@ class Compras extends Component {
                 </Menu>
                 {/*Pintado de grid dependiendo del flujo de los botones*/}
                 <div style={{ width: '100%', height: '100%' }}>
-                    <div id="salesGrid" style={{ height: '400px', width: '100%' }}
+                    <div id="salesGrid" style={{ height: '446px', width: '100%' }}
                         className="ag-theme-alpine">
                         {activeItem === "Aprobados" ?
                             util.createDataDrid(this.state.columnDefs, this.state.rowData, this.state.rowSelection, this.state.defaultColDef,
@@ -274,13 +265,13 @@ class Compras extends Component {
                                     util.createDataDrid(this.state.columnDefs, this.state.rowData, this.state.rowSelection, this.state.defaultColDef,
                                         this.state.components, this.onRowSelected.bind(this), this.onSelectionChanged.bind(this))
                         }
-                        <div id="idDivAlert">
-                            {this.state.show === true ?
-                                <div id="idButtonDiv">
-                                    <button style={{ zIndex: "-1" }} type="button" className="close" onClick={(event) => this.onMoveData(event, false)}><span aria-hidden="true">OK</span></button>
-                                </div> : null}
-                            <AlertDismissible valor={this.state.show} texto={this.state.texto} />
-                        </div>
+                    </div>
+                    <div id="idDivAlert">
+                        {this.state.show === true ?
+                            <div id="idButtonDiv">
+                                <button style={{ zIndex: "-1" }} type="button" className="close" onClick={(event) => this.onMoveData(event, false)}><span aria-hidden="true">OK</span></button>
+                            </div> : null}
+                        <AlertDismissible valor={this.state.show} texto={this.state.texto} />
                     </div>
                 </div>
             </div>
