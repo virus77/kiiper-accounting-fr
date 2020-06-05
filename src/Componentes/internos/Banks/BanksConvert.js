@@ -16,16 +16,19 @@ class BanksConvert extends Component {
         super(props);
         var openConvert = false;
         const openSections = {};
+        var bankSelected = null;
+        var bankInfo = null;
 
         this.state = { 
             openSections, 
             openConvert,
-            accounts: []
+            accounts: [],
+            bankSelected,
+            bankInfo
         };
     }
 
     componentDidMount() {
-        console.log("entree", this.props.orgIdSelected);
         //Getting data from Xero and building data grid
         calls.getBankAccounts(this.props.orgIdSelected).then(result => {
             console.log("data", result.data);
@@ -48,15 +51,19 @@ class BanksConvert extends Component {
     };
 
     onClickConvert = bank => label => {
-        console.log("bank", bank);
         const {
-            state: { openConvert },
+            state: { openConvert, bankSelected, bankInfo, accounts },
         } = this;
 
-        util.bankType(bank);
+        var _bankInfo = util.bankType(bank);
+        var _bankData = this.state.accounts.filter(function(_bank) {
+            return bank.indexOf(_bank.name) > -1
+        });
 
         this.setState({
             openConvert: !openConvert,
+            bankSelected: _bankData,
+            bankInfo: _bankInfo
         });
     }
 
@@ -71,19 +78,19 @@ class BanksConvert extends Component {
                 { !openConvert?
                     <Accordion>
                         {this.state.accounts.map( (mapping, index) => (
-                            <div label={index + ". " + mapping.name}>
+                            <div label={mapping.name}>
                                 <p className="color-blue-background">Estado de Cuenta</p>
                                 <div className="accordion-flex">
                                     <a className="color-blue-background underline"  
                                         onClick={onClickConvert(mapping.name)}> 
-                                        Convertir 
+                                        Convertir/Consultar
                                     </a>
-                                    <a className="color-blue-background underline"> Consultar </a>
                                 </div>
                             </div> 
                         ))}    
                     </Accordion>:
-                    <FileTransformationInformation/>
+                    <FileTransformationInformation bankData={this.state.bankSelected} 
+                    bankInfo={this.state.bankInfo} orgIdSelected={this.props.orgIdSelected} />
                 }
             </div>
         );
