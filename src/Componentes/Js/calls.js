@@ -44,6 +44,29 @@ const calls = {
                 })
         );
     },
+
+    /// Call base64 element
+    /// @param {string} withholdingId - _Id from xero element
+    getDocumentById: async (withholdingId) => {
+
+        const fetchConfig = { method: 'GET' };
+
+        // Fetch URL with parameters
+        const fetchURL = "/downloadWithholding" + `?withholdingId=${withholdingId}`;
+
+        return (
+
+            // Fetching data from the endpoint
+            fetch(fetchURL, fetchConfig)
+                .then(res => res.text())
+                .then(data => { return { data: data } })
+                .catch((error) => {
+                    console.log(error);
+                    return false;
+                })
+        );
+    },
+
     /// Start a process to request information from Xero to build
     /// Insert data when change status to "Archivados" or "Recibidos":
     /// @param {id} id_invoice_xero - idXero
@@ -69,6 +92,31 @@ const calls = {
                 }
             })
         )
+    },
+    /// Start a process to request information from Xero to build
+    /// Insert data when change status to "Anulados"
+    /// @param {WithholdingsArr} id_invoice_xero - idXero
+    setDataReissueWidthHoldings: async (WithholdingsArr) => {
+        WithholdingsArr.map(async (WithholdingsArr) => {
+            return (
+                await fetch('/reissueWithholding', {
+                    method: 'POST',
+                    body: JSON.stringify(WithholdingsArr),
+                    headers: {
+                        "Content-type": "application/json; charset=UTF-8",
+                        "Access-Control-Allow-Origin": "*",
+                    },
+                }).then(res => {
+                    if (res.ok) {
+                        console.log("request sucess");
+                        return true;
+                    } else {
+                        console.log("request fail");
+                        return false;
+                    }
+                })
+            )
+        })
     },
     /// Start a process to send information to Xero to 
     /// change vouchers from pending to received status
@@ -103,7 +151,6 @@ const calls = {
     // Petición para obtener cuentas bancarias de una empresa en Xero
     // @param {integer} id_organisation - organisation id
     getBankAccounts: (id_organisation) => {
-        console.log("entreee", id_organisation);
         const fetchConfig = {
             method: 'GET',
             headers: {
@@ -123,6 +170,44 @@ const calls = {
             });
 
     },
+
+    convertBankStatement: (fetchEndpoint, data) => {
+
+        return (
+            fetch(fetchEndpoint, {
+                method: 'POST',
+                body: data,
+            }).then(res => {
+                if (res.ok) {
+                    console.log("request sucess");
+                    return true;
+                } else {
+                    console.log("request fail");
+                    return false;
+                }
+            })
+        );
+    },
+
+    getConversions: (id_organisation, id_bank_xero) => {
+        const fetchConfig = {
+            method: 'GET',
+            headers: {
+                'Accept': 'application/json',
+                'Content-Type': 'application/json'
+            }
+        };
+
+        return fetch(`/getConversions?id_organisation=${id_organisation}&id_bank_xero=${id_bank_xero}`, fetchConfig)
+            .then(res => res.json())
+            .then(data => {
+                return {
+                    data: data
+                }
+            }).catch(err => {
+                console.log(err)
+            });
+    }
 }
 
 export default calls;
