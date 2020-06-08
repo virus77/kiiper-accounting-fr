@@ -19,32 +19,47 @@ class FileTransformationInformation extends Component {
         this.state = { 
             openSections,
             selectedFile: null,
-            columnDefs: [
-                { headerName: "Número de Conversión", field: "id" , cellStyle: {textAlign: 'center'}, width: 200}, 
-                { headerName: "Fecha", field: "date", cellStyle: {textAlign: 'center'}, width: 200}, 
-                { headerName: "Conversión", field: "file", width: 100, cellStyle: {textAlign: 'center'},  width: 200,
-                cellRenderer: function(params) {
-                    return (params.value == 1)? '<span><i class="fa fa-download"></i></span>': 'Sin Transacciones';
-                }}
-            ],
-            rowData: [
-                { id: "5879", date: "20/06/2019", file: 1 },
-                { id: "5880", date: "20/06/2019", file: 0 },
-                { id: "5880", date: "20/06/2019", file: 0 },
-                { id: "5880", date: "20/06/2019", file: 0 },
-                { id: "5880", date: "20/06/2019", file: 0 },
-                { id: "5880", date: "20/06/2019", file: 0 },
-                { id: "5880", date: "20/06/2019", file: 0 },
-                { id: "5880", date: "20/06/2019", file: 0 },
-            ],
+            columnDefs: [],
+            rowData: [],
             defaultColDef:{ width: 250 }
         };
     }
 
+    onDownloadFile(obj) {
+        console.log("obj", obj)
+    }
+
+    onRowSelected(rowIndex, _rowData){
+        if (rowIndex != null) {
+            if (_rowData['lastTransactionDate'] != "Sin transacciones")
+            console.log("entreeeee", _rowData);
+        }
+    }
+
     componentDidMount() {
         //Getting data from Xero and building data grid
+        var _columnDefs =  [
+            { headerName: "Número de Conversión", field: "id_conversion" , cellStyle: {textAlign: 'center'}, width: 200}, 
+            { headerName: "Fecha", field: "date", cellStyle: {textAlign: 'center'}, width: 200}, 
+            { headerName: "Conversión", field: "lastTransactionDate", width: 100, cellStyle: {textAlign: 'center'},  width: 200,
+                cellRendererFramework: (props) => { 
+                    return (   
+                        (props.value === "Sin transacciones")? 'Sin Transacciones': 
+                        <button onClick={this.onDownloadFile.bind(this)}> <span><i class="fa fa-download"></i></span> </button>
+                    );
+                }
+            }
+        ];
+        var _rowData;
         calls.getConversions(this.props.orgIdSelected, this.props.bankData[0].id_bank_xero).then(result => {
-            console.log("data 2", result);
+
+            _rowData = result;
+            console.log("data 2", result.data);
+
+            this.setState({
+                rowData: _rowData.data,
+                columnDefs: _columnDefs,
+            });
         });
     }
 
@@ -123,6 +138,11 @@ class FileTransformationInformation extends Component {
                     <AgGridReact
                         columnDefs={this.state.columnDefs}
                         rowData={this.state.rowData}
+                        onCellFocused={e => {
+                            this.onRowSelected(e.rowIndex, this.state.rowData[rowIndex])
+                        }}
+
+
                     >
                     </AgGridReact>
                 </div>
