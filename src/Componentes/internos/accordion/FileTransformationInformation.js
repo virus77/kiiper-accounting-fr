@@ -25,14 +25,17 @@ class FileTransformationInformation extends Component {
         };
     }
 
-    onDownloadFile(obj) {
-        console.log("obj", obj)
+    onDownloadFile(id_conversion) {
+        console.log("obj", id_conversion);
+        calls.getBankStatements(id_conversion,).then(result => {
+            console.log("data 4", result.data);
+        });
     }
 
     onRowSelected(rowIndex, _rowData){
         if (rowIndex != null) {
             if (_rowData['lastTransactionDate'] != "Sin transacciones")
-            console.log("entreeeee", _rowData);
+            this.onDownloadFile(_rowData['id_conversion'])
         }
     }
 
@@ -45,7 +48,7 @@ class FileTransformationInformation extends Component {
                 cellRendererFramework: (props) => { 
                     return (   
                         (props.value === "Sin transacciones")? 'Sin Transacciones': 
-                        <button onClick={this.onDownloadFile.bind(this)}> <span><i class="fa fa-download"></i></span> </button>
+                        <span><i class="fa fa-download"></i></span>
                     );
                 }
             }
@@ -139,10 +142,8 @@ class FileTransformationInformation extends Component {
                         columnDefs={this.state.columnDefs}
                         rowData={this.state.rowData}
                         onCellFocused={e => {
-                            this.onRowSelected(e.rowIndex, this.state.rowData[rowIndex])
+                            this.onRowSelected(e.rowIndex, this.state.rowData[e.rowIndex])
                         }}
-
-
                     >
                     </AgGridReact>
                 </div>
