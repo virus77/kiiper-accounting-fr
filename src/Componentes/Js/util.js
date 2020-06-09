@@ -13,6 +13,9 @@ import 'jquery-ui/ui/widgets/datepicker';
 // Declaring momenty object
 var moment = require('moment'); // require
 
+var withHoldingId = "";
+var fileName = "";
+
 const util = {
     /// Start a process to request information from Xero to build
     /// the structure data to render in the grid of the component Ventas and Compras
@@ -34,7 +37,7 @@ const util = {
 
                 // Build grid data structured with editable columns
                 const structure = util.fillWorkspaceGrid(
-                    result.data, taxInfo, isEditableGrid, kindOfPeople
+                    result.data, taxInfo, isEditableGrid, kindOfPeople, statusName
                 );
 
                 return {
@@ -50,7 +53,7 @@ const util = {
     /// @param {array} items - data requested from server
     /// @param {string} taxInfo - tax info with id and name
     /// @param {boolean} isAnEditableGrid - If the grid will have editable columns
-    fillWorkspaceGrid: (items, taxInfo, isAnEditableGrid, kindOfPeople) => {
+    fillWorkspaceGrid: (items, taxInfo, isAnEditableGrid, kindOfPeople, statusName) => {
 
         let gridItems = [];
 
@@ -58,7 +61,7 @@ const util = {
         let headersTemplate =
             isAnEditableGrid ?
                 util.returnHeader(taxInfo.name, kindOfPeople) :
-                util.returnHeaderFlow(taxInfo.name, kindOfPeople);
+                util.returnHeaderFlow(taxInfo.name, kindOfPeople, statusName);
 
         // ---------------------------------------
 
@@ -91,38 +94,23 @@ const util = {
                                 case "base_taxable":
 
                                     // Invoice subtotal
-                                    let invoiceSubTotal = item["invoice_subtotal"]["$numberDecimal"];
+                                    let invoiceSubTotal = item.invoice_subtotal;
                                     invoiceSubTotal = invoiceSubTotal ? invoiceSubTotal : 0;
 
                                     // Invoice exempt amount
-                                    let exemptAmount = item["invoice_exempt_amount"];
-                                    exemptAmount = exemptAmount ? exemptAmount["$numberDecimal"] : 75;
-                                   
+                                    let exemptAmount = item.invoice_exempt_amount;
+                                    exemptAmount = exemptAmount ? exemptAmount : 75;
+
                                     itemValue = parseFloat(invoiceSubTotal) - parseFloat(exemptAmount);
                                     itemValue = util.formatMoney(itemValue.toFixed(2));
-                                    break;
-
-                                case "retention_percentage":
-                                    // Invoice total tax
-                                    /*let invoiceTotalTax = item["invoice_total_tax"]["$numberDecimal"];
-                                    invoiceTotalTax = invoiceTotalTax ? invoiceTotalTax : 0;
-
-                                    // Retention percentage
-                                    let retentionPer = item["retention_percentage"];
-                                    retentionPer = retentionPer ? retentionPer["$numberDecimal"] : 0.75;
-
-                                    itemValue = (parseFloat(invoiceTotalTax) * parseFloat(retentionPer)) / 100;
-                                    itemValue = util.formatMoney(itemValue.toFixed(2));
-                                    */
-                                    itemValue = 75;
                                     break;
 
                                 case "retention_amount":
 
                                     // If retention amount came from request to Xero
-                                    let retentionAmount = item["retention_amount"];
-                                    retentionAmount = retentionAmount ? retentionAmount["$numberDecimal"] : "";
-                                    
+                                    let retentionAmount = item.retention_amount;
+                                    retentionAmount = retentionAmount ? retentionAmount : "";
+
                                     if (retentionAmount) {
                                         itemValue = retentionAmount;
                                     }
@@ -130,7 +118,7 @@ const util = {
 
                                         // If retention amount did not come from Xero
                                         // Invoice total tax
-                                        let invoiceTotalTax = item["invoice_total_tax"]["$numberDecimal"];
+                                        let invoiceTotalTax = item.invoice_total_tax;
                                         invoiceTotalTax = invoiceTotalTax ? invoiceTotalTax : 0;
 
                                         itemValue = parseFloat(invoiceTotalTax) * 0.75;
@@ -144,39 +132,39 @@ const util = {
                             break;
 
                         // In case itemValue is empty just break
-                        case itemValue === "" :
-                        default :
+                        case itemValue === "":
+                        default:
                             break;
 
                         // In case itemValue is a float. 
                         // This value comes different from Xero. It is an 
                         // object with a $numberDecimal property inside
-                        case (itemValue.hasOwnProperty("$numberDecimal")) :
-                            itemValue = util.formatMoney(parseFloat(itemValue["$numberDecimal"]))
+                        case (typeof itemValue === 'decimal'):
+                            itemValue = util.formatMoney(parseFloat(itemValue))
                             break;
 
                         // In case itemValue is a integer
-                        case (typeof itemValue === 'number') :
+                        case (typeof itemValue === 'number'):
 
                             switch (itemProp) {
 
-                                case "id_status" :
+                                case "id_status":
                                     itemValue = util.getStatusInfoConcept(itemValue);
                                     break;
 
-                                case "id_tax_type" :
+                                case "id_tax_type":
                                     itemValue = util.getTaxInfoConcept(itemValue);
                                     break;
 
-                                default :
+                                default:
                                     break;
                             }
                             break;
 
-                        case (typeof itemValue === "string") :
+                        case (typeof itemValue === "string"):
 
                             // In case itemValue is a date
-                            if(moment(itemValue).isValid() && itemValue.indexOf("-") >= 4) {
+                            if (moment(itemValue).isValid() && itemValue.indexOf("-") >= 4) {
                                 itemValue = moment(itemValue).format("DD/MM/YYYY");
                             }
                             break;
@@ -331,6 +319,7 @@ const util = {
             { headerName: 'ISLR / IVA', field: 'id_tax_type', xeroField: 'id_tax_type', hide: true },
             //id_status: El estatus del comprobante; donde 1 es borrador, 2 es aprobado, 3 es anulado, y 4 es archivado
             { headerName: 'B_A_A_A', field: 'id_status', xeroField: 'id_status', hide: true },
+            { headerName: 'reissued', field: 'reissued', xeroField: 'reissued', hide: true },
             //#endregion hidden rows
             {
                 headerName: 'No. Factura', field: 'NoFactura', xeroField: 'invoice_number', width: 125,
@@ -346,11 +335,7 @@ const util = {
             { headerName: 'Fecha factura', field: 'FechaFactura', xeroField: 'invoice_date', filter: 'agTextColumnFilter', width: 128, sortable: true },
             { headerName: 'Base imponible', field: 'invoice_subtotal', type: 'rightAligned', xeroField: true, calculated: true, formulaName: 'base_taxable', width: 123, sortable: true },
             { headerName: 'Total ' + Tipo, field: 'TotalIVA', xeroField: 'invoice_total_tax', type: 'rightAligned', width: 120, sortable: true },
-            Tipo === "IVA" ? {
-                headerName: '% retenido', field: 'Retencion', valueGetter: function () {
-                    return 75;
-                }, calculated: true, formulaName: 'retention_percentage', width: 100, sortable: true,
-            } : { headerName: '', field: '', hide: true },
+            { headerName: '% retenido', field: 'Retencion', xeroField: 'retention_percentage', type: 'rightAligned', hide: Tipo === "IVA" ? false : true, calculated: true, width: 104, sortable: true, },
             { headerName: 'Monto retenido', field: 'MontoRetenido', xeroField: true, calculated: true, formulaName: 'retention_amount', type: 'rightAligned', width: 129, sortable: true },
             { headerName: 'Fecha de comprobante', field: 'approval_date', width: 149, sortable: true, editable: true, cellEditor: Datepicker },
             { headerName: 'No. Comprobante', field: 'Comprobante', width: 160, sortable: true, editable: true, cellEditor: NumberValidation },
@@ -362,7 +347,7 @@ const util = {
     //Crea el header del componente de ventas
     /// @param {object} Tipo - Maneja variable si es IVA o ISLR)
     /// @param {object} kindOfPeople - Indica si es cliente o proveedor 
-    returnHeaderFlow: function (Tipo, kindOfPeople) {
+    returnHeaderFlow: function (Tipo, kindOfPeople, statusName) {
         var columnDefs = [
             //#region hidden rows
             { headerName: 'withHoldingId', field: 'withHoldingId', xeroField: '_id', hide: true },
@@ -378,19 +363,27 @@ const util = {
                     return params.columnApi.getRowGroupColumns().length === 0;
                 },
                 checkboxSelection: function (params) {
-                    return params.columnApi.getRowGroupColumns().length === 0;
+                    switch (true) {
+                        //Validar siempre trae aprobados
+                        case statusName !== "Anulados":
+                            return params.columnApi.getRowGroupColumns().length === 0;
+
+                        case params.data.reissued === "":
+                        case params.data.reissued === true:
+                        case params.data.reissued === undefined:
+                            break;
+
+                        default:
+                            return params.columnApi.getRowGroupColumns().length === 0;
+                    }
                 },
             },
             { headerName: 'No. Control', field: 'Control', xeroField: 'invoice_control', filter: 'agTextColumnFilter', width: 120, resizable: true, sortable: true },
             { headerName: kindOfPeople, field: 'Contacto', xeroField: 'contact_name', headerClass: "centerHeader", filter: 'agTextColumnFilter', width: 240, resizable: true, sortable: true },
             { headerName: 'Fecha factura', field: 'FechaFactura', xeroField: 'invoice_date', filter: 'agTextColumnFilter', width: 128, sortable: true },
             { headerName: 'Base imponible', field: 'invoice_subtotal', xeroField: 'invoice_subtotal', width: 123, sortable: true, type: 'rightAligned' },
-            { headerName: 'Total ' + Tipo, field: 'TotalIVA', xeroField: 'invoice_total_tax', width: 120, sortable: true, type: 'rightAligned' },
-            Tipo === "IVA" ? {
-                headerName: '% retenido', field: 'Retencion', type: 'centerAligned', valueGetter: function () {
-                    return 75;
-                }, calculated: true, formulaName: 'retention_percentage', width: 104, sortable: true,
-            } : { headerName: '', field: '', width: 0, hide: true },
+            { headerName: 'Total ' + Tipo, field: 'TotalIVA', xeroField: 'retained_amount', width: 120, sortable: true, type: 'rightAligned' },
+            { headerName: '% retenido', field: 'Retencion', xeroField: 'retention_percentage', type: 'rightAligned', hide: Tipo === "IVA" ? false : true, calculated: true, width: 104, sortable: true, },
             { headerName: 'Monto retenido', field: 'MontoRetenido', type: 'rightAligned', xeroField: true, calculated: true, formulaName: 'retention_amount', width: 129, sortable: true },
             { headerName: 'Fecha de comprobante', field: 'date', xeroField: 'approval_date', width: 149, sortable: true },
             { headerName: 'No. Comprobante', field: 'Comprobante', xeroField: 'invoice_number', width: 160, sortable: true },
@@ -410,11 +403,29 @@ const util = {
         return eDiv;
     },
     //Coloca icono de descarga en el grid
+    // y se ejecuta laa acción para descargar documento
+    /// @param {object} params - parámetro 
     CellRendererP: function (params) {
+
+        withHoldingId = params.data.withHoldingId;
+        fileName = params.data.invoice_number;
         var flag = '<img border="0" width="18" height="21" src="http://desacrm.quierocasa.com.mx:7002/Images/kiiper_Download.png"></img>';
         var eDiv = document.createElement('div');
         eDiv.className = "file-container";
-        eDiv.innerHTML = '<a href="' + params.data.withHoldingId + '"><span style="cursor: pointer; " >' + flag + '</span></a>';
+        eDiv.setAttribute("id", "dow_" + withHoldingId);
+        //Función utilooizada ára llamar el archivo en base64
+        //Convertirlo a pdf y descargarlo
+        eDiv.onclick = async function () {
+            let resp = await calls.getDocumentById(withHoldingId);
+            var element = document.createElement('a');
+            element.setAttribute('href', 'data:application/octet-stream;base64,' + encodeURIComponent(resp.data));
+            element.setAttribute('download', fileName + ".pdf");
+            element.style.display = 'none';
+            document.body.appendChild(element);
+            element.click();
+            document.body.removeChild(element);
+        };
+        eDiv.innerHTML = '<span style="cursor: pointer; " >' + flag + '</span>';
         return eDiv;
     },
     //Action log in ag-grid
@@ -521,7 +532,6 @@ const util = {
         );
     },
 }
-
 function NumberValidation() { }
 NumberValidation.prototype.init = function (params) {
     let container = document.createElement('div');
@@ -577,25 +587,29 @@ Datepicker.prototype.init = function (params) {
     this.eInput.value = params.value;
     this.eInput.classList.add('ag-input');
     this.eInput.style.height = '100%';
-    $(this.eInput).datepicker({ 
+    $(this.eInput).datepicker({
         dateFormat: 'dd/mm/yy',
-        dayNames: [ "Domingo", "Lunes", "Martes", "Miércoles", "Jueves", "Viernes", "Sábado" ],
-        dayNamesMin: [ "Do", "Lu", "Ma", "Mi", "Ju", "Vi", "Sa" ],
-        dayNamesShort: [ "Dom", "Lun", "Mar", "Mie", "Jue", "Vie", "Sab" ],
-        monthNames: [ "Enero", "Febrero", "Marzo", "Abril", "Mayo", "Junio", "Julio", "Agosto", "Septiembre", "Octubre", "Noviembre", "Diciembre" ],
-        monthNamesShort: [ "Ene", "Feb", "Mar", "Abr", "May", "Jun", "Jul", "Ago", "Sep", "Oct", "Nov", "Dec" ]
+        dayNames: ["Domingo", "Lunes", "Martes", "Miércoles", "Jueves", "Viernes", "Sábado"],
+        dayNamesMin: ["Do", "Lu", "Ma", "Mi", "Ju", "Vi", "Sa"],
+        dayNamesShort: ["Dom", "Lun", "Mar", "Mie", "Jue", "Vie", "Sab"],
+        monthNames: ["Enero", "Febrero", "Marzo", "Abril", "Mayo", "Junio", "Julio", "Agosto", "Septiembre", "Octubre", "Noviembre", "Diciembre"],
+        monthNamesShort: ["Ene", "Feb", "Mar", "Abr", "May", "Jun", "Jul", "Ago", "Sep", "Oct", "Nov", "Dec"]
     });
 };
+
 Datepicker.prototype.getGui = function () {
     return this.eInput;
 };
+
 Datepicker.prototype.afterGuiAttached = function () {
     this.eInput.focus();
     this.eInput.select();
 };
+
 Datepicker.prototype.getValue = function () {
     return this.eInput.value;
 };
+
 Datepicker.prototype.destroy = function () { };
 
 Datepicker.prototype.isPopup = function () {

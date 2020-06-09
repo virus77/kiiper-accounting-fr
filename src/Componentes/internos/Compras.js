@@ -109,7 +109,7 @@ class Compras extends Component {
     };
 
     //Función utilizada para mover los datos de un estatus a otro
-    onMoveData = (name, val) => {
+    onMoveData = async (name, val) => {
 
         let arrayToSend = "";
 
@@ -123,8 +123,27 @@ class Compras extends Component {
                 if (arrayToSend.length > 0) {
 
                     // Moving received or stored vouchers to cancelled
-                    if (calls.setDataVoidWidthHoldings(arrayToSend) === true) {
+                    let result1 = await calls.setDataVoidWidthHoldings(arrayToSend);
+                    if (result1 === true) {
                         this.setState({ show: val, texto: "El comprobante de retención ha sido anulado en Xero y cambió su estatus a ‘anulado’." })
+                        this.onRemoveSelected();
+                    }
+                }
+                break;
+
+            case "Anulados":
+                // Getting ros selected and building a JSON to send
+                arrayToSend = this.onFillstate(this.refs.agGrid.api.getSelectedRows(), name);
+
+                if (arrayToSend.length > 0) {
+
+                    // Moving received or stored vouchers to cancelled
+                    let result2 = await calls.setDataReissueWidthHoldings(arrayToSend);
+                    if (result2 === true) {
+                        if (result2 === true) {
+                            this.setState({ show: val, texto: "El comprobante de retención ha sido anulado en Xero y cambió su estatus." })
+                            this.onRemoveSelected();
+                        }
                     }
                 }
                 break;
@@ -133,28 +152,6 @@ class Compras extends Component {
                 break;
         }
     }
-
-    //Función on row selected del grid
-    onRowSelected = event => {
-
-        const { activeItem } = this.state
-
-        // Getting grid selected rows
-        const gridSelectedRows = event.api.getSelectedRows();
-        if (gridSelectedRows.length > 0) {
-            switch (activeItem) {
-
-                case "Archivados":
-                case "Aprobados":
-                    this.setState({ activeItem: activeItem + "Sel", show: false, texto: "El comprobante de retención ha sido anulado en Xero y cambió su estatus a ‘anulado’." })
-                    break;
-                default:
-                    break;
-            }
-        }
-        else
-            this.setState({ activeItem: activeItem.toString().substring(0, activeItem.length - 3), show: false })
-    };
 
     /// Llena el estado dependiendo delestatus seleccionado
     /// @param {object} gridSelectedRows - Object of selected items in grid
@@ -174,12 +171,18 @@ class Compras extends Component {
             // in voucher view action button 
             switch (statusName) {
 
-                case "Recibidos":      // Received voucher
-                case "Archivados":     // Stored voucher
-
+                case "Recibidos":  // Received voucher
+                case "Archivados": // Stored voucher
                     // Storing data from items selected in Sales grid
                     arrayToSend.push({
                         _id: withHoldingId
+                    });
+                    break;
+
+                case "Anulados":   // Stored voucher
+                    // Storing data from items selected in Sales grid
+                    arrayToSend.push({
+                        withholdingId: withHoldingId
                     });
                     break;
 
@@ -190,6 +193,34 @@ class Compras extends Component {
 
         return arrayToSend;
     };
+
+    //Función on row selected del grid
+    onRowSelected = event => {
+
+        const { activeItem } = this.state
+
+        // Getting grid selected rows
+        const gridSelectedRows = event.api.getSelectedRows();
+        if (gridSelectedRows.length > 0) {
+            switch (activeItem) {
+
+                case "Archivados":
+                case "Aprobados":
+                    this.setState({ activeItem: activeItem + "Sel", show: false, texto: "El comprobante de retención ha sido anulado en Xero y cambió su estatus a ‘anulado’." })
+                    break;
+
+
+                case "Anulados":
+                    this.setState({ activeItem: activeItem + "Sel", show: false, texto: "El comprobante de retención ha sido anulado en Xero y cambió su estatus." })
+                    break;
+                default:
+                    break;
+            }
+        }
+        else
+            this.setState({ activeItem: activeItem.toString().substring(0, activeItem.length - 3), show: false })
+    };
+
 
     //Función onchange del grid
     onSelectionChanged = event => {
@@ -236,16 +267,24 @@ class Compras extends Component {
                     <div style={{ paddingTop: "5px", paddingRight: "5px", borderStyle: "none", flex: "1", display: "flex", justifyContent: "flex-end" }}>
                         {activeItem === 'Aprobados' || activeItem === 'Archivados' ?
                             <div className="idDibvDisabled">
-                                <span>Mover a anulados 㐅</span>
+                                <span>Anular 㐅</span>
                             </div>
-                            : activeItem === 'AprobadosSel' ?
-                                <div className="idDibvEnabled" onClick={() => this.onMoveData("Aprobados", true)} >
-                                    <span>Mover a anulados 㐅</span>
+                            : activeItem === 'Anulados' ?
+                                <div className="idDibvDisabledsmall">
+                                    <span>Remitir ⇨</span>
                                 </div>
-                                : activeItem === 'ArchivadosSel' ?
-                                    <div className="idDibvEnabled" onClick={() => this.onMoveData("Archivados", true)} >
-                                        <span>Mover a anulados 㐅</span>
-                                    </div> : null
+                                : activeItem === 'AnuladosSel' ?
+                                    <div className="idDivEnabledSmall" onClick={() => this.onMoveData("Anulados", true)} >
+                                        <span>Remitir ⇨</span>
+                                    </div>
+                                    : activeItem === 'AprobadosSel' ?
+                                        <div className="idDibvEnabled" onClick={() => this.onMoveData("Aprobados", true)} >
+                                            <span>Anular 㐅</span>
+                                        </div>
+                                        : activeItem === 'ArchivadosSel' ?
+                                            <div className="idDibvEnabled" onClick={() => this.onMoveData("Archivados", true)} >
+                                                <span>Anular 㐅</span>
+                                            </div> : null
                         }
                     </div>
                 </Menu>
