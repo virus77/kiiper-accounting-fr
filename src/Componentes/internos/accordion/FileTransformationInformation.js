@@ -3,6 +3,8 @@ import PropTypes from 'prop-types';
 import '../Css/styles.scss';
 import calls from '../../Js/calls';
 import util from '../../Js/util';
+import { AgGridReact } from 'ag-grid-react';
+import GetAppRoundedIcon from '@material-ui/icons/GetAppRounded';
 
 class FileTransformationInformation extends Component {
     static propTypes = {
@@ -16,14 +18,51 @@ class FileTransformationInformation extends Component {
         this.inputReference = React.createRef();
         this.state = { 
             openSections,
-            selectedFile: null
+            selectedFile: null,
+            columnDefs: [],
+            rowData: [],
+            defaultColDef:{ width: 250 }
         };
+    }
+
+    onDownloadFile(id_conversion) {
+        console.log("obj", id_conversion);
+        calls.getBankStatements(id_conversion,).then(result => {
+            console.log("data 4", result.data);
+        });
+    }
+
+    onRowSelected(rowIndex, _rowData){
+        if (rowIndex != null) {
+            if (_rowData['lastTransactionDate'] != "Sin transacciones")
+            this.onDownloadFile(_rowData['id_conversion'])
+        }
     }
 
     componentDidMount() {
         //Getting data from Xero and building data grid
+        var _columnDefs =  [
+            { headerName: "Número de Conversión", field: "id_conversion" , cellStyle: {textAlign: 'center'}, width: 200}, 
+            { headerName: "Fecha", field: "date", cellStyle: {textAlign: 'center'}, width: 200}, 
+            { headerName: "Conversión", field: "lastTransactionDate", width: 100, cellStyle: {textAlign: 'center'},  width: 200,
+                cellRendererFramework: (props) => { 
+                    return (   
+                        (props.value === "Sin transacciones")? 'Sin Transacciones': 
+                        <span><i class="fa fa-download"></i></span>
+                    );
+                }
+            }
+        ];
+        var _rowData;
         calls.getConversions(this.props.orgIdSelected, this.props.bankData[0].id_bank_xero).then(result => {
-            console.log("data 2", result);
+
+            _rowData = result;
+            console.log("data 2", result.data);
+
+            this.setState({
+                rowData: _rowData.data,
+                columnDefs: _columnDefs,
+            });
         });
     }
 
@@ -47,23 +86,6 @@ class FileTransformationInformation extends Component {
         });
     }
 
-    // uploadAction = e => {
-    //     let h = new Headers();
-    //     h.append('Accept','application/json');
-
-    //     const data = new FormData();
-    //     let file = e.target.files[0];
-    //     console.log("file 2", file)
-    //     data.append('file', file);
-    //     data.append('id_bank_xero', this.props.bankData[0].id_bank_xero);
-    //     data.append('organisationId', this.props.orgIdSelected);
-            
-    //     fetch('/convertBankStatement/BOD', {
-    //         method: 'POST',
-    //         body: data
-    //     }).then(res => res.json()).then(result => console.log(result));
-    // }
-
     onClickHandler = () => {
 
         var data = new FormData();
@@ -86,32 +108,47 @@ class FileTransformationInformation extends Component {
         } = this;
 
         return (
-            <div className="container-transformation">
-                <h3>{this.props.bankData[0].name}</h3>
-                <div>Siga estas instrucciones para transformar el archivo:</div>
-                <br/>
-                <div>
-                    <ol>
-                        <hr className="separator"/>
-                        <li>Transformar estado de cuenta.
-                            <ul>
-                                <li>Adjunte el estado de cuenta en Examinar / Seleccionar Archivo / Browse / Choose File</li>
-                                <li>Presione el botón Transformar archivo.</li>
-                                <li>Descargue el estado de cuenta transformado en el botón Descargar</li>
-                            </ul>
-                            <br/>
-                            <div className="container-button-load">
-                                <input className="margin-left-button" type="file" name="file" onChange={this.onChangeHandler}/>
-                                <button type="button" className="button-pill-blue" onClick={this.onClickHandler}>
-                                    <div className="text"> Transformar Archivo </div>
-                                </button>
-                            </div>
-                            <br/>
-                        </li>
-                        <hr className="separator"/>
-                    </ol>
+            <div>
+                <div className="container-transformation">
+                    <h3>{this.props.bankData[0].name}</h3>
+                    <div>Siga estas instrucciones para transformar el archivo:</div>
+                    <br/>
+                    <div>
+                        <ol>
+                            <hr className="separator"/>
+                            <li>Transformar estado de cuenta.
+                                <ul>
+                                    <li>Adjunte el estado de cuenta en Examinar / Seleccionar Archivo / Browse / Choose File</li>
+                                    <li>Presione el botón Transformar archivo.</li>
+                                </ul>
+                                <br/>
+                                <div className="container-button-load">
+                                    <input className="margin-left-button" type="file" name="file" onChange={this.onChangeHandler}/>
+                                    <button type="button" className="button-pill-blue" onClick={this.onClickHandler}>
+                                        <div className="text"> Transformar Archivo </div>
+                                    </button>
+                                </div>
+                                <br/>
+                            </li>
+                            <hr className="separator"/>
+                            
+                        </ol>
+                    </div>
+                </div>
+                <br></br>
+                <br></br>
+                <div id="myGrid" className="container-transformation ag-theme-alpine"  style={{ height: "302px" }}>
+                    <AgGridReact
+                        columnDefs={this.state.columnDefs}
+                        rowData={this.state.rowData}
+                        onCellFocused={e => {
+                            this.onRowSelected(e.rowIndex, this.state.rowData[e.rowIndex])
+                        }}
+                    >
+                    </AgGridReact>
                 </div>
             </div>
+            
         );
     }
 }

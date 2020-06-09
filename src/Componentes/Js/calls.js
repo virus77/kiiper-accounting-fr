@@ -154,8 +154,8 @@ const calls = {
         const fetchConfig = {
             method: 'GET',
             headers: {
-                'Accept': 'application/json',
-                'Content-Type': 'application/json'
+              'Accept': 'application/json',
+              'Content-Type': 'application/json'
             }
         };
 
@@ -168,16 +168,16 @@ const calls = {
             }).catch(err => {
                 console.log(err)
             });
-
+    
     },
 
     convertBankStatement: (fetchEndpoint, data) => {
-
+        
         return (
             fetch(fetchEndpoint, {
                 method: 'POST',
                 body: data,
-            }).then(res => {
+            }).then(res  => {
                 if (res.ok) {
                     console.log("request sucess");
                     return true;
@@ -193,8 +193,8 @@ const calls = {
         const fetchConfig = {
             method: 'GET',
             headers: {
-                'Accept': 'application/json',
-                'Content-Type': 'application/json'
+              'Accept': 'application/json',
+              'Content-Type': 'application/json'
             }
         };
 
@@ -207,6 +207,26 @@ const calls = {
             }).catch(err => {
                 console.log(err)
             });
+    },
+
+    getBankStatements:(id_conversion) => {
+        const fetchConfig = {
+            method: 'GET',
+            headers: {
+              'Accept': 'application/json',
+              'Content-Type': 'application/json'
+            }
+        };
+
+        return fetch(`/getBankStatements?conversionId=${id_conversion}`, fetchConfig)
+            .then(res => res.json())
+            .then(data => {
+                return {
+                    data: data
+                }
+            }).catch(err => {
+                console.log(err)
+            })
     }
 }
 
