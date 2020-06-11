@@ -5,6 +5,7 @@ import calls from '../../Js/calls';
 import util from '../../Js/util';
 import { AgGridReact } from 'ag-grid-react';
 import GetAppRoundedIcon from '@material-ui/icons/GetAppRounded';
+import { CSVLink, CSVDownload } from "react-csv";
 
 class FileTransformationInformation extends Component {
     static propTypes = {
@@ -13,22 +14,39 @@ class FileTransformationInformation extends Component {
 
     constructor(props) {
         super(props);
+        this.csvLink = React.createRef();
 
         const openSections = {};
         this.inputReference = React.createRef();
+
+        const csvData = [
+            { date: "2014-10-30" ,description: "COMISION DE MANTENIMIENTO DE C", amount: -4.5, reference: "19114800" },
+            { date: "2014-10-30" ,description: "COMISION ENVIO ESTADOS DE CUEN", amount: -1.4, reference: "19114800" }
+        ];
+
         this.state = { 
             openSections,
             selectedFile: null,
             columnDefs: [],
             rowData: [],
-            defaultColDef:{ width: 250 }
+            defaultColDef:{ width: 250 },
+            csvData,
+            existFileTransformation: false,
+            transformedFile: []
         };
     }
 
     onDownloadFile(id_conversion) {
-        console.log("obj", id_conversion);
         calls.getBankStatements(id_conversion,).then(result => {
-            console.log("data 4", result.data);
+            console.log("onDownloadFile data", result.data);
+
+            this.setState({ transformedFile: result.data }, () => {
+                // click the CSVLink component to trigger the CSV download
+
+                setTimeout(function(){ 
+                    this.csvLink.current.link.click();
+                }.bind(this),0);
+            })
         });
     }
 
@@ -42,13 +60,14 @@ class FileTransformationInformation extends Component {
     componentDidMount() {
         //Getting data from Xero and building data grid
         var _columnDefs =  [
-            { headerName: "Número de Conversión", field: "id_conversion" , cellStyle: {textAlign: 'center'}, width: 200}, 
-            { headerName: "Fecha", field: "date", cellStyle: {textAlign: 'center'}, width: 200}, 
-            { headerName: "Conversión", field: "lastTransactionDate", width: 100, cellStyle: {textAlign: 'center'},  width: 200,
+            { headerName: "Número de Conversión", field: "id_conversion" , cellStyle: {textAlign: 'center'}, width: 150}, 
+            { headerName: "Fecha", field: "date", cellStyle: {textAlign: 'center'}, width: 150}, 
+            { headerName: "Última transacción", field: "lastTransactionDate", cellStyle: {textAlign: 'center'}, width: 150}, 
+            { headerName: "Descargar", field: "download", cellStyle: {textAlign: 'center'},  width: 150,
                 cellRendererFramework: (props) => { 
                     return (   
-                        (props.value === "Sin transacciones")? 'Sin Transacciones': 
-                        <span><i class="fa fa-download"></i></span>
+                        (props.value === false)? null: 
+                        <button> <span><i className="fa fa-download"></i></span> </button>
                     );
                 }
             }
@@ -56,11 +75,20 @@ class FileTransformationInformation extends Component {
         var _rowData;
         calls.getConversions(this.props.orgIdSelected, this.props.bankData[0].id_bank_xero).then(result => {
 
-            _rowData = result;
-            console.log("data 2", result.data);
+            _rowData = result.data;
+            let _newRowData = _rowData.map(function(e) {
+                                if (e.lastTransactionDate === "Sin transacciones") {
+                                    e['download'] = false;
+                                } else {
+                                    e['download'] = true;
+                                }
+                                return e;
+                            });
+                            
+            console.log("getConversions List", result.data);
 
             this.setState({
-                rowData: _rowData.data,
+                rowData: _newRowData,
                 columnDefs: _columnDefs,
             });
         });
@@ -96,7 +124,11 @@ class FileTransformationInformation extends Component {
         let _bank = util.bankType(this.props.bankData[0].name);
 
         calls.convertBankStatement(_bank[0]['url'], data).then(result => {
-            console.log("data 3", result);
+            console.log("onClickHandler data", result);
+
+            this.setState({
+                existFileTransformation: true
+            });
         });
     }
 
@@ -128,6 +160,14 @@ class FileTransformationInformation extends Component {
                                         <div className="text"> Transformar Archivo </div>
                                     </button>
                                 </div>
+                                { this.state.existFileTransformation?
+                                    <div className="file-path"> El archivo ha sido transformado exitosamente</div>:null
+                                }
+                                <CSVLink data={this.state.transformedFile}  
+                                    filename={`${this.props.bankData[0].name}-transformado.csv`}
+                                    ref={this.csvLink}
+                                    className="hidden">
+                                </CSVLink>
                                 <br/>
                             </li>
                             <hr className="separator"/>
