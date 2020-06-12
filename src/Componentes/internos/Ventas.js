@@ -147,6 +147,22 @@ class Ventas extends Component {
                     }
                 }
                 break;
+            case "Anulados":
+                // Getting ros selected and building a JSON to send
+                arrayToSend = this.onFillstate(this.refs.agGrid.api.getSelectedRows(), name);
+
+                if (arrayToSend.length > 0) {
+
+                    // Moving received or stored vouchers to cancelled
+                    let result2 = await calls.setDataReissueWidthHoldings(arrayToSend);
+                    if (result2 === true) {
+                        if (result2 === true) {
+                            this.setState({ show: val, texto: "El comprobante de retención ha sido anulado en Xero y cambió su estatus." })
+                            this.onRemoveSelected();
+                        }
+                    }
+                }
+                break;
             default:
                 this.setState({ show: false, texto: "" })
                 break;
@@ -168,7 +184,7 @@ class Ventas extends Component {
             const clientName = selectedRow.Contacto;
             const retentionPercentage = selectedRow.Retencion;
             const withHoldingId = selectedRow.withHoldingId;
-           
+
             // Finding date added to voucher
             let voucherDate = selectedRow.approval_date != "" ? moment(selectedRow.approval_date) : "";
 
@@ -228,13 +244,18 @@ class Ventas extends Component {
 
                 case "Recibidos":      // Received voucher
                 case "Archivados":     // Stored voucher
-
                     // Storing data from items selected in Sales grid
                     arrayToSend.push({
                         _id: withHoldingId
                     });
                     break;
 
+
+                case "Anulados":   // Stored voucher
+                    // Storing data from items selected in Sales grid
+                    arrayToSend.push({
+                        withholdingId: withHoldingId
+                    });
                 default:
                     break;
             }
@@ -268,6 +289,10 @@ class Ventas extends Component {
                 case "Archivados":
                 case "Recibidos":
                     this.setState({ activeItem: activeItem + "Sel", show: false, texto: "El comprobante de retención ha sido anulado en Xero y cambió su estatus a ‘anulado’." })
+                    break;
+
+                case "Anulados":
+                    this.setState({ activeItem: activeItem + "Sel", show: false, texto: "El comprobante de retención ha sido anulado en Xero y cambió su estatus." })
                     break;
 
                 default:
@@ -317,7 +342,8 @@ class Ventas extends Component {
                         active={activeItem === 'Anulados' ? true : false}
                         onClick={this.handleItemClick}>
                         {activeItem === 'Anulados' ? <span style={{ color: "#7158e2" }} >Anulados</span> :
-                            <span >Anulados</span>}
+                            activeItem === 'AnuladosSel' ? <span style={{ color: "#7158e2" }} >Anulados</span> :
+                                <span >Anulados</span>}
                     </Menu.Item>
                     <Menu.Item
                         name='Archivados'
@@ -331,22 +357,31 @@ class Ventas extends Component {
                         {activeItem === 'Pendientes' ?
                             <div className="idDibvDisabledsmall">
                                 <span>Registrar ⇨</span>
-                            </div> : activeItem === 'PendientesSel' ?
+                            </div>
+                            : activeItem === 'PendientesSel' ?
                                 <div className="idDivEnabledSmall" onClick={() => this.onMoveData("Pendientes", true)} >
                                     <span>Registrar ⇨</span>
                                 </div>
-                                : activeItem === 'Recibidos' || activeItem === 'Archivados' ?
-                                    <div className="idDibvDisabled">
-                                        <span>Mover a anulados 㐅</span>
+                                : activeItem === 'Anulados' ?
+                                    <div className="idDibvDisabledsmall">
+                                        <span>Remitir ⇨</span>
                                     </div>
-                                    : activeItem === 'RecibidosSel' ?
-                                        <div className="idDibvEnabled" onClick={() => this.onMoveData("Recibidos", true)} >
-                                            <span>Mover a anulados 㐅</span>
+                                    : activeItem === 'Anulados' ?
+                                        <div className="idDivEnabledSmall" onClick={() => this.onMoveData("Anulados", true)} >
+                                            <span>Remitir ⇨</span>
                                         </div>
-                                        : activeItem === 'ArchivadosSel' ?
-                                            <div className="idDibvEnabled" onClick={() => this.onMoveData("Archivados", true)} >
+                                        : activeItem === 'Recibidos' || activeItem === 'Archivados' ?
+                                            <div className="idDibvDisabled">
                                                 <span>Mover a anulados 㐅</span>
-                                            </div> : null
+                                            </div>
+                                            : activeItem === 'RecibidosSel' ?
+                                                <div className="idDibvEnabled" onClick={() => this.onMoveData("Recibidos", true)} >
+                                                    <span>Mover a anulados 㐅</span>
+                                                </div>
+                                                : activeItem === 'ArchivadosSel' ?
+                                                    <div className="idDibvEnabled" onClick={() => this.onMoveData("Archivados", true)} >
+                                                        <span>Mover a anulados 㐅</span>
+                                                    </div> : null
                         }
                     </div>
                 </Menu>
