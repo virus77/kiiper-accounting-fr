@@ -25,6 +25,30 @@ class FileTransformationInformation extends Component {
         calls.getBankStatements(id_conversion,).then(result => {
             console.log("onDownloadFile data", result.data);
 
+            let _newRowData = result.data.map(function(e) {
+                let d =  new Date(e.date);
+                let ye = new Intl.DateTimeFormat('en', { year: 'numeric' }).format(d);
+                let mo = new Intl.DateTimeFormat('en', { month: 'short' }).format(d);
+                let da = new Intl.DateTimeFormat('en', { day: '2-digit' }).format(d);
+
+                e['*Date'] = `${da}-${mo}-${ye}`;
+                delete e.date;
+
+                e['*Amount'] = e.amount;
+                delete e.amount;
+
+                e['Description'] = e.description;
+                delete e.description;
+
+                e['Reference'] = e.reference;
+                delete e.reference;
+
+                e['Payee'] = '';
+                e['Check Number']= '';
+
+                return e;
+            });
+
             this.setState({ transformedFile: result.data }, () => {
                 // click the CSVLink component to trigger the CSV download
 
