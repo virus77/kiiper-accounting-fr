@@ -23,19 +23,124 @@ class Reports extends Component {
 
         this.state = { 
             optionList,
-            startDate: new Date()
+            startDateLibroCompras: new Date(),
+            finishDateLibroCompras: new Date(),
+            showDateLibroCompras: false,
+            startDateLibroVentas: new Date(),
+            finishDateLibroVentas: new Date(),
+            showDateLibroVentas: false,
+            startDateDeclaracionIVA: new Date(),
+            finishDateDeclaracionIVA: new Date(),
+            showDateDeclaracionIVA: false,
+            startDateDeclaracionISLR: new Date(),
+            finishDateDeclaracionISLR: new Date(),
+            showDateDeclaracionISLR: false,
         };
     }
 
     componentDidMount() {}
 
+    /* Funciones Libro de Compras */
 
-    handleChange = date => {
+    handleChangeStartDateLibroCompras = date => {
+        console.log("start day LibroCompras ", date)
         this.setState({
-          startDate: date
+            startDateLibroCompras: date
         });
     };
 
+    handleChangeFinishDateLibroCompras = date => {
+        console.log("finish day LibroCompras", date)
+        this.setState({
+            finishDateLibroCompras: date
+        });
+    };
+
+    handleClickLibroCompras  = e => {
+        console.log("handleClick LibroCompra", e)
+        if (e.id === 2) {
+            this.setState({
+                showDateLibroCompras: true
+            });
+        }
+    };
+
+     /* Funciones Libro de Ventas */
+
+    handleChangeStartDateLibroVentas = date => {
+        console.log("star day LibroVentas", date)
+        this.setState({
+            startDateLibroVentas: date
+        });
+    };
+
+    handleChangeFinishDateLibroVentas = date => {
+        console.log("finish day LibroVentas", date)
+        this.setState({
+            finishDateLibroVentas: date
+        });
+    };
+
+    handleClickLibroVentas  = e => {
+        console.log("handleClick LibroVentas", e);
+        if (e.id === 2) {
+            this.setState({
+                showDateLibroVentas: true
+            });
+        }
+    };
+
+
+    /* Funciones Declaracion de IVA */
+    handleChangeStartDateDeclaracionIVA = date => {
+        console.log("star day DeclaracionIVA", date)
+        this.setState({
+            startDateDeclaracionIVA: date
+        });
+    };
+
+    handleChangeFinishDateDeclaracionIVA = date => {
+        console.log("finish day DeclaracionIVA", date)
+        this.setState({
+            finishDateDeclaracionIVA: date
+        });
+    };
+
+    handleClickDeclaracionIVA  = e => {
+        console.log("handleClick DeclaracionIVA", e)
+        if (e.id === 2) {
+            this.setState({
+                showDateDeclaracionIVA: true
+            });
+        }
+    };
+
+
+    /* Funciones  Declaracion Retenciones de ISLR */
+
+    handleChangeStartDateDeclaracionISLR = date => {
+        console.log("star day DeclaracionISLR", date)
+        this.setState({
+            startDateDeclaracionISLR: date
+        });
+    };
+
+    handleChangeFinishDateDeclaracionISLR = date => {
+        console.log("finish day DeclaracionISLR", date)
+        this.setState({
+            finishDateDeclaracionISRL: date
+        });
+    };
+
+    handleClickDeclaracionISLR  = e => {
+        console.log("handleClick DeclaracionISLR", e);
+        if (e.id === 2) {
+            this.setState({
+                showDateDeclaracionISLR: true
+            });
+        }
+    };
+    
     render() {
         return (
             <div className="padding-accordion-bank">
@@ -51,29 +156,33 @@ class Reports extends Component {
                                         <div>Período:</div>
                                         <DropdownList
                                             style={{ width: "150px" }}
+                                            onChange={value => this.handleClickLibroCompras(value)}
                                             data={this.state.optionList}
                                             valueField="id"
                                             textField="text"
                                             groupBy='Grupo' />
                                     </div>
-                                    <div className="date-container">
-                                        <div className="inline-date">
-                                            <div>Desde:</div>
-                                            <DatePicker
-                                                selected={this.state.startDate}
-                                                onChange={this.handleChange}
-                                                locale="es"
-                                            /> 
-                                        </div>
-                                        <div className="inline-date">
-                                            <div>Hasta:</div>
-                                            <DatePicker
-                                                selected={this.state.startDate}
-                                                onChange={this.handleChange}
-                                                locale="es"
-                                            /> 
-                                        </div> 
-                                    </div>
+                                    { this.state.showDateLibroCompras?
+                                        <div className="date-container">
+                                            <div className="inline-date">
+                                                <div>Desde:</div>
+                                                <DatePicker
+                                                    selected={this.state.startDateLibroCompras}
+                                                    onChange={this.handleChangeStartDateLibroCompras}
+                                                    locale="es"
+                                                /> 
+                                            </div>
+                                            <div className="inline-date">
+                                                <div>Hasta:</div>
+                                                <DatePicker
+                                                    selected={this.state.finishDateLibroCompras}
+                                                    onChange={this.handleChangeFinishDateLibroCompras}
+                                                    locale="es"
+                                                /> 
+                                            </div> 
+                                        </div>: null
+                                    }
+                                    
                                 </Card.Text>
                                 <div className="btn-generate">
                                     <Button className="btn-width">Generar</Button>
@@ -85,10 +194,41 @@ class Reports extends Component {
                                 <Card.Title>Libros de Ventas</Card.Title>
                                 <hr className="separator"/>
                                 <Card.Text>
-                                Some quick example text to build on the card title and make up the bulk of
-                                the card's content.
+                                    <div className="flex-container">
+                                        <div>Período:</div>
+                                        <DropdownList
+                                            style={{ width: "150px" }}
+                                            data={this.state.optionList}
+                                            valueField="id"
+                                            textField="text"
+                                            onChange={value => this.handleClickLibroVentas(value)}
+                                            groupBy='Grupo' />
+                                    </div>
+                                    { this.state.showDateLibroVentas?
+                                        <div className="date-container">
+                                            <div className="inline-date">
+                                                <div>Desde:</div>
+                                                <DatePicker
+                                                    selected={this.state.startDateLibroVentas}
+                                                    onChange={this.handleChangeStartDateLibroVentas}
+                                                    locale="es"
+                                                /> 
+                                            </div>
+                                            <div className="inline-date">
+                                                <div>Hasta:</div>
+                                                <DatePicker
+                                                    selected={this.state.finishDateLibroVentas}
+                                                    onChange={this.handleChangeFinishDateLibroVentas}
+                                                    locale="es"
+                                                /> 
+                                            </div> 
+                                        </div>:null
+                                    }
+                                    
                                 </Card.Text>
-                                <Button variant="primary">Go somewhere</Button>
+                                <div className="btn-generate">
+                                    <Button className="btn-width">Generar</Button>
+                                </div>
                             </Card.Body>
                         </Card>
                     </div>
@@ -99,24 +239,86 @@ class Reports extends Component {
                     <div className="flex-container">
                         <Card className="card-container">
                             <Card.Body>
-                                <Card.Title>Retenciones IVA</Card.Title>
+                                <Card.Title>Declaración de IVA</Card.Title>
                                 <hr className="separator"/>
                                 <Card.Text>
-                                Some quick example text to build on the card title and make up the bulk of
-                                the card's content.
+                                    <div className="flex-container">
+                                        <div>Período:</div>
+                                        <DropdownList
+                                            style={{ width: "150px" }}
+                                            data={this.state.optionList}
+                                            valueField="id"
+                                            textField="text"
+                                            onChange={value => this.handleClickDeclaracionIVA(value)}
+                                            groupBy='Grupo' />
+                                    </div>
+                                    { this.state.showDateDeclaracionIVA ?
+                                        <div className="date-container">
+                                            <div className="inline-date">
+                                                <div>Desde:</div>
+                                                <DatePicker
+                                                    selected={this.state.startDateDeclaracionIVA}
+                                                    onChange={this.handleChangeStartDateDeclaracionIVA}
+                                                    locale="es"
+                                                /> 
+                                            </div>
+                                            <div className="inline-date">
+                                                <div>Hasta:</div>
+                                                <DatePicker
+                                                    selected={this.state.finishDateDeclaracionIVA}
+                                                    onChange={this.handleChangeFinishDateDeclaracionIVA}
+                                                    locale="es"
+                                                /> 
+                                            </div> 
+                                        </div>: null
+                                    }
+                                    
                                 </Card.Text>
-                                <Button variant="primary">Go somewhere</Button>
+                                <div className="btn-generate">
+                                    <Button className="btn-width">Generar</Button>
+                                </div>
                             </Card.Body>
                         </Card>
                         <Card className="card-container">
                             <Card.Body>
-                                <Card.Title>Retenciones ISLR</Card.Title>
+                                <Card.Title>Retenciones de ISLR</Card.Title>
                                 <hr className="separator"/>
                                 <Card.Text>
-                                Some quick example text to build on the card title and make up the bulk of
-                                the card's content.
+                                    <div className="flex-container">
+                                        <div>Período:</div>
+                                        <DropdownList
+                                            style={{ width: "150px" }}
+                                            data={this.state.optionList}
+                                            valueField="id"
+                                            textField="text"
+                                            onChange={value => this.handleClickDeclaracionISLR(value)}
+                                            groupBy='Grupo' />
+                                    </div>
+                                    { this.state.showDateDeclaracionISLR?
+                                        <div className="date-container">
+                                            <div className="inline-date">
+                                                <div>Desde:</div>
+                                                <DatePicker
+                                                    selected={this.state.startDateDeclaracionISLR}
+                                                    onChange={this.handleChangeStartDateDeclaracionISLR}
+                                                    locale="es"
+                                                /> 
+                                            </div>
+                                            <div className="inline-date">
+                                                <div>Hasta:</div>
+                                                <DatePicker
+                                                    selected={this.state.finishDateDeclaracionISLR}
+                                                    onChange={this.handleChangeFinishDateDeclaracionISLR}
+                                                    locale="es"
+                                                /> 
+                                            </div> 
+                                        </div>: null
+                                    }
+                                    
                                 </Card.Text>
-                                <Button variant="primary">Go somewhere</Button>
+                                <div className="btn-generate">
+                                    <Button className="btn-width">Generar</Button>
+                                </div>
                             </Card.Body>
                         </Card>
                     </div>
