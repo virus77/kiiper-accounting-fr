@@ -1,0 +1,42 @@
+.flex-container {
+    display: flex;
+    justify-content: space-evenly;
+    align-items: flex-end;
+}
+
+.card-container {
+    width: 350px;
+    height: 300px;
+}
+
+.report-container {
+    padding: 20px 40px;
+}
+
+.btn-generate {
+    position: absolute;
+    left: 50%;
+    transform: translate(-50%, 0px);
+    bottom: 40px;
+
+    & .btn-width {
+        width: 150px;
+        color: #ffffff;
+        border-radius: 12px;
+        background-color: #9680ED;
+        border-color: #9680ED;
+    }
+}
+
+.inline-date {
+    display: flex;
+    justify-content: space-evenly;
+}
+
+.date-container {
+    height: 84px;
+    display: flex;
+    justify-content: space-between;
+    flex-direction: column;
+    padding-top: 30px;
+}

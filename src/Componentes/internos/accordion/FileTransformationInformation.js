@@ -69,10 +69,9 @@ class FileTransformationInformation extends Component {
     componentDidMount() {
         //Getting data from Xero and building data grid
         var _columnDefs =  [
-            { headerName: "Número de Conversión", field: "id_conversion" , cellStyle: {textAlign: 'center'}, width: 150}, 
-            { headerName: "Fecha", field: "date", cellStyle: {textAlign: 'center'}, width: 150}, 
-            { headerName: "Última transacción", field: "lastTransactionDate", cellStyle: {textAlign: 'center'}, width: 150}, 
-            { headerName: "Descargar", field: "download", cellStyle: {textAlign: 'center'},  width: 150,
+            { headerName: "Fecha", field: "date", cellStyle: {textAlign: 'center'}, width: 200}, 
+            { headerName: "Última transacción", field: "lastTransactionDate", cellStyle: {textAlign: 'center'}, width: 200}, 
+            { headerName: "Descargar", field: "download", cellStyle: {textAlign: 'center'},  width: 200,
                 cellRendererFramework: (props) => { 
                     return (   
                         (props.value === false)? null: 
