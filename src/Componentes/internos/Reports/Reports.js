@@ -62,6 +62,10 @@ class Reports extends Component {
             this.setState({
                 showDateLibroCompras: true
             });
+        } else {
+            this.setState({
+                showDateLibroCompras: false
+            });
         }
     };
 
@@ -86,6 +90,10 @@ class Reports extends Component {
         if (e.id === 2) {
             this.setState({
                 showDateLibroVentas: true
+            });
+        } else {
+            this.setState({
+                showDateLibroVentas: false
             });
         }
     };
@@ -112,6 +120,10 @@ class Reports extends Component {
             this.setState({
                 showDateDeclaracionIVA: true
             });
+        } else {
+            this.setState({
+                showDateDeclaracionIVA: false
+            });
         }
     };
 
@@ -137,6 +149,10 @@ class Reports extends Component {
         if (e.id === 2) {
             this.setState({
                 showDateDeclaracionISLR: true
+            });
+        } else {
+            this.setState({
+                showDateDeclaracionISLR: false
             });
         }
     };
