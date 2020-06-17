@@ -92,7 +92,7 @@ class App extends Component {
           /*  Acción utilizada ocultar el logo de kiiper para darle paso al formulario de inicio de sesion */
           <div className="App">
             <div style={{ padding: "30px" }}>
-              <img src={kiiperLogoSm} alt="img-logokiiper" />
+              <img style={{height:"20px"}} src={kiiperLogoSm} alt="img-logokiiper" />
             </div>
             <div className="formulario">
               <div className="col-12" style={{ display: "flex", flexDirection: "column", alignItems: "center" }}>
@@ -133,7 +133,7 @@ class App extends Component {
                       </Row>
                     </div>*/}
                   <div style={{ padding: "0px 0px 0px 0px" }}>
-                    <Button type="submit" id="xeroSyncAnchor" onClick={() => { this.onIniciarProceso() }}>
+                    <Button style={{fontFamily:"'Muli',sans-serif",fontWeight:"700"}} type="submit" id="xeroSyncAnchor" onClick={() => { this.onIniciarProceso() }}>
                       Iniciar sesión
                       </Button>
                   </div>

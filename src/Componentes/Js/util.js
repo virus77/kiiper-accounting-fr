@@ -86,7 +86,7 @@ const util = {
                     switch (true) {
 
                         // In case the data needs a specific value based in a formula
-                        case (header.hasOwnProperty("calculated")) :
+                        case (header.hasOwnProperty("calculated")):
 
                             switch (header.formulaName) {
 
@@ -112,7 +112,7 @@ const util = {
                                     retentionAmount = retentionAmount ? retentionAmount : "";
 
                                     if (retentionAmount) {
-                                        itemValue = retentionAmount;
+                                        itemValue = util.formatMoney(retentionAmount);
                                     }
                                     else {
 
@@ -126,7 +126,7 @@ const util = {
                                     }
                                     break;
 
-                                default :
+                                default:
                                     break;
                             }
                             break;
@@ -157,6 +157,7 @@ const util = {
                                     break;
 
                                 default:
+                                    itemValue = util.formatMoney(itemValue.toFixed(2));
                                     break;
                             }
                             break;
@@ -408,11 +409,11 @@ const util = {
     CellRendererP: function (params) {
 
         withHoldingId = params.data.withHoldingId;
-        fileName = params.data.invoice_number;
+        fileName = "Retención de IVA - " + params.data.invoice_number;
         var flag = '<img border="0" width="18" height="21" src="http://desacrm.quierocasa.com.mx:7002/Images/kiiper_Download.png"></img>';
         var eDiv = document.createElement('div');
         eDiv.className = "file-container";
-        eDiv.setAttribute("id", "dow_" + withHoldingId);
+        eDiv.setAttribute("id", "down_" + withHoldingId);
         //Función utilooizada ára llamar el archivo en base64
         //Convertirlo a pdf y descargarlo
         eDiv.onclick = async function () {
@@ -481,41 +482,62 @@ const util = {
             return v.indexOf(v2) > -1;
         }
     },
-    
-    bankType: function(_bank) {
+
+    /// Regresa rango de fechas del mes actual
+    getmonthRange() {
+        var date = new Date(), y = date.getFullYear(), m = date.getMonth();
+        var firstDay = new Date(y, m, 1);
+        var lastDay = new Date(y, m + 1, 0);
+        return (
+            { firstDay: moment(firstDay).format("DD/MM/YYYY"), lastDay: moment(lastDay).format("DD/MM/YYYY") }
+        )
+    },
+
+    /// Regresa rango de fechas del mes previo al actual
+    getPreviousRange() {
+        var date = new Date(), y = date.getFullYear(), m = date.getMonth() - 1;
+        var firstDay = new Date(y, m, 1);
+        var lastDay = new Date(y, m + 1, 0);
+
+        return (
+            { firstDay: moment(firstDay).format("DD/MM/YYYY"), lastDay: moment(lastDay).format("DD/MM/YYYY") }
+        )
+    },
+
+    bankType: function (_bank) {
         var bankName = _bank.toLowerCase();
-    
-        const banks = [ 
-            {id: 1,  name: 'mercantil natural',      url: '/convertBankStatement/MercantilNatural'},
-            {id: 2,  name: 'mercantil juridica',     url: '/convertBankStatement/MercantilJuridica'},
-            {id: 3,  name: 'bod', fileType: 'pdf',   url: '/convertBankStatement/BOD'},
-            {id: 4,  name: 'banesco',                url: '/convertBankStatement/Banesco'},
-            {id: 5,  name: 'commerce bank',          url: '/convertBankStatement/CommerceBank'},
-            {id: 6,  name: 'bicentenario',           url: '/convertBankStatement/Bicentenario'},
-            {id: 7,  name: 'mibanco',                url: '/convertBankStatement/MiBanco'},
-            {id: 8,  name: 'bvc',                    url: '/convertBankStatement/BVC' },
-            {id: 9,  name: 'bancaribe',              url: '/convertBankStatement/Bancaribe'},
-            {id: 10, name: 'safra',                  url: '/convertBankStatement/Safra'},
-            {id: 11, name: 'plaza',                  url: '/convertBankStatement/Plaza'},
-            {id: 12, name: 'caroni',                 url: '/convertBankStatement/Caroni'},
-            {id: 13, name: 'venezuela',              url: '/convertBankStatement/Vzla'},
-            {id: 14, name: 'santader',               url: '/convertBankStatement/Santander'},
-            {id: 15, name: 'exterior',               url: '/convertBankStatement/Exterior'},
-            {id: 16, name: 'bnc',                    url: '/convertBankStatement/BNC'},
-            {id: 17, name: 'provincial',             url: '/convertBankStatement/Provincial'},
-            {id: 18, name: 'banplus',                url: '/convertBankStatement/Banplus'},
-            {id: 19, name: 'mercadopago',            url: '/convertBankStatement/Mercadopago'},
-            {id: 20, name: 'deutsche',               url: '/convertBankStatement/Deutsche'},
-            {id: 21, name: 'multibank',              url: '/convertBankStatement/Multibank'},
-            {id: 22, name: 'banesco panama',         url: '/convertBankStatement/BanescoPanama'},
-            {id: 23, name: 'chase',                  url: '/convertBankStatement/Chase'},
-            {id: 24, name: 'wellfargo',              url: '/convertBankStatement/WellsFargo'},
-            {id: 25, name: 'rigdewood',              url: '/convertBankStatement/Ridgewood'},
-            {id: 26, name: 'kearny',                 url: '/convertBankStatement/Kearny'},
-            {id: 27, name: 'tdbank',                 url: '/convertBankStatement/TDBank'}
+
+        const banks = [
+            { id: 1, name: 'mercantil natural', url: '/convertBankStatement/MercantilNatural' },
+            { id: 2, name: 'mercantil juridica', url: '/convertBankStatement/MercantilJuridica' },
+            { id: 3, name: 'bod', fileType: 'pdf', url: '/convertBankStatement/BOD' },
+            { id: 4, name: 'banesco', url: '/convertBankStatement/Banesco' },
+            { id: 5, name: 'commerce bank', url: '/convertBankStatement/CommerceBank' },
+            { id: 6, name: 'bicentenario', url: '/convertBankStatement/Bicentenario' },
+            { id: 7, name: 'mibanco', url: '/convertBankStatement/MiBanco' },
+            { id: 8, name: 'bvc', url: '/convertBankStatement/BVC' },
+            { id: 9, name: 'bancaribe', url: '/convertBankStatement/Bancaribe' },
+            { id: 10, name: 'safra', url: '/convertBankStatement/Safra' },
+            { id: 11, name: 'plaza', url: '/convertBankStatement/Plaza' },
+            { id: 12, name: 'caroni', url: '/convertBankStatement/Caroni' },
+            { id: 13, name: 'venezuela', url: '/convertBankStatement/Vzla' },
+            { id: 14, name: 'santader', url: '/convertBankStatement/Santander' },
+            { id: 15, name: 'exterior', url: '/convertBankStatement/Exterior' },
+            { id: 16, name: 'bnc', url: '/convertBankStatement/BNC' },
+            { id: 17, name: 'provincial', url: '/convertBankStatement/Provincial' },
+            { id: 18, name: 'banplus', url: '/convertBankStatement/Banplus' },
+            { id: 19, name: 'mercadopago', url: '/convertBankStatement/Mercadopago' },
+            { id: 20, name: 'deutsche', url: '/convertBankStatement/Deutsche' },
+            { id: 21, name: 'multibank', url: '/convertBankStatement/Multibank' },
+            { id: 22, name: 'banesco panama', url: '/convertBankStatement/BanescoPanama' },
+            { id: 23, name: 'chase', url: '/convertBankStatement/Chase' },
+            { id: 24, name: 'wellfargo', url: '/convertBankStatement/WellsFargo' },
+            { id: 25, name: 'rigdewood', url: '/convertBankStatement/Ridgewood' },
+            { id: 26, name: 'kearny', url: '/convertBankStatement/Kearny' },
+            { id: 27, name: 'tdbank', url: '/convertBankStatement/TDBank' }
         ];
-    
-        var bankSelected = banks.filter(function(bank) {
+
+        var bankSelected = banks.filter(function (bank) {
             return bankName.indexOf(bank.name) > -1
         });
         return bankSelected;

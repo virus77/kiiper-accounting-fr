@@ -55,6 +55,9 @@ class BanksConvert extends Component {
             return bank.indexOf(_bank.name) > -1
         });
 
+        // Setting bank breadcrumb
+        document.getElementById("breadcrumbPath").innerText = ` > ${label}`;
+
         this.setState({
             openConvert: !openConvert,
             bankSelected: _bankData,

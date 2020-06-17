@@ -38,6 +38,8 @@ import Title from './internos/Title';
 import IframeComponent from './internos/iFrame';
 import BanksConvert from '../Componentes/internos/Banks/BanksConvert';
 import Reports from '../Componentes/internos/Reports/Reports';
+import FiscalReportSales from '../Componentes/internos/Reportes/LibroVentas'
+import FiscalReportPurchase from '../Componentes/internos/Reportes/LibroCompras'
 
 //#region estilo
 const drawerWidth = 240;
@@ -153,6 +155,9 @@ export default function Dashboard(props) {
   // Selected option from organizations List. Initialazed at zero
   const [orgIdSelected, setorgIdSelected] = useState("");
 
+  // Selected option from organizations List. Initialazed at zero
+  const [orgNameSelected, setorgNameSelected] = useState("");
+
   //Cambia el estatus del evento del clic en el DeopDownList
   let handleClick = (item) => {
 
@@ -164,6 +169,7 @@ export default function Dashboard(props) {
 
       // Setting organization selected in React to component
       setorgIdSelected(item.id);
+      setorgNameSelected(item.name);
       setValue(item.name)
 
       //Cambia el color en el ddlPrincipal dependiendo la selección
@@ -189,7 +195,7 @@ export default function Dashboard(props) {
         <Toolbar className={classes.toolbar}>
           <Typography component="h1" variant="h6" color="inherit" noWrap className={classes.title}>
             {event === -1 ? "Kiiper" :
-              <img src={K} alt="img-K" />}
+              <img style={{height:"20px"}} src={K} alt="img-K" />}
           </Typography>
           {/* icon Busqueda*/}
           <IconButton color="inherit">
@@ -225,7 +231,7 @@ export default function Dashboard(props) {
               <tbody>
                 <tr>
                   <td>
-                    {event === 0.1 || event === "xeroOrgName" || event === 1.1 || event === 1.2 ?
+                    {event === "xeroOrgName" || event === 0.1 || event === 1.1 || event === 1.2 ?
                       <div className={classes.toolbarIcon}>
                         <IconButton onClick={(event) => handleClick(-1)}>
                           <ChevronLeftIcon />
@@ -235,7 +241,7 @@ export default function Dashboard(props) {
                   <td>
                     <div className={classes.toolbarIcon}>
                       <DropdownList
-                        style={{ width: "280px" }}
+                        style={{ width: "240px" }}
                         filter
                         data={organizations}
                         allowCreate="onFilter"
@@ -253,26 +259,27 @@ export default function Dashboard(props) {
             </table>
           </Navbar.Brand>
           <Navbar.Toggle aria-controls="basic-navbar-nav" />
-          {event === 0.1 || event === "xeroOrgName" || event === 1.1 || event === 1.2 || event === 2.1  || event === 3.1  ?
+          {event === "xeroOrgName" || event === 0.1 || event === 1.1 || event === 1.2 || event === 2.1 || event === 3.1 || event === 3.2 ?
             <Navbar.Collapse id="basic-navbar-nav">
               <Nav className="mr-auto">
-                <Nav.Link style={{ width: "135px" }} eventKey={0.1} onClick={(event) => handleListItemClick(event, 0.1)} href="#home">Dashboard</Nav.Link>
-                <NavDropdown style={{ width: "130px" }} title="Negocio" id="ddlNegocioId">
+                <Nav.Link className="navBarOptionSelected" style={{ padding: "0 30px" }} eventKey={0.1} onClick={(event) => handleListItemClick(event, 0.1)} href="#home">Dashboard</Nav.Link>
+                <NavDropdown style={{ padding: "0 30px" }} title="Negocio" id="ddlNegocioId">
                   <NavDropdown.Item eventKey={1.1} onClick={(event) => handleListItemClick(event, 1.1)} href="#Negocio/Ventas">Ventas</NavDropdown.Item>
                   <NavDropdown.Item eventKey={1.2} onClick={(event) => handleListItemClick(event, 1.2)} href="#Negocio/Compras">Compras</NavDropdown.Item>
                 </NavDropdown>
-                <NavDropdown style={{ width: "145px" }} title="Contabilidad" id="ddlContabilidadId">
+                <NavDropdown style={{ padding: "0 30px" }} title="Contabilidad" id="ddlContabilidadId">
                   <NavDropdown.Item eventKey={2.1} onClick={(event) => handleListItemClick(event, 2.1)} href="#Contabilidad/Bancos">Bancos</NavDropdown.Item>
                 </NavDropdown>
-                <NavDropdown title="Reportes" id="ddlReportesId">
+                <NavDropdown style={{ padding: "0 30px" }} title="Reportes" id="ddlReportesId">
                   <NavDropdown.Item eventKey={3.1} onClick={(event) => handleListItemClick(event, 3.1)} href="#Reportes/Impuestos">Impuestos</NavDropdown.Item>
+                  {/* <NavDropdown.Item eventKey={3.2} onClick={(event) => handleListItemClick(event, 3.2)} href="#Reportes/Compras">Compras</NavDropdown.Item> */}
                 </NavDropdown>
               </Nav>
             </Navbar.Collapse> :
             null}
         </Navbar>
-        <Container maxWidth="lg" style={{ height: "530px" }} className={classes.container}>
-          {event === 0.1 || event === "xeroOrgName" ?
+        <Container maxWidth="lg" style={{ height: "calc(100% - 105px)", padding:"20px!important" }} className={classes.container}>
+          {event === "xeroOrgName" || event === 0.1 ?
             <Grid container spacing={2}>
               {/* Dashboard */}
               <Title>Dashboard</Title>
@@ -285,7 +292,7 @@ export default function Dashboard(props) {
             event === "xeroOrgName" || event === 1.1 ?
               <Grid container spacing={2}>
                 {/* Recent Sales  */}
-                <label>Ventas</label>
+                <Title>Ventas</Title>
                 <Grid item xs={12}>
                   <Ventas token={props.token} orgIdSelected={orgIdSelected} />
                 </Grid>
@@ -293,30 +300,42 @@ export default function Dashboard(props) {
               event === "xeroOrgName" || event === 1.2 ?
                 <Grid container spacing={2}>
                   {/* Recent purchases */}
-                  <label>Compras</label>
+                  <Title>Compras</Title>
                   <Grid item xs={12}>
                     <Compras token={props.token} orgIdSelected={orgIdSelected} />
                   </Grid>
                 </Grid> :
                 event === "xeroOrgName" || event === 2.1 ?
                   <Grid container spacing={2}>
-                    <Title>Bancos</Title>
+                    {/* Breadcrumb  */}
+                    <div class="breadcrumbClass">
+                      <Title eventKey={2.1} onClick={(event) => handleListItemClick(event, 2.1)}>Bancos</Title>
+                        <span id="breadcrumbPath"></span>
+                    </div>
                     <Grid item xs={12}>
                       <Paper className={classes.paper}>
                         < BanksConvert orgIdSelected={orgIdSelected} />
                       </Paper>
                     </Grid>
                   </Grid> :
-                event === "xeroOrgName" || event === 3.1 ?
-                  <Grid container spacing={2}>
-                    <Title>Reportes</Title>
-                    <Grid item xs={12}>
-                      <Paper className={classes.paper}>
-                        < Reports orgIdSelected={orgIdSelected} />
-                      </Paper>
-                    </Grid>
-                  </Grid>:
-                null}
+                  event === "xeroOrgName" || event === 3.1 ?
+                    <Grid container spacing={2}>
+                      <Grid item xs={12}>
+                        <Paper className={classes.paper}>
+                          < Reports orgIdSelected={orgIdSelected} />
+                        </Paper>
+                      </Grid>
+                    </Grid> :
+                    event === "xeroOrgName" || event === 3.2 ?
+                      <Grid container spacing={2}>
+                        <Title>Libro fiscal de compras</Title>
+                        <Grid item xs={12}>
+                          <Paper className={classes.paper}>
+                            <FiscalReportPurchase orgIdSelected={orgIdSelected} orgNameSelected={orgNameSelected} />
+                          </Paper>
+                        </Grid>
+                      </Grid> :
+                      null}
           {/* Copyright */}
           <Box pt={4}>
             <util.Copyright />

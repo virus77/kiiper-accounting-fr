@@ -1,4 +1,6 @@
 
+import util from './util'
+
 /* Script que contiene las llamadas a funciones */
 const calls = {
 
@@ -93,6 +95,7 @@ const calls = {
             })
         )
     },
+
     /// Start a process to request information from Xero to build
     /// Insert data when change status to "Anulados"
     /// @param {WithholdingsArr} id_invoice_xero - idXero
@@ -118,6 +121,7 @@ const calls = {
             )
         })
     },
+
     /// Start a process to send information to Xero to 
     /// change vouchers from pending to received status
     /// @param {string} taxType - tax type from the voucher
@@ -148,14 +152,15 @@ const calls = {
             })
         )
     },
+
     // Petición para obtener cuentas bancarias de una empresa en Xero
     // @param {integer} id_organisation - organisation id
     getBankAccounts: (id_organisation) => {
         const fetchConfig = {
             method: 'GET',
             headers: {
-              'Accept': 'application/json',
-              'Content-Type': 'application/json'
+                'Accept': 'application/json',
+                'Content-Type': 'application/json'
             }
         };
 
@@ -168,16 +173,16 @@ const calls = {
             }).catch(err => {
                 console.log(err)
             });
-    
+
     },
 
     convertBankStatement: (fetchEndpoint, data) => {
-        
+
         return (
             fetch(fetchEndpoint, {
                 method: 'POST',
                 body: data,
-            }).then(res  => {
+            }).then(res => {
                 if (res.ok) {
                     console.log("request sucess");
                     return true;
@@ -186,6 +191,15 @@ const calls = {
                     return false;
                 }
             })
+                .then(res => {
+                    if (res.ok) {
+                        console.log("request sucess");
+                        return true;
+                    } else {
+                        console.log("request fail");
+                        return false;
+                    }
+                })
         );
     },
 
@@ -193,8 +207,8 @@ const calls = {
         const fetchConfig = {
             method: 'GET',
             headers: {
-              'Accept': 'application/json',
-              'Content-Type': 'application/json'
+                'Accept': 'application/json',
+                'Content-Type': 'application/json'
             }
         };
 
@@ -209,25 +223,76 @@ const calls = {
             });
     },
 
-    getBankStatements:(id_conversion) => {
-        const fetchConfig = {
-            method: 'GET',
-            headers: {
-              'Accept': 'application/json',
-              'Content-Type': 'application/json'
-            }
+    /// Petición para obtener el libro de Compras y ventas en Xero
+    /// deppendiendo del periodo
+    /// @param {text} id_organisation - organisation id
+    /// @param {text} initialDate - Format date DD/MM/YYYY"
+    /// @param {text} endDate -  Format date DD/MM/YYYY"
+    /// @param {text} endPoint - Ruta de acceso al Endpoint dependiendo si es compras o venntas
+    getBook: async (id_organisation, Periodo, initialDate, endDate, endPoint) => {
+
+        switch (Periodo) {
+            case "1":
+                let Range = util.getmonthRange();
+                initialDate = Range.firstDay;
+                endDate = Range.lastDay;
+                break;
+
+            case "2":
+                let PreviousRange = util.getPreviousRange();
+                initialDate = PreviousRange.firstDay;
+                endDate = PreviousRange.lastDay;
+                break;
+
+            default:
+                break;
+        }
+
+        var param = {
+            id_organisation: id_organisation,
+            initialDate: initialDate,
+            endDate: endDate
         };
 
-        return fetch(`/getBankStatements?conversionId=${id_conversion}`, fetchConfig)
-            .then(res => res.json())
-            .then(data => {
-                return {
-                    data: data
-                }
-            }).catch(err => {
-                console.log(err)
+        return (
+            await fetch(endPoint, {
+                method: 'POST',
+                body: JSON.stringify(param),
+                headers: {
+                    "Content-type": "application/json; charset=UTF-8",
+                    "Access-Control-Allow-Origin": "*",
+                },
+            }).then(res => res.text()
+            ).then(data => {
+                return { data: data }
             })
-    }
+        );
+    },
+
+    /// Petición para obtener cuentas bancarias de una empresa en Xero
+    /// @param {text} taxbookId - id que regresa getSalesBook or getPurchaseBook
+    /// @param {text} endPoint - Ruta de acceso al Endpoint dependiendo si es compras o venntas
+    getDocumentByTaxbookId: async (valor, endPoint) => {
+        let taxbookId = valor;
+        taxbookId = taxbookId.replace(/['"]+/g, '');
+
+        const fetchConfig = { method: 'GET' };
+
+        // Fetch URL with parameters
+        const fetchURL = endPoint + `?taxbookId=${taxbookId}`;
+
+        return (
+
+            // Fetching data from the endpoint
+            await fetch(fetchURL, fetchConfig)
+                .then(res => res.text())
+                .then(data => { return { data: data } })
+                .catch((error) => {
+                    console.log(error);
+                    return false;
+                })
+        );
+    },
 }
 
 export default calls;
