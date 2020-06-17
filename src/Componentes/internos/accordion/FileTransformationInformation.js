@@ -170,8 +170,6 @@ class FileTransformationInformation extends Component {
                                 </CSVLink>
                                 <br/>
                             </li>
-                            <hr className="separator"/>
-                            
                         </ol>
                     </div>
                 </div>

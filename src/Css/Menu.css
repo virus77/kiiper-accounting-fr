@@ -11,8 +11,9 @@ body {
 
 /* asigna color y borde del dllprincipal */
 .rw-widget > .rw-widget-container {
-    border-radius: 14px !important;
-    height: 45px !important;
+    border-radius: 10px !important;
+    height: auto!important;
+    padding: 6px;
     background-color: #232c51 !important;
     color: white !important;
     border-color: #232c51 !important;
@@ -47,6 +48,7 @@ body {
 #basic-navbar-nav {
     color: #232c51 !important;
     font-size: 10pt !important;
+    height: 100%;
 }
 
 .rw-list-empty,
@@ -70,11 +72,10 @@ body {
 .dropdown-item:active {
     border-color: #5540c2 !important;
     background-color: #e6defd !important;
-    font-size: 11pt !important;
 }
 
 .navbar-expand-lg .navbar-nav .dropdown-menu {
-    margin: 10px !important;
+    margin-top: 8px !important;
 }
 
 .dropdown-item,
