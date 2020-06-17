@@ -18,19 +18,12 @@
     left: 50%;
     transform: translate(-50%, 0px);
     bottom: 40px;
-
-    & .btn-width {
-        width: 150px;
-        color: #ffffff;
-        border-radius: 12px;
-        background-color: #9680ED;
-        border-color: #9680ED;
-    }
 }
 
 .inline-date {
     display: flex;
     justify-content: space-evenly;
+    padding-bottom: 10px;
 }
 
 .date-container {
@@ -38,5 +31,5 @@
     display: flex;
     justify-content: space-between;
     flex-direction: column;
-    padding-top: 30px;
+    padding-top: 10px;
 }

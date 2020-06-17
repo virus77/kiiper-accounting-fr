@@ -53,7 +53,7 @@ class salesBook extends Component {
     /// solicitados por medio de post para generar el guardado en Xero
     onGetPeriod = async () => {
         if (this.state.value !== "") {
-            let taxbookId = await calls.getSalesBook(this.props.orgIdSelected, this.state.value,
+            let taxbookId = await calls.getBook(this.props.orgIdSelected, this.state.value,
                 moment(this.state.startDateB).format("DD/MM/YYYY"), moment(this.state.startDateA).format("DD/MM/YYYY"),
                 "/salesBook");
 
