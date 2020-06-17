@@ -1,0 +1,35 @@
+.flex-container {
+    display: flex;
+    justify-content: space-evenly;
+    align-items: center;
+}
+
+.card-container {
+    width: 350px;
+    height: 300px;
+}
+
+.report-container {
+    padding: 20px 40px;
+}
+
+.btn-generate {
+    position: absolute;
+    left: 50%;
+    transform: translate(-50%, 0px);
+    bottom: 40px;
+}
+
+.inline-date {
+    display: flex;
+    justify-content: space-evenly;
+    padding-bottom: 10px;
+}
+
+.date-container {
+    height: 84px;
+    display: flex;
+    justify-content: space-between;
+    flex-direction: column;
+    padding-top: 10px;
+}

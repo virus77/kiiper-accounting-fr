@@ -1,36 +1,21 @@
 import React, { Component } from 'react';
-import PropTypes from 'prop-types';
 import '../Css/styles.scss';
 import calls from '../../Js/calls';
 import util from '../../Js/util';
 import { AgGridReact } from 'ag-grid-react';
-import GetAppRoundedIcon from '@material-ui/icons/GetAppRounded';
-import { CSVLink, CSVDownload } from "react-csv";
+import { CSVLink } from "react-csv";
 
 class FileTransformationInformation extends Component {
-    static propTypes = {
-    //children: PropTypes.instanceOf(Object).isRequired,
-    };
 
     constructor(props) {
         super(props);
         this.csvLink = React.createRef();
 
-        const openSections = {};
-        this.inputReference = React.createRef();
-
-        const csvData = [
-            { date: "2014-10-30" ,description: "COMISION DE MANTENIMIENTO DE C", amount: -4.5, reference: "19114800" },
-            { date: "2014-10-30" ,description: "COMISION ENVIO ESTADOS DE CUEN", amount: -1.4, reference: "19114800" }
-        ];
-
         this.state = { 
-            openSections,
             selectedFile: null,
             columnDefs: [],
             rowData: [],
             defaultColDef:{ width: 250 },
-            csvData,
             existFileTransformation: false,
             transformedFile: []
         };
@@ -39,6 +24,30 @@ class FileTransformationInformation extends Component {
     onDownloadFile(id_conversion) {
         calls.getBankStatements(id_conversion,).then(result => {
             console.log("onDownloadFile data", result.data);
+
+            let _newRowData = result.data.map(function(e) {
+                let d =  new Date(e.date);
+                let ye = new Intl.DateTimeFormat('en', { year: 'numeric' }).format(d);
+                let mo = new Intl.DateTimeFormat('en', { month: 'short' }).format(d);
+                let da = new Intl.DateTimeFormat('en', { day: '2-digit' }).format(d);
+
+                e['*Date'] = `${da}-${mo}-${ye}`;
+                delete e.date;
+
+                e['*Amount'] = e.amount;
+                delete e.amount;
+
+                e['Description'] = e.description;
+                delete e.description;
+
+                e['Reference'] = e.reference;
+                delete e.reference;
+
+                e['Payee'] = '';
+                e['Check Number']= '';
+
+                return e;
+            });
 
             this.setState({ transformedFile: result.data }, () => {
                 // click the CSVLink component to trigger the CSV download
@@ -51,8 +60,8 @@ class FileTransformationInformation extends Component {
     }
 
     onRowSelected(rowIndex, _rowData){
-        if (rowIndex != null) {
-            if (_rowData['lastTransactionDate'] != "Sin transacciones")
+        if (rowIndex !== null) {
+            if (_rowData['lastTransactionDate'] !== "Sin transacciones")
             this.onDownloadFile(_rowData['id_conversion'])
         }
     }
@@ -60,10 +69,9 @@ class FileTransformationInformation extends Component {
     componentDidMount() {
         //Getting data from Xero and building data grid
         var _columnDefs =  [
-            { headerName: "Número de Conversión", field: "id_conversion" , cellStyle: {textAlign: 'center'}, width: 150}, 
-            { headerName: "Fecha", field: "date", cellStyle: {textAlign: 'center'}, width: 150}, 
-            { headerName: "Última transacción", field: "lastTransactionDate", cellStyle: {textAlign: 'center'}, width: 150}, 
-            { headerName: "Descargar", field: "download", cellStyle: {textAlign: 'center'},  width: 150,
+            { headerName: "Fecha", field: "date", cellStyle: {textAlign: 'center'}, width: 200}, 
+            { headerName: "Última transacción", field: "lastTransactionDate", cellStyle: {textAlign: 'center'}, width: 200}, 
+            { headerName: "Descargar", field: "download", cellStyle: {textAlign: 'center'},  width: 200,
                 cellRendererFramework: (props) => { 
                     return (   
                         (props.value === false)? null: 
@@ -94,20 +102,6 @@ class FileTransformationInformation extends Component {
         });
     }
 
-    onClick = label => {
-        const {
-            state: { openSections },
-        } = this;
-
-        const isOpen = !!openSections[label];
-
-        this.setState({
-            openSections: {
-            [label]: !isOpen
-            }
-        });
-    };
-
     onChangeHandler = event =>{
         this.setState({
           selectedFile: event.target.files[0],
@@ -133,11 +127,6 @@ class FileTransformationInformation extends Component {
     }
 
     render() {
-        const {
-        onClick,
-        props: { children },
-        state: { openSections },
-        } = this;
 
         return (
             <div>

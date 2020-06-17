@@ -10,13 +10,37 @@
   color: white;
 }
 
+.xeroGenerate {
+  background-color: #232c51;
+  cursor: pointer;
+  padding: 10px 20px;
+  border: none;
+  border-radius: 10px;
+  font-size: 0.9em;
+  width: 110px;
+  color: white;
+}
+
 #xeroGenerate:hover {
+  background-color: #7158e2; /* Change the value to with anchors hover color*/
+  color: white;
+}
+
+.xeroGenerate:hover {
   background-color: #7158e2; /* Change the value to with anchors hover color*/
   color: white;
 }
 
 /*DropDown de los periodos*/
 #ddlPeriodo {
+  width: 200px;
+  height: 30px;
+  border-radius: 7px;
+  border-color: #7158e2;
+  color: #232c51;
+}
+
+.ddlPeriodo {
   width: 200px;
   height: 30px;
   border-radius: 7px;
