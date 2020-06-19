@@ -1,6 +1,6 @@
 .padding-accordion-bank {
     padding: 20px 0;
-    font-family: Muli;
+    font-weight:100;
 }
 
 .color-blue-background {
@@ -11,15 +11,25 @@
     text-decoration: underline !important;
     font-weight: bold;
     cursor: pointer;
+    color: #7158E2!important;
 }
 
 .accordion-flex {
-    display: flex;    
-    color: #232c51;
-    justify-content: space-evenly;
+    display: flex;
+    justify-content: space-between;
 }
 
 .container-button-load {
     display: flex;
-    justify-content: space-evenly;
+    justify-content: space-between;
+}
+
+.acoordionOptionArrow img{
+    height:10px;
+}
+
+.arrowUp{
+    transform:rotate(180deg);
+    -webkit-transform: rotate(180deg);
+    display: block;
 }

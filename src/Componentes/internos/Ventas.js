@@ -19,6 +19,7 @@ import '../internos/Css/alert.css'
 var moment = require('moment'); // require
 
 class Ventas extends Component {
+
     constructor(props) {
         super(props);
         this.state = {
@@ -127,6 +128,7 @@ class Ventas extends Component {
                     if (result === true) {
                         this.setState({ show: val, texto: "El comprobante de retención ha sido registrado en Xero y cambió su estatus a 'recibido'." })
                         this.onRemoveSelected();
+                        this.setState({ activeItem: name })
                     }
                 }
                 break;
@@ -144,27 +146,31 @@ class Ventas extends Component {
                     if (result1 === true) {
                         this.setState({ show: val, texto: "El comprobante de retención ha sido anulado en Xero y cambió su estatus a ‘anulado’." })
                         this.onRemoveSelected();
+                        this.setState({ activeItem: name })
                     }
                 }
+                else
+                    this.setState({ activeItem: name, show: false })
                 break;
             case "Anulados":
                 // Getting ros selected and building a JSON to send
                 arrayToSend = this.onFillstate(this.refs.agGrid.api.getSelectedRows(), name);
 
                 if (arrayToSend.length > 0) {
-
                     // Moving received or stored vouchers to cancelled
                     let result2 = await calls.setDataReissueWidthHoldings(arrayToSend);
+
                     if (result2 === true) {
-                        if (result2 === true) {
-                            this.setState({ show: val, texto: "El comprobante de retención ha sido anulado en Xero y cambió su estatus." })
-                            this.onRemoveSelected();
-                        }
+                        this.setState({ show: val, texto: "El comprobante de retención ha sido anulado en Xero y cambió su estatus." })
+                        this.onRemoveSelected();
+                        this.setState({ activeItem: name })
                     }
                 }
+                else
+                    this.setState({ activeItem: name, show: false })
                 break;
             default:
-                this.setState({ show: false, texto: "" })
+                this.setState({ activeItem: name.toString().substring(0, name.length - 3), show: false })
                 break;
         }
     }
@@ -299,8 +305,6 @@ class Ventas extends Component {
                     break;
             }
         }
-        else
-            this.setState({ activeItem: activeItem.toString().substring(0, activeItem.length - 3), show: false })
     };
 
     //Función onchange del grid
@@ -312,9 +316,9 @@ class Ventas extends Component {
     render() {
         const { activeItem } = this.state
         return (
-            <div>
-                {/*Pintado del dropdownlist de iva/isrl*/}
-                <div style={{ paddingBottom: "10px" }}>
+            <div style={{ height: "100%" }}>
+                {/*Pintado del dropdownlist de iva/islr*/}
+                <div>
                     <NavDropdown id="ddlVentas" title={this.state.event === 4.2 ? '≡  Comprobante de retención de IVA  ' : this.state.event === 4.1 ? '≡  Comprobante de retención de ISLR  ' : '≡  Comprobante de retención de IVA  '} >
                         <NavDropdown.Item eventKey={4.1} onClick={(event) => this.handleListItemClick(event, 4.1)} href="#Reportes/ISLR"><span className="ddlComVenLabel"> Comprobante de retención de ISLR </span></NavDropdown.Item>
                         <NavDropdown.Item eventKey={4.2} onClick={(event) => this.handleListItemClick(event, 4.2)} href="#Reportes/IVA"><span className="ddlComVenLabel"> Comprobante de retención de IVA </span></NavDropdown.Item>
@@ -353,34 +357,34 @@ class Ventas extends Component {
                             activeItem === 'ArchivadosSel' ? <span style={{ color: "#7158e2" }} >Archivados</span> :
                                 <span >Archivados</span>}
                     </Menu.Item>
-                    <div style={{ paddingTop: "5px", paddingRight: "5px", borderStyle: "none", flex: "1", display: "flex", justifyContent: "flex-end" }}>
+                    <div style={{ flex: "1", display: "flex", justifyContent: "flex-end" }}>
                         {activeItem === 'Pendientes' ?
                             <div className="idDibvDisabledsmall">
-                                <span>Registrar ⇨</span>
+                                <span>Registrar</span>
                             </div>
                             : activeItem === 'PendientesSel' ?
                                 <div className="idDivEnabledSmall" onClick={() => this.onMoveData("Pendientes", true)} >
-                                    <span>Registrar ⇨</span>
+                                    <span>Registrar</span>
                                 </div>
                                 : activeItem === 'Anulados' ?
                                     <div className="idDibvDisabledsmall">
-                                        <span>Remitir ⇨</span>
+                                        <span>Remitir</span>
                                     </div>
                                     : activeItem === 'Anulados' ?
                                         <div className="idDivEnabledSmall" onClick={() => this.onMoveData("Anulados", true)} >
-                                            <span>Remitir ⇨</span>
+                                            <span>Remitir</span>
                                         </div>
                                         : activeItem === 'Recibidos' || activeItem === 'Archivados' ?
-                                            <div className="idDibvDisabled">
-                                                <span>Mover a anulados 㐅</span>
+                                            <div className="idDibvDisabledsmall">
+                                                <span>Anular 㐅</span>
                                             </div>
                                             : activeItem === 'RecibidosSel' ?
-                                                <div className="idDibvEnabled" onClick={() => this.onMoveData("Recibidos", true)} >
-                                                    <span>Mover a anulados 㐅</span>
+                                                <div className="idDivEnabledSmall" onClick={() => this.onMoveData("Recibidos", true)} >
+                                                    <span>Anular 㐅</span>
                                                 </div>
                                                 : activeItem === 'ArchivadosSel' ?
-                                                    <div className="idDibvEnabled" onClick={() => this.onMoveData("Archivados", true)} >
-                                                        <span>Mover a anulados 㐅</span>
+                                                    <div className="idDivEnabledSmall" onClick={() => this.onMoveData("Archivados", true)} >
+                                                        <span>Anular 㐅</span>
                                                     </div> : null
                         }
                     </div>

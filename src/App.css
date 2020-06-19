@@ -1,174 +1,364 @@
-html,
-body {
-  font-family: "Muli" !important;
-}
-
 .row {
-  margin: 0 !important;
+	margin: 0 !important;
 }
 
 p {
-  margin-bottom: 15px !important;
+	margin-bottom: 15px !important;
 }
 
 .App {
-  height: 100%;
+	height: 100%;
 }
 
 .App-logo {
-  animation-name: rotate;
-  animation-duration: 5s;
-  animation-iteration-count: infinite;
-  animation-timing-function: linear;
+	animation-name: rotate;
+	animation-duration: 5s;
+	animation-iteration-count: infinite;
+	animation-timing-function: linear;
 }
 
 .formularioResp {
-  background-color: #ffffff !important;
-  position: fixed;
-  top: 18%;
-  left: 50%;
-  margin-top: -5%;
-  margin-left: -21.7%;
-  width: 38%;
-  height: 82%;
-  border-radius: 3%;
+	background-color: #ffffff !important;
+	position: fixed;
+	top: 18%;
+	left: 50%;
+	margin-top: -5%;
+	margin-left: -21.7%;
+	width: 38%;
+	height: 82%;
+	border-radius: 3%;
 }
 
 .formulario {
-  background-color: #ffffff !important;
-  position: absolute;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  margin: auto;
-  width: 33%;
-  height: 65%;
-  border-radius: 3%;
-  display: flex;
-  align-items: center;
-  justify-content: center;
+	background-color: #ffffff !important;
+	position: absolute;
+	top: 0;
+	left: 0;
+	right: 0;
+	bottom: 0;
+	margin: auto;
+	width: 33%;
+	height: 65%;
+	border-radius: 3%;
+	display: flex;
+	align-items: center;
+	justify-content: center;
 }
 
 /*Botón inicial*/
 #xeroSyncAnchor {
-  background-color: #7158e2;
-  cursor: pointer;
-  padding: 12px 20px;
-  border: none;
-  border-radius: 11px;
-  font-size:0.9em;
+	background-color: #232c51;
+	cursor: pointer;
+	padding: 12px 20px;
+	border: none;
+	border-radius: 11px;
+	font-size: 0.9em;
 }
 #xeroSyncAnchor:hover {
-  background-color: #232c51; /* Change the value to with anchors hover color*/
+	background-color:  #7158e2;/* Change the value to with anchors hover color*/
 }
 
 /*Color del header*/
 .MuiAppBar-colorPrimary {
-  background-color: #232c51 !important;
-  color: #5efff2 !important;
+	background-color: #232c51 !important;
+	color: #5efff2 !important;
 }
 
 /*Tamaño del contenido*/
 .MuiContainer-maxWidthLg {
-  max-width: 100% !important;
+	max-width: 100% !important;
 }
 
 /*ajusta el borde del grid*/
 .MuiGrid-spacing-xs-2 > .MuiGrid-item {
   padding: 0px !important;
+  flex:1;
+  height:100%;
 }
 
 /*ajusta el borde del grid*/
 .makeStyles-paper-14 {
   padding: 0px !important;
+  height:100%;
 }
 
 /*Color inicial del body para visualizar el formulario*/
 .bodycolor {
-  background: url(Imagenes/Kiiper_lineasSm.png) 0 -200px #232c51;
-  background-size: 100%;
-  /*-webkit-animation: imgFade 3s;
+	background: url(Imagenes/Kiiper_lineasSm.png) 0 -200px #232c51;
+	background-size: 100%;
+	/*-webkit-animation: imgFade 3s;
   animation: imgFade 3s;*/
 }
 
 /* Safari and Chrome */
 @-webkit-keyframes imgFade {
-  from {
-    background: #232c51;
-  }
-  to {
-    background: url(Imagenes/Kiiper_lineasSm.png) 0 -200px #232c51;
-    background-size: 100%;
-  }
+	from {
+		background: #232c51;
+	}
+	to {
+		background: url(Imagenes/Kiiper_lineasSm.png) 0 -200px #232c51;
+		background-size: 100%;
+	}
 }
 
 @keyframes imgFade {
-  from {
-    background: #232c51;
-  }
-  to {
-    background: url(Imagenes/Kiiper_lineasSm.png) 0 -200px #232c51;
-    background-size: 100%;
-  }
+	from {
+		background: #232c51;
+	}
+	to {
+		background: url(Imagenes/Kiiper_lineasSm.png) 0 -200px #232c51;
+		background-size: 100%;
+	}
 }
 
 /*Alinea el logo inical de Kipepr*/
 .alinearLogo {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  height: 650px;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	height: 650px;
 }
 
 /* Style input text */
 input[type="email"] {
-  background-color: white;
-  background-repeat: no-repeat;
-  padding: 4%;
-  color: #232c51;
-  border-radius: 7px;
-  border-color: #7158e2 !important;
-  box-shadow: #7158e2 !important;
+	background-color: white;
+	background-repeat: no-repeat;
+	padding: 4%;
+	color: #232c51;
+	border-radius: 7px;
+	border-color: #7158e2 !important;
+	box-shadow: #7158e2 !important;
 }
 
 /* Style input password */
 input[type="password"] {
-  background-color: white;
-  padding: 4%;
-  color: #232c51;
-  border-radius: 9px;
-  border-color: #7158e2 !important;
-  box-shadow: #7158e2 !important;
+	background-color: white;
+	padding: 4%;
+	color: #232c51;
+	border-radius: 9px;
+	border-color: #7158e2 !important;
+	box-shadow: #7158e2 !important;
 }
 
 /* Style input checkbox */
 input[type="checkbox"] {
-  cursor: pointer !important;
-  font-weight: bold !important;
-  font-size: 20px !important;
-  border-color: #7158e2 !important;
-  border-radius: 4px;
-  color: white !important;
-  background-color: #7158e2 !important;
-  box-shadow: #7158e2 !important;
+	cursor: pointer !important;
+	font-weight: bold !important;
+	font-size: 20px !important;
+	border-color: #7158e2 !important;
+	border-radius: 4px;
+	color: white !important;
+	background-color: #7158e2 !important;
+	box-shadow: #7158e2 !important;
 }
 
 input[type="password"]::-ms-reveal {
-  background-image: url(Imagenes/kiiper_eyee.png);
+	background-image: url(Imagenes/kiiper_eyee.png);
 }
 
 input[type="password"]::-ms-reveal:hover {
-  background-image: url(Imagenes/kiiper_eyeeClic.png);
+	background-image: url(Imagenes/kiiper_eyeeClic.png);
 }
 
 /* Labels como link */
 .label {
-  cursor: pointer;
-  color: #7158e2;
-  text-decoration: underline;
+	cursor: pointer;
+	color: #7158e2;
+	text-decoration: underline;
 }
 
 .label:hover {
-  color: #232c51; /* Change the value to with anchors hover color*/
+	color: #232c51; /* Change the value to with anchors hover color*/
+}
+
+/* Style corrections to be like Recco first design ---------------------------------------------- */
+
+/* Ribbon header container */
+.MuiPaper-elevation4 {
+	box-shadow: none !important;
+}
+
+.MuiToolbar-regular {
+	min-height: inherit !important;
+	padding: 0 20px!important;
+}
+
+/* Logo */
+.MuiTypography-h6{
+  line-height: 1!important;
+  font-family: "Muli", "Helvetica", "Arial", sans-serif!important;
+  font-weight:700!important
+}
+
+/* Ribbon header buttons */
+.MuiIconButton-label img {
+	height: 17px;
+}
+
+/* Menu ribbon */
+.bg-light {
+	background-color: #fff !important;
+}
+
+.jss11 {
+	min-height: 45px !important;
+}
+
+.jss3 {
+  min-height: auto !important;
+  padding: 0 !important;
+}
+
+/* Back button */
+.jss3 > .MuiIconButton-root {
+	border: 0.5px solid #e6defd;
+	padding: 9px;
+}
+
+.jss3 .MuiIconButton-label svg{
+  color:#7158E2;
+}
+
+/* Organization selection */
+.navbar-brand {
+	padding: 0 25px 0 0 !important;
+}
+
+.rw-dropdown-list-input {
+	font-size: 0.8em;
+}
+
+.rw-state-focus > .rw-widget-container,
+.rw-state-focus > .rw-widget-container:hover,
+.rw-widget-container.rw-state-focus,
+.rw-widget-container.rw-state-focus:hover {
+  box-shadow: none!important;
+}
+
+/* Nav bar */
+.navbar {
+	padding: 0 12px;
+	height: 60px;
+	background: #fff;
+}
+
+#basic-navbar-nav > div > a, 
+#basic-navbar-nav > div,
+#basic-navbar-nav > div > div,
+#basic-navbar-nav > div > div > a{
+  height: 100%;
+  display: flex;
+}
+
+/* Nav bar options container */
+.navbar-nav,
+.navbar-nav div,
+.navbar-nav a {
+	align-items: center;
+	justify-content: center;
+}
+
+/* Nav bar option selected */
+.navBarOptionSelected {
+	color: #7158e2 !important;
+	border-bottom: 3px solid #7158e2;
+}
+
+/* Option selection menu displayed */
+.dropdown-menu {
+	border: 1px solid #eee!important;
+	box-shadow: 0 5px 5px #eeeeee;
+  flex-direction: column;
+  border-radius:7px;
+  width: 100%;
+}
+
+.navbar-nav .dropdown-menu{
+  height:auto!important;
+  padding:0;
+}
+
+.dropdown-menu a{
+  justify-content:flex-start;
+  font-weight: 700;
+  padding:10px 20px;
+  border-radius: 3px;
+}
+
+/* App background color */
+.jss12 {
+	background-color: #f5f6fa;
+}
+
+/* Dashboard container */
+.MuiGrid-spacing-xs-2{
+  width:auto!important;
+  margin:0!important;
+  height:100%;
+  flex-wrap:initial!important;
+}
+
+.MuiGrid-container{
+  flex-direction:column;
+}
+
+/* Dasboard Xero container */
+.jss15{
+  height:calc(100% - 33px)!important;
+}
+
+.MuiPaper-elevation1{
+  box-shadow: none!important;
+  height:100%;
+}
+
+.MuiPaper-rounded{
+  border-radius:10px!important;
+}
+
+/* Xero iframe */
+iframe {
+  border: 1px solid #E6DEFD;
+  border-radius: 10px;
+}
+
+iframe body{
+  background: transparent!important;
+}
+
+/* Grid in sells and purchases */
+
+/* UI Menu Tabs */
+.ui.menu{
+  border-bottom-left-radius:0!important;
+  border-bottom-right-radius:0!important;
+  border-top:1px solid #E5E5EA!important;
+  border-left:1px solid #E5E5EA!important;
+  border-right:1px solid #E5E5EA!important;
+  padding: 0 20px;
+  align-items: center;
+  box-shadow: none!important;
+}
+
+/* UI Menu Tabs label */
+.ui.menu .item {
+  padding: 20px 15px!important;
+  color: rgba(35, 44, 81, 0.5)!important;
+  font-weight: 700!important;
+  font-family:"Muli",sans-serif;
+}
+
+/* UI Menu Tab selected */
+.ui.menu .active.item{
+  background:transparent!important;
+  border-bottom:2px solid #7158E2;
+  border-radius: 0!important;
+}
+
+.ui.menu .item:before{
+  background:transparent;
+}
+
+/* Empty and invisible div inside body that sizes Ribbon */
+@media (min-width: 600px) {
 }

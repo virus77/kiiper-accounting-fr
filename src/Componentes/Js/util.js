@@ -112,7 +112,7 @@ const util = {
                                     retentionAmount = retentionAmount ? retentionAmount : "";
 
                                     if (retentionAmount) {
-                                        itemValue = retentionAmount;
+                                        itemValue = util.formatMoney(retentionAmount);
                                     }
                                     else {
 
@@ -157,6 +157,7 @@ const util = {
                                     break;
 
                                 default:
+                                    itemValue = util.formatMoney(itemValue.toFixed(2));
                                     break;
                             }
                             break;
@@ -330,16 +331,16 @@ const util = {
                     return params.columnApi.getRowGroupColumns().length === 0;
                 },
             },
-            { headerName: 'No. Control', field: 'Control', xeroField: 'invoice_control', filter: 'agTextColumnFilter', width: 120, resizable: true, sortable: true },
-            { headerName: kindOfPeople, field: 'Contacto', xeroField: 'contact_name', headerClass: "centerHeader", filter: 'agTextColumnFilter', width: 240, resizable: true, sortable: true },
-            { headerName: 'Fecha factura', field: 'FechaFactura', xeroField: 'invoice_date', filter: 'agTextColumnFilter', width: 128, sortable: true },
-            { headerName: 'Base imponible', field: 'invoice_subtotal', type: 'rightAligned', xeroField: true, calculated: true, formulaName: 'base_taxable', width: 123, sortable: true },
-            { headerName: 'Total ' + Tipo, field: 'TotalIVA', xeroField: 'invoice_total_tax', type: 'rightAligned', width: 120, sortable: true },
-            { headerName: '% retenido', field: 'Retencion', xeroField: 'retention_percentage', type: 'rightAligned', hide: Tipo === "IVA" ? false : true, calculated: true, width: 104, sortable: true, },
+            { headerName: 'No. Control', field: 'Control', xeroField: 'invoice_control', filter: 'agTextColumnFilter', filter: 'agTextColumnFilter', width: 120, sortable: true },
+            { headerName: kindOfPeople, field: 'Contacto', xeroField: 'contact_name', headerClass: "centerHeader", filter: 'agTextColumnFilter', width: 248, sortable: true },
+            { headerName: 'Fecha factura', field: 'FechaFactura', cellClass: "grid-cell-centered", xeroField: 'invoice_date', filter: 'agTextColumnFilter', filter: 'agTextColumnFilter', width: 130, sortable: true, cellClass: "grid-cell-centered" },
+            { headerName: 'Base imponible', field: 'invoice_subtotal', type: 'rightAligned', xeroField: true, calculated: true, formulaName: 'base_taxable', width: 135, sortable: true },
+            { headerName: 'Total ' + Tipo, field: 'TotalIVA', headerClass: "grid-cell-centered", xeroField: 'invoice_total_tax', type: 'rightAligned', width: 110, sortable: true },
+            { headerName: '% retenido', field: 'Retencion', xeroField: 'retention_percentage', type: 'rightAligned', hide: Tipo === "IVA" ? false : true, calculated: true, width: 104, sortable: true, cellClass: "grid-cell-centered" },
             { headerName: 'Monto retenido', field: 'MontoRetenido', xeroField: true, calculated: true, formulaName: 'retention_amount', type: 'rightAligned', width: 129, sortable: true },
-            { headerName: 'Fecha de comprobante', field: 'approval_date', width: 149, sortable: true, editable: true, cellEditor: Datepicker },
-            { headerName: 'No. Comprobante', field: 'Comprobante', width: 160, sortable: true, editable: true, cellEditor: NumberValidation },
-            { headerName: '', field: '_id', width: 100, cellRenderer: this.CellRendererUp }
+            { headerName: 'Fecha de comprobante', field: 'approval_date', width: 170, sortable: true, editable: true, cellEditor: Datepicker },
+            { headerName: 'No. Comprobante', field: 'Comprobante', width: 150, sortable: true, editable: true, cellEditor: NumberValidation },
+            { headerName: '', field: '_id', width: 60, cellRenderer: this.CellRendererUp }
         ]
 
         return (columnDefs)
@@ -378,16 +379,16 @@ const util = {
                     }
                 },
             },
-            { headerName: 'No. Control', field: 'Control', xeroField: 'invoice_control', filter: 'agTextColumnFilter', width: 120, resizable: true, sortable: true },
-            { headerName: kindOfPeople, field: 'Contacto', xeroField: 'contact_name', headerClass: "centerHeader", filter: 'agTextColumnFilter', width: 240, resizable: true, sortable: true },
-            { headerName: 'Fecha factura', field: 'FechaFactura', xeroField: 'invoice_date', filter: 'agTextColumnFilter', width: 128, sortable: true },
-            { headerName: 'Base imponible', field: 'invoice_subtotal', xeroField: 'invoice_subtotal', width: 123, sortable: true, type: 'rightAligned' },
-            { headerName: 'Total ' + Tipo, field: 'TotalIVA', xeroField: 'retained_amount', width: 120, sortable: true, type: 'rightAligned' },
-            { headerName: '% retenido', field: 'Retencion', xeroField: 'retention_percentage', type: 'rightAligned', hide: Tipo === "IVA" ? false : true, calculated: true, width: 104, sortable: true, },
-            { headerName: 'Monto retenido', field: 'MontoRetenido', type: 'rightAligned', xeroField: true, calculated: true, formulaName: 'retention_amount', width: 129, sortable: true },
-            { headerName: 'Fecha de comprobante', field: 'date', xeroField: 'approval_date', width: 149, sortable: true },
-            { headerName: 'No. Comprobante', field: 'Comprobante', xeroField: 'invoice_number', width: 160, sortable: true },
-            { headerName: '', field: 'file', width: 100, cellRenderer: this.CellRendererP }
+            { headerName: 'No. Control', field: 'Control', xeroField: 'invoice_control', filter: 'agTextColumnFilter', filter: 'agTextColumnFilter', width: 120, sortable: true },
+            { headerName: kindOfPeople, field: 'Contacto', xeroField: 'contact_name', headerClass: "centerHeader", filter: 'agTextColumnFilter', width: 248,  sortable: true },
+            { headerName: 'Fecha factura', field: 'FechaFactura', xeroField: 'invoice_date', headerClass: "grid-cell-centered", filter: 'agTextColumnFilter', width: 130, sortable: true, cellClass: "grid-cell-centered" },
+            { headerName: 'Base imponible', field: 'invoice_subtotal', xeroField: 'invoice_subtotal', width: 135, sortable: true, type: 'rightAligned' },
+            { headerName: 'Total ' + Tipo, field: 'TotalIVA', headerClass: "grid-cell-centered", xeroField: 'retained_amount', width: 110, sortable: true, type: 'rightAligned' },
+            { headerName: '% retenido', field: 'Retencion', xeroField: 'retention_percentage', type: 'rightAligned', hide: Tipo === "IVA" ? false : true, calculated: true, width: 104, sortable: true, cellClass: "grid-cell-centered" },
+            { headerName: 'Monto retenido', field: 'MontoRetenido', headerClass: "grid-cell-centered", type: 'rightAligned', xeroField: true, calculated: true, formulaName: 'retention_amount', width: 129, sortable: true },
+            { headerName: 'Fecha de comprobante', field: 'date', xeroField: 'approval_date', filter: 'agTextColumnFilter', width: 170, sortable: true, cellClass: "grid-cell-centered" },
+            { headerName: 'No. Comprobante', field: 'Comprobante', xeroField: 'invoice_number', width: 150, sortable: true },
+            { headerName: '', field: 'file', width: 60, cellRenderer: this.CellRendererP }
         ]
         return (columnDefs)
     },
@@ -408,11 +409,11 @@ const util = {
     CellRendererP: function (params) {
 
         withHoldingId = params.data.withHoldingId;
-        fileName = params.data.invoice_number;
+        fileName = "Retención de IVA - " + params.data.invoice_number;
         var flag = '<img border="0" width="18" height="21" src="http://desacrm.quierocasa.com.mx:7002/Images/kiiper_Download.png"></img>';
         var eDiv = document.createElement('div');
         eDiv.className = "file-container";
-        eDiv.setAttribute("id", "dow_" + withHoldingId);
+        eDiv.setAttribute("id", "down_" + withHoldingId);
         //Función utilooizada ára llamar el archivo en base64
         //Convertirlo a pdf y descargarlo
         eDiv.onclick = async function () {
@@ -481,7 +482,25 @@ const util = {
             return v.indexOf(v2) > -1;
         }
     },
+    /// Regresa rango de fechas del mes actual
+    getmonthRange() {
+        var date = new Date(), y = date.getFullYear(), m = date.getMonth();
+        var firstDay = new Date(y, m, 1);
+        var lastDay = new Date(y, m + 1, 0);
+        return (
+            { firstDay: moment(firstDay).format("DD/MM/YYYY"), lastDay: moment(lastDay).format("DD/MM/YYYY") }
+        )
+    },
+    /// Regresa rango de fechas del mes previo al actual
+    getPreviousRange() {
+        var date = new Date(), y = date.getFullYear(), m = date.getMonth() - 1;
+        var firstDay = new Date(y, m, 1);
+        var lastDay = new Date(y, m + 1, 0);
 
+        return (
+            { firstDay: moment(firstDay).format("DD/MM/YYYY"), lastDay: moment(lastDay).format("DD/MM/YYYY") }
+        )
+    },
     bankType: function (_bank) {
         var bankName = _bank.toLowerCase();
 
@@ -538,8 +557,8 @@ NumberValidation.prototype.init = function (params) {
     container.style = "display: flex; align-items: center; justify-content: center; height: 100%;";
 
     // Finding date added to voucher
-    let voucherDate = moment(params.data.approval_date);
-    voucherDate = voucherDate.format("YYYYMM");
+    let voucherDate = moment(params.data.approval_date, "DD/MM/YYYY").format("YYYYMM");
+
     let inputField = document.createElement("input");
     inputField.style = "border-style: none; width: 100%; height: 100%;";
     inputField.value = voucherDate !== "Invalid date" ? voucherDate : "";
@@ -588,6 +607,8 @@ Datepicker.prototype.init = function (params) {
     this.eInput.classList.add('ag-input');
     this.eInput.style.height = '100%';
     $(this.eInput).datepicker({
+        changeYear: true,
+        changeMonth: true,
         dateFormat: 'dd/mm/yy',
         dayNames: ["Domingo", "Lunes", "Martes", "Miércoles", "Jueves", "Viernes", "Sábado"],
         dayNamesMin: ["Do", "Lu", "Ma", "Mi", "Ju", "Vi", "Sa"],

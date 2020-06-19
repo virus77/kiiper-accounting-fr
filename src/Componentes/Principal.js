@@ -37,6 +37,8 @@ import Ventas from './internos/Ventas';
 import Title from './internos/Title';
 import IframeComponent from './internos/iFrame';
 import BanksConvert from '../Componentes/internos/Banks/BanksConvert';
+import FiscalReportSales from '../Componentes/internos/Reportes/LibroVentas'
+import FiscalReportPurchase from '../Componentes/internos/Reportes/LibroCompras'
 
 //#region estilo
 const drawerWidth = 240;
@@ -142,7 +144,7 @@ export default function Dashboard(props) {
   var organizations = fillDropDownList(props);
 
   const [event, eventKey] = React.useState(-1);
-  const handleListItemClick = (event, index) => { eventKey(index); }
+  const handleListItemClick = (event, index) => { eventKey(index); selectMenuOption(event); }
   const fixedHeightPaper = clsx(classes.paper, classes.fixedHeight);
 
   // Change selected value from dropdownlist when press left button
@@ -151,6 +153,15 @@ export default function Dashboard(props) {
 
   // Selected option from organizations List. Initialazed at zero
   const [orgIdSelected, setorgIdSelected] = useState("");
+
+  // Selected option from organizations List. Initialazed at zero
+  const [orgNameSelected, setorgNameSelected] = useState("");
+
+  // Stores banks show module again flag
+  const [showModuleAgain, setShowModuleAgain] = useState(false);
+
+  // Stores breadcrumb path
+  const [breadcrumbPath, setBreadcrumbPath] = useState("");
 
   //Cambia el estatus del evento del clic en el DeopDownList
   let handleClick = (item) => {
@@ -163,6 +174,7 @@ export default function Dashboard(props) {
 
       // Setting organization selected in React to component
       setorgIdSelected(item.id);
+      setorgNameSelected(item.name);
       setValue(item.name)
 
       //Cambia el color en el ddlPrincipal dependiendo la selección
@@ -177,6 +189,23 @@ export default function Dashboard(props) {
     }
   }
 
+  // When selecting menu option
+  const selectMenuOption = (event) => {
+    const parent = event.target.parentNode;
+    const parentId = parent.getAttribute("aria-labelledby");
+    const selectedClass = "navBarOptionSelected";
+    document.querySelectorAll(`.${selectedClass}`).forEach((item) => {
+      item.classList.remove(selectedClass);
+    });
+
+    if (parentId) {
+      document.getElementById(parentId).classList.add(selectedClass);
+    }
+    else {
+      event.target.classList.add(selectedClass);
+    }
+  }
+
   //Asigna el cuadro al texto dependiendo si es org o grup
   let kiiper_PurpleSquare = "http://desacrm.quierocasa.com.mx:7002/Images/kiiper_PurpleSquare.png";
   let kiiper_BlueSquare = "http://desacrm.quierocasa.com.mx:7002/Images/kiiper_BlueSquare.png";
@@ -188,7 +217,7 @@ export default function Dashboard(props) {
         <Toolbar className={classes.toolbar}>
           <Typography component="h1" variant="h6" color="inherit" noWrap className={classes.title}>
             {event === -1 ? "Kiiper" :
-              <img src={K} alt="img-K" />}
+              <img style={{ height: "20px" }} src={K} alt="img-K" />}
           </Typography>
           {/* icon Busqueda*/}
           <IconButton color="inherit">
@@ -224,7 +253,7 @@ export default function Dashboard(props) {
               <tbody>
                 <tr>
                   <td>
-                    {event === 0.1 || event === "xeroOrgName" || event === 1.1 || event === 1.2 ?
+                    {event === "xeroOrgName" || event === 0.1 || event === 1.1 || event === 1.2 ?
                       <div className={classes.toolbarIcon}>
                         <IconButton onClick={(event) => handleClick(-1)}>
                           <ChevronLeftIcon />
@@ -234,7 +263,7 @@ export default function Dashboard(props) {
                   <td>
                     <div className={classes.toolbarIcon}>
                       <DropdownList
-                        style={{ width: "280px" }}
+                        style={{ width: "240px" }}
                         filter
                         data={organizations}
                         allowCreate="onFilter"
@@ -252,34 +281,34 @@ export default function Dashboard(props) {
             </table>
           </Navbar.Brand>
           <Navbar.Toggle aria-controls="basic-navbar-nav" />
-          {event === 0.1 || event === "xeroOrgName" || event === 1.1 || event === 1.2 || event === 2.1 ?
+          {event === "xeroOrgName" || event === 0.1 || event === 1.1 || event === 1.2 || event === 2.1 || event === 3.1 || event === 3.2 ?
             <Navbar.Collapse id="basic-navbar-nav">
               <Nav className="mr-auto">
-                <Nav.Link style={{ width: "135px" }} eventKey={0.1} onClick={(event) => handleListItemClick(event, 0.1)} href="#home">Dashboard</Nav.Link>
-                <NavDropdown style={{ width: "130px" }} title="Negocio" id="ddlNegocioId">
+                <Nav.Link className="navBarOptionSelected" style={{ padding: "0 30px" }} eventKey={0.1} onClick={(event) => handleListItemClick(event, 0.1)} href="#home">Dashboard</Nav.Link>
+                <NavDropdown style={{ padding: "0 30px" }} title="Negocio" id="ddlNegocioId">
                   <NavDropdown.Item eventKey={1.1} onClick={(event) => handleListItemClick(event, 1.1)} href="#Negocio/Ventas">Ventas</NavDropdown.Item>
                   <NavDropdown.Item eventKey={1.2} onClick={(event) => handleListItemClick(event, 1.2)} href="#Negocio/Compras">Compras</NavDropdown.Item>
                 </NavDropdown>
-                <NavDropdown style={{ width: "145px" }} title="Contabilidad" id="ddlContabilidadId">
+                <NavDropdown style={{ padding: "0 30px" }} title="Contabilidad" id="ddlContabilidadId">
                   <NavDropdown.Item eventKey={2.1} onClick={(event) => handleListItemClick(event, 2.1)} href="#Contabilidad/Bancos">Bancos</NavDropdown.Item>
                   <NavDropdown.Item eventKey={2.2} href="#Contabilidad/Impuestos">Impuestos</NavDropdown.Item>
                   {/* <NavDropdown.Divider /> */}
                   {/* <NavDropdown.Item href="#action/3.4">Separated link</NavDropdown.Item> */}
                 </NavDropdown>
-                <NavDropdown title="Reportes" id="ddlReportesId">
-                  <NavDropdown.Item eventKey={3.1} href="#Reportes/Ventas">Ventas</NavDropdown.Item>
-                  <NavDropdown.Item eventKey={3.2} href="#Reportes/Compras">Compras</NavDropdown.Item>
-                  <NavDropdown.Item eventKey={3.3} href="#Reportes/Bancos">Bancos</NavDropdown.Item>
+                <NavDropdown style={{ padding: "0 30px" }} title="Reportes" id="ddlReportesId">
+                  <NavDropdown.Item eventKey={3.1} onClick={(event) => handleListItemClick(event, 3.1)} href="#Reportes/Ventas">Ventas</NavDropdown.Item>
+                  <NavDropdown.Item eventKey={3.2} onClick={(event) => handleListItemClick(event, 3.2)} href="#Reportes/Compras">Compras</NavDropdown.Item>
                   <NavDropdown.Item eventKey={3.4} href="#Reportes/Impuestos">Impuestos</NavDropdown.Item>
+                  {/*<NavDropdown.Item eventKey={3.3} href="#Reportes/Bancos">Bancos</NavDropdown.Item>
                   <NavDropdown.Item eventKey={3.5} href="#Reportes/Contabilidad">Contabilidad</NavDropdown.Item>
-                  <NavDropdown.Item eventKey={3.6} href="#Reportes/Análisis">Análisis</NavDropdown.Item>
+                  <NavDropdown.Item eventKey={3.6} href="#Reportes/Análisis">Análisis</NavDropdown.Item> */}
                 </NavDropdown>
               </Nav>
             </Navbar.Collapse> :
             null}
         </Navbar>
-        <Container maxWidth="lg" style={{ height: "530px" }} className={classes.container}>
-          {event === 0.1 || event === "xeroOrgName" ?
+        <Container maxWidth="lg" style={{ height: "calc(100% - 105px)", padding: "20px!important" }} className={classes.container}>
+          {event === "xeroOrgName" || event === 0.1 ?
             <Grid container spacing={2}>
               {/* Dashboard */}
               <Title>Dashboard</Title>
@@ -292,7 +321,7 @@ export default function Dashboard(props) {
             event === "xeroOrgName" || event === 1.1 ?
               <Grid container spacing={2}>
                 {/* Recent Sales  */}
-                <label>Ventas</label>
+                <Title>Ventas</Title>
                 <Grid item xs={12}>
                   <Ventas token={props.token} orgIdSelected={orgIdSelected} />
                 </Grid>
@@ -300,21 +329,56 @@ export default function Dashboard(props) {
               event === "xeroOrgName" || event === 1.2 ?
                 <Grid container spacing={2}>
                   {/* Recent purchases */}
-                  <label>Compras</label>
+                  <Title>Compras</Title>
                   <Grid item xs={12}>
                     <Compras token={props.token} orgIdSelected={orgIdSelected} />
                   </Grid>
                 </Grid> :
                 event === "xeroOrgName" || event === 2.1 ?
                   <Grid container spacing={2}>
-                    <Title>Bancos</Title>
+                    {/* Breadcrumb  */}
+                    <div className="breadcrumbClass" style={{ display: "flex" }}>
+                      <div id="moduleTitle" style={{ cursor: "pointer" }} onClick={(event) => { setShowModuleAgain(true); setBreadcrumbPath(""); }}>
+                        <Title>Bancos</Title>
+                      </div>
+                      <span
+                        id="breadcrumbPath"
+                        style={{
+                          marginLeft: 10,
+                          fontWeight: 700,
+                          marginBottom: 10,
+                          display: "flex",
+                          alignItems: "flex-end",
+                          fontSize: "1.2em",
+                          color: "#9680ED"
+                        }}
+                      >{breadcrumbPath}</span>
+                    </div>
                     <Grid item xs={12}>
                       <Paper className={classes.paper}>
-                        < BanksConvert orgIdSelected={orgIdSelected} />
+                        < BanksConvert setBreadcrumbPath={setBreadcrumbPath} setShowModuleAgain={setShowModuleAgain} showModuleAgain={showModuleAgain} orgIdSelected={orgIdSelected} />
                       </Paper>
                     </Grid>
                   </Grid> :
-                  null}
+                  event === "xeroOrgName" || event === 3.1 ?
+                    <Grid container spacing={2}>
+                      <Title>Libro fiscal de ventas</Title>
+                      <Grid item xs={12}>
+                        <Paper className={classes.paper}>
+                          <FiscalReportSales orgIdSelected={orgIdSelected} />
+                        </Paper>
+                      </Grid>
+                    </Grid> :
+                    event === "xeroOrgName" || event === 3.2 ?
+                      <Grid container spacing={2}>
+                        <Title>Libro fiscal de compras</Title>
+                        <Grid item xs={12}>
+                          <Paper className={classes.paper}>
+                            <FiscalReportPurchase orgIdSelected={orgIdSelected} />
+                          </Paper>
+                        </Grid>
+                      </Grid> :
+                      null}
           {/* Copyright */}
           <Box pt={4}>
             <util.Copyright />

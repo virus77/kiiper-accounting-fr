@@ -7,9 +7,9 @@ import calls from '../../Js/calls';
 import util from '../../Js/util';
 
 class BanksConvert extends Component {
-    
+
     static propTypes = {
-    //children: PropTypes.instanceOf(Object).isRequired,
+        //children: PropTypes.instanceOf(Object).isRequired,
     };
 
     constructor(props) {
@@ -19,8 +19,8 @@ class BanksConvert extends Component {
         var bankSelected = null;
         var bankInfo = null;
 
-        this.state = { 
-            openSections, 
+        this.state = {
+            openSections,
             openConvert,
             accounts: [],
             bankSelected,
@@ -45,7 +45,7 @@ class BanksConvert extends Component {
 
         this.setState({
             openSections: {
-            [label]: !isOpen
+                [label]: !isOpen
             }
         });
     };
@@ -56,12 +56,16 @@ class BanksConvert extends Component {
         } = this;
 
         var _bankInfo = util.bankType(bank);
-        var _bankData = this.state.accounts.filter(function(_bank) {
+        var _bankData = this.state.accounts.filter(function (_bank) {
             return bank.indexOf(_bank.name) > -1
         });
 
+        // Setting bank breadcrumb and 
+        this.props.setBreadcrumbPath(` > ${_bankData[0].name}`);
+        this.props.setShowModuleAgain(false);
+
         this.setState({
-            openConvert: !openConvert,
+            openConvert: true,
             bankSelected: _bankData,
             bankInfo: _bankInfo
         });
@@ -75,22 +79,22 @@ class BanksConvert extends Component {
 
         return (
             <div className="padding-accordion-bank">
-                { !openConvert?
-                    <Accordion>
-                        {this.state.accounts.map( (mapping, index) => (
-                            <div label={mapping.name}>
+                {!openConvert || this.props.showModuleAgain ?
+                    <Accordion key="Accordion">
+                        {this.state.accounts.map((mapping, index) => (
+                            <div key={`bank${index}`} label={mapping.name}>
                                 <p className="color-blue-background">Estado de Cuenta</p>
-                                <div className="accordion-flex">
-                                    <a className="color-blue-background underline"  
-                                        onClick={onClickConvert(mapping.name)}> 
+                                <div className="accordion-flex" style={{ justifyContent: "center" }}>
+                                    <a className="color-blue-background underline"
+                                        onClick={onClickConvert(mapping.name)}>
                                         Convertir/Consultar
                                     </a>
                                 </div>
-                            </div> 
-                        ))}    
-                    </Accordion>:
-                    <FileTransformationInformation bankData={this.state.bankSelected} 
-                    bankInfo={this.state.bankInfo} orgIdSelected={this.props.orgIdSelected} />
+                            </div>
+                        ))}
+                    </Accordion> :
+                    <FileTransformationInformation bankData={this.state.bankSelected}
+                        bankInfo={this.state.bankInfo} orgIdSelected={this.props.orgIdSelected} />
                 }
             </div>
         );
