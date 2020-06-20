@@ -392,7 +392,7 @@ class Reports extends Component {
                                     { this.state.showDateLibroVentas?
                                         <div className="date-container">
                                             <div className="inline-date">
-                                                <div>Desde:</div>
+                                                <div className="time-interval">Desde:</div>
                                                 <DatePicker
                                                     className={"calendar"}
                                                     selected={this.state.startDateLibroVentas}
@@ -401,7 +401,7 @@ class Reports extends Component {
                                                 /> 
                                             </div>
                                             <div className="inline-date">
-                                                <div>Hasta:</div>
+                                                <div className="time-interval">Hasta:</div>
                                                 <DatePicker
                                                     className={"calendar"}
                                                     selected={this.state.finishDateLibroVentas}
@@ -447,7 +447,7 @@ class Reports extends Component {
                                     { this.state.showDateDeclaracionIVA ?
                                         <div className="date-container">
                                             <div className="inline-date">
-                                                <div>Desde:</div>
+                                                <div className="time-interval">Desde:</div>
                                                 <DatePicker
                                                     className={"calendar"}
                                                     selected={this.state.startDateDeclaracionIVA}
@@ -456,7 +456,7 @@ class Reports extends Component {
                                                 /> 
                                             </div>
                                             <div className="inline-date">
-                                                <div>Hasta:</div>
+                                                <div className="time-interval">Hasta:</div>
                                                 <DatePicker
                                                     className={"calendar"}
                                                     selected={this.state.finishDateDeclaracionIVA}
@@ -497,7 +497,7 @@ class Reports extends Component {
                                     { this.state.showDateDeclaracionISLR?
                                         <div className="date-container">
                                             <div className="inline-date">
-                                                <div>Desde:</div>
+                                                <div className="time-interval">Desde:</div>
                                                 <DatePicker
                                                     className={"calendar"}
                                                     selected={this.state.startDateDeclaracionISLR}
@@ -506,7 +506,7 @@ class Reports extends Component {
                                                 /> 
                                             </div>
                                             <div className="inline-date">
-                                                <div>Hasta:</div>
+                                                <div className="time-interval">Hasta:</div>
                                                 <DatePicker
                                                     className={"calendar"}
                                                     selected={this.state.finishDateDeclaracionISLR}
