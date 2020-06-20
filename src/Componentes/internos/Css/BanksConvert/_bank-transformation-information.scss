@@ -24,3 +24,33 @@
 .ag-cell-label-container .ag-header-cell-label {
     justify-content: center;
 }
+
+.inputFileContainer {
+    display: flex;
+    align-items: center;
+}
+
+.inputFile {
+    width: 0.1px;
+    height: 0.1px;
+    opacity: 0;
+    overflow: hidden;
+    position: absolute;
+    z-index: -1;
+}
+
+.inputFileLabel {
+    font-size: 0.9em;
+    margin: 0;
+    color: #2F9FB7;
+    background-color: #efeff7;
+    border: 1px solid #e5e5ea;
+    padding: 5px 15px;
+    cursor: pointer; /* "hand" cursor */
+}
+
+.inputFileLabel:hover{
+    background-color: #e5e5f3;
+    color: #9680ED;
+}
+

@@ -128,6 +128,8 @@ class purchaseBook extends Component {
                                             className={"calendar"}
                                             selected={this.state.startDateB}
                                             onChange={this.handleChangeDatePkB}
+                                            showMonthDropdown
+                                            showYearDropdown
                                         />
                                     </Form.Group>
                                 </Form>
@@ -152,6 +154,8 @@ class purchaseBook extends Component {
                                             className={"calendar"}
                                             selected={this.state.startDateA}
                                             onChange={this.handleChangeDatePkA}
+                                            showMonthDropdown
+                                            showYearDropdown
                                         />
                                     </Form.Group>
                                 </Form>

@@ -128,6 +128,7 @@ class Ventas extends Component {
                     if (result === true) {
                         this.setState({ show: val, texto: "El comprobante de retención ha sido registrado en Xero y cambió su estatus a 'recibido'." })
                         this.onRemoveSelected();
+                        this.setState({ activeItem: name })
                     }
                 }
                 break;
@@ -145,8 +146,11 @@ class Ventas extends Component {
                     if (result1 === true) {
                         this.setState({ show: val, texto: "El comprobante de retención ha sido anulado en Xero y cambió su estatus a ‘anulado’." })
                         this.onRemoveSelected();
+                        this.setState({ activeItem: name })
                     }
                 }
+                else
+                    this.setState({ activeItem: name, show: false })
                 break;
             case "Anulados":
                 // Getting ros selected and building a JSON to send
@@ -159,11 +163,14 @@ class Ventas extends Component {
                     if (result2 === true) {
                         this.setState({ show: val, texto: "El comprobante de retención ha sido anulado en Xero y cambió su estatus." })
                         this.onRemoveSelected();
+                        this.setState({ activeItem: name })
                     }
                 }
+                else
+                    this.setState({ activeItem: name, show: false })
                 break;
             default:
-                this.setState({ show: false, texto: "" })
+                this.setState({ activeItem: name.toString().substring(0, name.length - 3), show: false })
                 break;
         }
     }
@@ -298,8 +305,6 @@ class Ventas extends Component {
                     break;
             }
         }
-        else
-            this.setState({ activeItem: activeItem.toString().substring(0, activeItem.length - 3), show: false })
     };
 
     //Función onchange del grid
@@ -311,7 +316,7 @@ class Ventas extends Component {
     render() {
         const { activeItem } = this.state
         return (
-            <div style={{height:"100%"}}>
+            <div style={{ height: "100%" }}>
                 {/*Pintado del dropdownlist de iva/islr*/}
                 <div>
                     <NavDropdown id="ddlVentas" title={this.state.event === 4.2 ? '≡  Comprobante de retención de IVA  ' : this.state.event === 4.1 ? '≡  Comprobante de retención de ISLR  ' : '≡  Comprobante de retención de IVA  '} >
@@ -355,19 +360,19 @@ class Ventas extends Component {
                     <div style={{ flex: "1", display: "flex", justifyContent: "flex-end" }}>
                         {activeItem === 'Pendientes' ?
                             <div className="idDibvDisabledsmall">
-                                <span>Registrar ⇨</span>
+                                <span>Registrar</span>
                             </div>
                             : activeItem === 'PendientesSel' ?
                                 <div className="idDivEnabledSmall" onClick={() => this.onMoveData("Pendientes", true)} >
-                                    <span>Registrar ⇨</span>
+                                    <span>Registrar</span>
                                 </div>
                                 : activeItem === 'Anulados' ?
                                     <div className="idDibvDisabledsmall">
-                                        <span>Remitir ⇨</span>
+                                        <span>Remitir</span>
                                     </div>
                                     : activeItem === 'Anulados' ?
                                         <div className="idDivEnabledSmall" onClick={() => this.onMoveData("Anulados", true)} >
-                                            <span>Remitir ⇨</span>
+                                            <span>Remitir</span>
                                         </div>
                                         : activeItem === 'Recibidos' || activeItem === 'Archivados' ?
                                             <div className="idDibvDisabledsmall">

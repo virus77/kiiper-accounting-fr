@@ -14,7 +14,9 @@ const calls = {
     getOrgConceptsInfo: (taxInfo, statusInfo, orgIdSelected) => {
 
         // Organization selected by user previously
-        let orgIdDefault = orgIdSelected ? orgIdSelected : "5ea086c97cc16250b45f82e1";
+        //let orgIdDefault = orgIdSelected ? orgIdSelected : "5ea086c97cc16250b45f82e1";
+
+        let orgIdDefault = "5ea086c97cc16250b45f82e1";
 
         // Testing validation purposes
         orgIdDefault =
@@ -100,11 +102,11 @@ const calls = {
     /// Insert data when change status to "Anulados"
     /// @param {WithholdingsArr} id_invoice_xero - idXero
     setDataReissueWidthHoldings: async (WithholdingsArr) => {
-        WithholdingsArr.map(async (WithholdingsArr) => {
+        WithholdingsArr.map(async (array) => {
             return (
                 await fetch('/reissueWithholding', {
                     method: 'POST',
-                    body: JSON.stringify(WithholdingsArr),
+                    body: JSON.stringify(array),
                     headers: {
                         "Content-type": "application/json; charset=UTF-8",
                         "Access-Control-Allow-Origin": "*",
