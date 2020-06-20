@@ -102,7 +102,6 @@ class Reports extends Component {
         let x = moment(this.state.startDateLibroCompras)
         let y = moment(this.state.finishDateLibroCompras)
 
-        console.log("dateeeee", x.isBefore(y))
         if (x.isBefore(y)) {
 
             this.setState({
@@ -347,6 +346,8 @@ class Reports extends Component {
                                                     selected={this.state.startDateLibroCompras}
                                                     onChange={this.handleChangeStartDateLibroCompras}
                                                     locale="es"
+                                                    showMonthDropdown
+                                                    showYearDropdown
                                                 /> 
                                             </div>
                                             <div className="inline-date">
@@ -356,6 +357,8 @@ class Reports extends Component {
                                                     selected={this.state.finishDateLibroCompras}
                                                     onChange={this.handleChangeFinishDateLibroCompras}
                                                     locale="es"
+                                                    showMonthDropdown
+                                                    showYearDropdown
                                                 /> 
                                             </div> 
                                         </div>: null
@@ -398,6 +401,8 @@ class Reports extends Component {
                                                     selected={this.state.startDateLibroVentas}
                                                     onChange={this.handleChangeStartDateLibroVentas}
                                                     locale="es"
+                                                    showMonthDropdown
+                                                    showYearDropdown
                                                 /> 
                                             </div>
                                             <div className="inline-date">
@@ -407,6 +412,8 @@ class Reports extends Component {
                                                     selected={this.state.finishDateLibroVentas}
                                                     onChange={this.handleChangeFinishDateLibroVentas}
                                                     locale="es"
+                                                    showMonthDropdown
+                                                    showYearDropdown
                                                 /> 
                                             </div> 
                                         </div>:null
@@ -453,6 +460,8 @@ class Reports extends Component {
                                                     selected={this.state.startDateDeclaracionIVA}
                                                     onChange={this.handleChangeStartDateDeclaracionIVA}
                                                     locale="es"
+                                                    showMonthDropdown
+                                                    showYearDropdown
                                                 /> 
                                             </div>
                                             <div className="inline-date">
@@ -462,6 +471,8 @@ class Reports extends Component {
                                                     selected={this.state.finishDateDeclaracionIVA}
                                                     onChange={this.handleChangeFinishDateDeclaracionIVA}
                                                     locale="es"
+                                                    showMonthDropdown
+                                                    showYearDropdown
                                                 /> 
                                             </div> 
                                         </div>: null
@@ -503,6 +514,8 @@ class Reports extends Component {
                                                     selected={this.state.startDateDeclaracionISLR}
                                                     onChange={this.handleChangeStartDateDeclaracionISLR}
                                                     locale="es"
+                                                    showMonthDropdown
+                                                    showYearDropdown
                                                 /> 
                                             </div>
                                             <div className="inline-date">
@@ -512,6 +525,8 @@ class Reports extends Component {
                                                     selected={this.state.finishDateDeclaracionISLR}
                                                     onChange={this.handleChangeFinishDateDeclaracionISLR}
                                                     locale="es"
+                                                    showMonthDropdown
+                                                    showYearDropdown
                                                 /> 
                                             </div> 
                                         </div>: null
