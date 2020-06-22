@@ -37,8 +37,7 @@ import Ventas from './internos/Ventas';
 import Title from './internos/Title';
 import IframeComponent from './internos/iFrame';
 import BanksConvert from '../Componentes/internos/Banks/BanksConvert';
-import FiscalReportSales from '../Componentes/internos/Reportes/LibroVentas'
-import FiscalReportPurchase from '../Componentes/internos/Reportes/LibroCompras'
+import Reports from '../Componentes/internos/Reports/Reports';
 
 //#region estilo
 const drawerWidth = 240;
@@ -291,17 +290,10 @@ export default function Dashboard(props) {
                 </NavDropdown>
                 <NavDropdown style={{ padding: "0 30px" }} title="Contabilidad" id="ddlContabilidadId">
                   <NavDropdown.Item eventKey={2.1} onClick={(event) => handleListItemClick(event, 2.1)} href="#Contabilidad/Bancos">Bancos</NavDropdown.Item>
-                  <NavDropdown.Item eventKey={2.2} href="#Contabilidad/Impuestos">Impuestos</NavDropdown.Item>
-                  {/* <NavDropdown.Divider /> */}
-                  {/* <NavDropdown.Item href="#action/3.4">Separated link</NavDropdown.Item> */}
                 </NavDropdown>
                 <NavDropdown style={{ padding: "0 30px" }} title="Reportes" id="ddlReportesId">
-                  <NavDropdown.Item eventKey={3.1} onClick={(event) => handleListItemClick(event, 3.1)} href="#Reportes/Ventas">Ventas</NavDropdown.Item>
-                  <NavDropdown.Item eventKey={3.2} onClick={(event) => handleListItemClick(event, 3.2)} href="#Reportes/Compras">Compras</NavDropdown.Item>
-                  <NavDropdown.Item eventKey={3.4} href="#Reportes/Impuestos">Impuestos</NavDropdown.Item>
-                  {/*<NavDropdown.Item eventKey={3.3} href="#Reportes/Bancos">Bancos</NavDropdown.Item>
-                  <NavDropdown.Item eventKey={3.5} href="#Reportes/Contabilidad">Contabilidad</NavDropdown.Item>
-                  <NavDropdown.Item eventKey={3.6} href="#Reportes/Análisis">Análisis</NavDropdown.Item> */}
+                  <NavDropdown.Item eventKey={3.1} onClick={(event) => handleListItemClick(event, 3.1)} href="#Reportes/Impuestos">Impuestos</NavDropdown.Item>
+                  {/* <NavDropdown.Item eventKey={3.2} onClick={(event) => handleListItemClick(event, 3.2)} href="#Reportes/Compras">Compras</NavDropdown.Item> */}
                 </NavDropdown>
               </Nav>
             </Navbar.Collapse> :
@@ -362,23 +354,13 @@ export default function Dashboard(props) {
                   </Grid> :
                   event === "xeroOrgName" || event === 3.1 ?
                     <Grid container spacing={2}>
-                      <Title>Libro fiscal de ventas</Title>
                       <Grid item xs={12}>
                         <Paper className={classes.paper}>
-                          <FiscalReportSales orgIdSelected={orgIdSelected} />
+                          < Reports orgIdSelected={orgIdSelected} />
                         </Paper>
                       </Grid>
                     </Grid> :
-                    event === "xeroOrgName" || event === 3.2 ?
-                      <Grid container spacing={2}>
-                        <Title>Libro fiscal de compras</Title>
-                        <Grid item xs={12}>
-                          <Paper className={classes.paper}>
-                            <FiscalReportPurchase orgIdSelected={orgIdSelected} />
-                          </Paper>
-                        </Grid>
-                      </Grid> :
-                      null}
+                    null}
           {/* Copyright */}
           <Box pt={4}>
             <util.Copyright />

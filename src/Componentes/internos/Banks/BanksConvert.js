@@ -1,5 +1,4 @@
 import React, { Component } from 'react';
-import PropTypes from 'prop-types';
 import '../Css/styles.scss';
 import Accordion from '../accordion/Accordion';
 import FileTransformationInformation from '../accordion/FileTransformationInformation';
@@ -7,10 +6,6 @@ import calls from '../../Js/calls';
 import util from '../../Js/util';
 
 class BanksConvert extends Component {
-
-    static propTypes = {
-        //children: PropTypes.instanceOf(Object).isRequired,
-    };
 
     constructor(props) {
         super(props);

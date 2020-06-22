@@ -1,0 +1,45 @@
+.flex-container {
+    display: flex;
+    justify-content: space-evenly;
+    align-items: baseline;
+}
+
+.card-container {
+    width: 350px;
+    height: 245px;
+}
+
+.report-container {
+    padding: 20px 40px;
+}
+
+.btn-generate {
+    position: absolute;
+    left: 50%;
+    transform: translate(-50%, 0px);
+    bottom: 21px;
+}
+
+.inline-date {
+    display: flex;
+    justify-content: space-evenly;
+    align-items: baseline;
+
+    & .time-interval {
+        margin-right: 10px;
+    }
+}
+
+.date-container {
+    display: flex;
+    justify-content: space-evenly;
+    flex-direction: row;
+    padding-top: 10px;
+}
+
+.error-msg {
+    display: flex;
+    justify-content: center;
+    padding-top: 5px;
+    color: red;
+}
