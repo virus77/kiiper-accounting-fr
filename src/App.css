@@ -1,8 +1,3 @@
-html,
-body {
-	font-family: "Muli" !important;
-}
-
 .row {
 	margin: 0 !important;
 }
@@ -52,7 +47,7 @@ p {
 
 /*Botón inicial*/
 #xeroSyncAnchor {
-	background-color: #7158e2;
+	background-color: #232c51;
 	cursor: pointer;
 	padding: 12px 20px;
 	border: none;
@@ -60,7 +55,7 @@ p {
 	font-size: 0.9em;
 }
 #xeroSyncAnchor:hover {
-	background-color: #232c51; /* Change the value to with anchors hover color*/
+	background-color:  #7158e2;/* Change the value to with anchors hover color*/
 }
 
 /*Color del header*/
@@ -191,7 +186,7 @@ input[type="password"]::-ms-reveal:hover {
 /* Logo */
 .MuiTypography-h6{
   line-height: 1!important;
-  font-family: "Muli", "Helvetica", "Arial", sans-serif!important;
+  font-family: "Muli";
   font-weight:700!important
 }
 
@@ -350,7 +345,7 @@ iframe body{
   padding: 20px 15px!important;
   color: rgba(35, 44, 81, 0.5)!important;
   font-weight: 700!important;
-  font-family:"Muli",sans-serif;
+  font-family:"Muli";
 }
 
 /* UI Menu Tab selected */

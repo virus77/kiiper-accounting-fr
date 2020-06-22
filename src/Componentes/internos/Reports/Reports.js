@@ -35,18 +35,22 @@ class Reports extends Component {
             finishDateLibroCompras: new Date(),
             showDateLibroCompras: false,
             optionSelectedLibroCompras: 0,
+            msgLibroCompras:"",
             startDateLibroVentas: new Date(),
             finishDateLibroVentas: new Date(),
             showDateLibroVentas: false,
             optionSelectedLibroVentas: 0,
+            msgLibroVentas:"",
             startDateDeclaracionIVA: new Date(),
             finishDateDeclaracionIVA: new Date(),
             showDateDeclaracionIVA: false,
             optionSelectedDeclaracionIVA: 0,
+            msgDeclaracionIVA:"",
             startDateDeclaracionISLR: new Date(),
             finishDateDeclaracionISLR: new Date(),
             showDateDeclaracionISLR: false,
             optionSelectedDeclaracionISLR: 0,
+            msgDeclaracionISLR:"",
             taxbookId: ""
         };
 
@@ -94,16 +98,32 @@ class Reports extends Component {
     /// Funcion utilizada para obtener el periodo y enviar los parámetros 
     /// solicitados por medio de post para generar el guardado en Xero
     onGetPeriodLibroCompras = async () => {
-        let taxbookId = await calls.getBook(this.props.orgIdSelected, this.state.optionSelectedLibroCompras,
-            moment(this.state.finishDateLibroCompras).format("DD/MM/YYYY"), moment(this.state.startDateLibroCompras).format("DD/MM/YYYY"),
-            "/purchasesBook");
 
-        if (taxbookId.data === false)
-            console.log("Ocurrió un problema al momento de guardar en Xero");
-        else {
-            this.setState({ taxbookId: taxbookId.data });
-            console.log("Se generó correctamente");
+        let x = moment(this.state.startDateLibroCompras)
+        let y = moment(this.state.finishDateLibroCompras)
+
+        if (x.isBefore(y)) {
+
+            this.setState({
+                msgLibroCompras: '',
+            });
+            
+            let taxbookId = await calls.getBook(this.props.orgIdSelected, this.state.optionSelectedLibroCompras,
+                y.format("DD/MM/YYYY"), x.format("DD/MM/YYYY"),
+                "/purchasesBook");
+    
+            if (taxbookId.data === false)
+                console.log("Ocurrió un problema al momento de guardar en Xero");
+            else {
+                this.setState({ taxbookId: taxbookId.data });
+                console.log("Se generó correctamente");
+            }
+        } else {
+            this.setState({
+                msgLibroCompras: 'Las fechas son inválidas',
+            });
         }
+        
     };
 
     /* Funciones Libro de Ventas */
@@ -140,16 +160,32 @@ class Reports extends Component {
     /// Funcion utilizada para obtener el periodo y enviar los parámetros 
     /// solicitados por medio de post para generar el guardado en Xero
     onGetPeriodLibroVentas = async () => {
-        let taxbookId = await calls.getBook(this.props.orgIdSelected, this.state.optionSelectedLibroVentas,
-            moment(this.state.finishDateLibroVentas).format("DD/MM/YYYY"), moment(this.state.startDateLibroVentas).format("DD/MM/YYYY"),
-            "/purchasesBook");
 
-        if (taxbookId.data === false)
-            console.log("Ocurrió un problema al momento de guardar en Xero");
-        else {
-            this.setState({ taxbookId: taxbookId.data });
-            console.log("Se generó correctamente");
-        }
+        let x = moment(this.state.startDateLibroVentas);
+        let y = moment(this.state.finishDateLibroVentas);
+
+        if (x.isBefore(y)) {
+
+            this.setState({
+                msgLibroVentas: '',
+            });
+
+            let taxbookId = await calls.getBook(this.props.orgIdSelected, this.state.optionSelectedLibroVentas,
+                y.format("DD/MM/YYYY"), x.format("DD/MM/YYYY"),
+                "/purchasesBook");
+    
+            if (taxbookId.data === false)
+                console.log("Ocurrió un problema al momento de guardar en Xero");
+            else {
+                this.setState({ taxbookId: taxbookId.data });
+                console.log("Se generó correctamente");
+            }
+            
+        } else {
+            this.setState({
+                msgLibroVentas: 'Las fechas son inválidas',
+            });
+        }        
     };
 
 
@@ -186,18 +222,33 @@ class Reports extends Component {
         /// Funcion utilizada para obtener el periodo y enviar los parámetros 
     /// solicitados por medio de post para generar el guardado en Xero
     onGetPeriodDeclaracionIVA  = async () => {
-        let taxbookId = await calls.getBook(this.props.orgIdSelected, this.state.optionSelectedDeclaracionIVA,
-            moment(this.state.finishDateDeclaracionIVA).format("DD/MM/YYYY"), moment(this.state.startDateDeclaracionIVA).format("DD/MM/YYYY"),
-            "/purchasesBook");
 
-        if (taxbookId.data === false)
-            console.log("Ocurrió un problema al momento de guardar en Xero");
-        else {
-            this.setState({ taxbookId: taxbookId.data });
-            console.log("Se generó correctamente");
+        let x = moment(this.state.startDateDeclaracionIVA);
+        let y = moment(this.state.finishDateDeclaracionIVA);
+
+        if (x.isBefore(y)) {
+
+            this.setState({
+                msgDeclaracionIVA: '',
+            });
+
+            let taxbookId = await calls.getBook(this.props.orgIdSelected, this.state.optionSelectedDeclaracionIVA,
+                y.format("DD/MM/YYYY"), x.format("DD/MM/YYYY"),
+                "/purchasesBook");
+    
+            if (taxbookId.data === false)
+                console.log("Ocurrió un problema al momento de guardar en Xero");
+            else {
+                this.setState({ taxbookId: taxbookId.data });
+                console.log("Se generó correctamente");
+            }
+        } else {
+            this.setState({
+                msgDeclaracionIVA: 'Las fechas son inválidas',
+            });
         }
+        
     };
-
 
     /* Funciones  Declaracion Retenciones de ISLR */
 
@@ -211,7 +262,7 @@ class Reports extends Component {
     handleChangeFinishDateDeclaracionISLR = date => {
         console.log("finish day DeclaracionISLR", date)
         this.setState({
-            finishDateDeclaracionISRL: date
+            finishDateDeclaracionISLR: date
         });
     };
 
@@ -233,15 +284,31 @@ class Reports extends Component {
             /// Funcion utilizada para obtener el periodo y enviar los parámetros 
     /// solicitados por medio de post para generar el guardado en Xero
     onGetPeriodDeclaracionISLR  = async () => {
-        let taxbookId = await calls.getBook(this.props.orgIdSelected, this.state.optionSelectedDeclaracionISLR,
-            moment(this.state.finishDateDeclaracionISLR).format("DD/MM/YYYY"), moment(this.state.startDateDeclaracionISLR).format("DD/MM/YYYY"),
-            "/purchasesBook");
 
-        if (taxbookId.data === false)
-            console.log("Ocurrió un problema al momento de guardar en Xero");
-        else {
-            this.setState({ taxbookId: taxbookId.data });
-            console.log("Se generó correctamente");
+
+        let x = moment(this.state.startDateDeclaracionISLR);
+        let y = moment(this.state.finishDateDeclaracionISLR);
+
+        if (x.isBefore(y)) {
+
+            this.setState({
+                msgDeclaracionISLR: '',
+            });
+
+            let taxbookId = await calls.getBook(this.props.orgIdSelected, this.state.optionSelectedDeclaracionISLR,
+                y.format("DD/MM/YYYY"), x.format("DD/MM/YYYY"),
+                "/purchasesBook");
+    
+            if (taxbookId.data === false)
+                console.log("Ocurrió un problema al momento de guardar en Xero");
+            else {
+                this.setState({ taxbookId: taxbookId.data });
+                console.log("Se generó correctamente");
+            }
+        } else {
+            this.setState({
+                msgDeclaracionISLR: 'Las fechas son inválidas',
+            });
         }
     };
     
@@ -273,26 +340,30 @@ class Reports extends Component {
                                     { this.state.showDateLibroCompras?
                                         <div className="date-container">
                                             <div className="inline-date">
-                                                <div>Desde:</div>
+                                                <div className="time-interval">Desde: </div>
                                                 <DatePicker
                                                     className={"calendar"}
                                                     selected={this.state.startDateLibroCompras}
                                                     onChange={this.handleChangeStartDateLibroCompras}
                                                     locale="es"
+                                                    showMonthDropdown
+                                                    showYearDropdown
                                                 /> 
                                             </div>
                                             <div className="inline-date">
-                                                <div>Hasta:</div>
+                                                <div className="time-interval">Hasta: </div>
                                                 <DatePicker
                                                     className={"calendar"}
                                                     selected={this.state.finishDateLibroCompras}
                                                     onChange={this.handleChangeFinishDateLibroCompras}
                                                     locale="es"
+                                                    showMonthDropdown
+                                                    showYearDropdown
                                                 /> 
                                             </div> 
                                         </div>: null
                                     }
-                                    
+                                    <span className="error-msg">{this.state.msgLibroCompras}</span>
                                 </Card.Text>
                                 <div className="btn-generate">
                                     <Button className="xeroGenerate" 
@@ -324,26 +395,30 @@ class Reports extends Component {
                                     { this.state.showDateLibroVentas?
                                         <div className="date-container">
                                             <div className="inline-date">
-                                                <div>Desde:</div>
+                                                <div className="time-interval">Desde:</div>
                                                 <DatePicker
                                                     className={"calendar"}
                                                     selected={this.state.startDateLibroVentas}
                                                     onChange={this.handleChangeStartDateLibroVentas}
                                                     locale="es"
+                                                    showMonthDropdown
+                                                    showYearDropdown
                                                 /> 
                                             </div>
                                             <div className="inline-date">
-                                                <div>Hasta:</div>
+                                                <div className="time-interval">Hasta:</div>
                                                 <DatePicker
                                                     className={"calendar"}
                                                     selected={this.state.finishDateLibroVentas}
                                                     onChange={this.handleChangeFinishDateLibroVentas}
                                                     locale="es"
+                                                    showMonthDropdown
+                                                    showYearDropdown
                                                 /> 
                                             </div> 
                                         </div>:null
                                     }
-                                    
+                                    <span className="error-msg">{this.state.msgLibroVentas}</span>
                                 </Card.Text>
                                 <div className="btn-generate">
                                     <Button className="xeroGenerate"  
@@ -379,26 +454,30 @@ class Reports extends Component {
                                     { this.state.showDateDeclaracionIVA ?
                                         <div className="date-container">
                                             <div className="inline-date">
-                                                <div>Desde:</div>
+                                                <div className="time-interval">Desde:</div>
                                                 <DatePicker
                                                     className={"calendar"}
                                                     selected={this.state.startDateDeclaracionIVA}
                                                     onChange={this.handleChangeStartDateDeclaracionIVA}
                                                     locale="es"
+                                                    showMonthDropdown
+                                                    showYearDropdown
                                                 /> 
                                             </div>
                                             <div className="inline-date">
-                                                <div>Hasta:</div>
+                                                <div className="time-interval">Hasta:</div>
                                                 <DatePicker
                                                     className={"calendar"}
                                                     selected={this.state.finishDateDeclaracionIVA}
                                                     onChange={this.handleChangeFinishDateDeclaracionIVA}
                                                     locale="es"
+                                                    showMonthDropdown
+                                                    showYearDropdown
                                                 /> 
                                             </div> 
                                         </div>: null
                                     }
-                                    
+                                    <span className="error-msg">{this.state.msgDeclaracionIVA}</span>
                                 </Card.Text>
                                 <div className="btn-generate">
                                     <Button className="xeroGenerate"  onClick={() => { this.onGetPeriodDeclaracionIVA() }}>
@@ -429,26 +508,30 @@ class Reports extends Component {
                                     { this.state.showDateDeclaracionISLR?
                                         <div className="date-container">
                                             <div className="inline-date">
-                                                <div>Desde:</div>
+                                                <div className="time-interval">Desde:</div>
                                                 <DatePicker
                                                     className={"calendar"}
                                                     selected={this.state.startDateDeclaracionISLR}
                                                     onChange={this.handleChangeStartDateDeclaracionISLR}
                                                     locale="es"
+                                                    showMonthDropdown
+                                                    showYearDropdown
                                                 /> 
                                             </div>
                                             <div className="inline-date">
-                                                <div>Hasta:</div>
+                                                <div className="time-interval">Hasta:</div>
                                                 <DatePicker
                                                     className={"calendar"}
                                                     selected={this.state.finishDateDeclaracionISLR}
                                                     onChange={this.handleChangeFinishDateDeclaracionISLR}
                                                     locale="es"
+                                                    showMonthDropdown
+                                                    showYearDropdown
                                                 /> 
                                             </div> 
                                         </div>: null
                                     }
-                                    
+                                    <span className="error-msg">{this.state.msgDeclaracionISLR}</span>
                                 </Card.Text>
                                 <div className="btn-generate">
                                     <Button className="xeroGenerate" onClick={() => { this.onGetPeriodDeclaracionISLR() }}>
