@@ -1,0 +1,33 @@
+.Sales {
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+}
+
+.SalesTable {
+    display: flex;
+    flex:2;
+    flex-direction: column;
+    margin-right: 5px;
+}
+
+.SalesChart {
+    display: flex;
+    flex:1;
+    flex-direction: column;
+    margin-left: 5px;
+}
+
+.Title {
+    background-color: #F6F7F9;
+    padding: 25px 15px;
+    margin-bottom: 25px;
+}
+
+.MyTooltip {
+    box-shadow: 0 2px 3px #ccc;
+    border: 1px solid #eee;
+    padding: 10px;
+    box-sizing: border-box;
+    background-color: whitesmoke;
+}

@@ -39,7 +39,8 @@ import IframeComponent from './internos/iFrame';
 import BanksConvert from '../Componentes/internos/Banks/BanksConvert';
 import Reports from '../Componentes/internos/Reports/Reports';
 import FiscalReportSales from '../Componentes/internos/Reportes/LibroVentas'
-import FiscalReportPurchase from '../Componentes/internos/Reportes/LibroCompras'
+import FiscalReportPurchase from '../Componentes/internos/Reportes/LibroCompras';
+import DashboardPanel from './internos/Dashboard/dashboard'
 
 //#region estilo
 const drawerWidth = 240;
@@ -285,7 +286,8 @@ export default function Dashboard(props) {
               <Title>Dashboard</Title>
               <Grid item xs={12}>
                 <Paper className={fixedHeightPaper} style={{ height: "715px" }}>
-                  <IframeComponent src="https://gca.panatech.io/login?returnUrl=%2Fpractice%2F5eab0c49a81fa271945c5b37" height="710px" width="100%" />
+                  {/* <IframeComponent src="https://gca.panatech.io/login?returnUrl=%2Fpractice%2F5eab0c49a81fa271945c5b37" height="710px" width="100%" /> */}
+                  <DashboardPanel/>
                 </Paper>
               </Grid>
             </Grid> :

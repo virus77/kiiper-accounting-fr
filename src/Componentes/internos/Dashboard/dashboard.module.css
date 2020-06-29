@@ -1,0 +1,15 @@
+.TabStyle {
+    font-size: 14px;
+    color:#232c51;
+    font-weight: bold;
+    outline: none;
+    text-transform: capitalize;
+}
+
+.TabStyle:focus {
+    outline: none;
+}
+
+.TabsContainer {
+    background-color: #F3F3F3;
+} 
