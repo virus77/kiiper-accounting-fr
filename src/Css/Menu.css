@@ -71,6 +71,7 @@
 
 .navbar-expand-lg .navbar-nav .dropdown-menu {
     margin-top: 8px !important;
+  margin-left: 29px!important;
 }
 
 .dropdown-item,

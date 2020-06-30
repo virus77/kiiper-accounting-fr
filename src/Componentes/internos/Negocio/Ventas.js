@@ -2,9 +2,9 @@ import React, { Component } from 'react';
 import { Menu } from 'semantic-ui-react';
 
 //Componentes
-import util from '../Js/util'
-import calls from '../Js/calls'
-import AlertDismissible from '../internos/Alert'
+import util from '../../Js/util'
+import calls from '../../Js/calls'
+import AlertDismissible from '../../internos/Alert'
 import { NavDropdown } from 'react-bootstrap';
 
 //Css
@@ -12,8 +12,8 @@ import 'semantic-ui-css/semantic.min.css'
 import 'ag-grid-community/dist/styles/ag-grid.css';
 import 'ag-grid-community/dist/styles/ag-theme-alpine.css';
 import 'ag-grid-community/dist/styles/ag-grid.css';
-import '../internos/Css/Grid.scss'
-import '../internos/Css/alert.css'
+import '../../internos/Css/Grid.scss'
+import '../../internos/Css/alert.css'
 
 // Declaring momenty object
 var moment = require('moment'); // require
@@ -196,7 +196,7 @@ class Ventas extends Component {
 
             // Finding file uploaded to voucher
             let voucherFile = document.querySelector(`[id=lbl_${withHoldingId}]`);
-            voucherFile = voucherFile ? voucherFile.innerHTML : "";            
+            voucherFile = voucherFile ? voucherFile.innerHTML : "";
 
             // Formatting voucher number
             let voucherNumber = selectedRow.Comprobante ? selectedRow.Comprobante : "";
@@ -301,8 +301,18 @@ class Ventas extends Component {
                     break;
 
                 default:
+                    if (activeItem.includes("Sel") === true)
+                        this.setState({ activeItem: activeItem.substring(0, activeItem.length - 3), show: false, texto: "" })
+                    else
+                        this.setState({ activeItem: activeItem, show: false, texto: "" })
                     break;
             }
+        }
+        else {
+            if (activeItem.includes("Sel") === true)
+                this.setState({ activeItem: activeItem.substring(0, activeItem.length - 3), show: false, texto: "" })
+            else
+                this.setState({ activeItem: activeItem, show: false, texto: "" })
         }
     };
 

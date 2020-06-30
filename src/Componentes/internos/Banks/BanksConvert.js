@@ -26,6 +26,7 @@ class BanksConvert extends Component {
     componentDidMount() {
         //Getting data from Xero and building data grid
         calls.getBankAccounts(this.props.orgIdSelected).then(result => {
+            if(result.data !== undefined )
             console.log("data", result.data);
             this.setState({ accounts: result.data });
         });

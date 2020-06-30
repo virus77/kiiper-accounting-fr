@@ -3,9 +3,9 @@ import React, { Component } from 'react';
 import { Menu } from 'semantic-ui-react'
 
 //Componentes
-import util from '../Js/util'
-import calls from '../Js/calls'
-import AlertDismissible from '../internos/Alert'
+import util from '../../Js/util'
+import calls from '../../Js/calls'
+import AlertDismissible from '../../internos/Alert'
 import { NavDropdown } from 'react-bootstrap';
 
 //Css
@@ -13,8 +13,8 @@ import 'semantic-ui-css/semantic.min.css'
 import 'ag-grid-community/dist/styles/ag-grid.css';
 import 'ag-grid-community/dist/styles/ag-theme-alpine.css';
 import 'ag-grid-community/dist/styles/ag-grid.css';
-import '../internos/Css/Grid.scss'
-import '../internos/Css/alert.css'
+import '../../internos/Css/Grid.scss'
+import '../../internos/Css/alert.css'
 
 class Compras extends Component {
     constructor(props) {
@@ -221,8 +221,18 @@ class Compras extends Component {
                     this.setState({ activeItem: activeItem + "Sel", show: false, texto: "El comprobante de retención ha sido anulado en Xero y cambió su estatus." })
                     break;
                 default:
+                    if (activeItem.includes("Sel") === true)
+                        this.setState({ activeItem: activeItem.substring(0, activeItem.length - 3), show: false, texto: "" })
+                    else
+                        this.setState({ activeItem: activeItem, show: false, texto: "" })
                     break;
             }
+        }
+        else {
+            if (activeItem.includes("Sel") === true)
+                this.setState({ activeItem: activeItem.substring(0, activeItem.length - 3), show: false, texto: "" })
+            else
+                this.setState({ activeItem: activeItem, show: false, texto: "" })
         }
     };
 

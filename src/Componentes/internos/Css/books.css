@@ -65,6 +65,24 @@
   padding-left: 5px;
 }
 
+/*txtDate de los periodos*/
+.calendarDueDate {
+  width: 400px;
+  height: 30px;
+  border-radius: 7px;
+  border-color: #7158e2;
+  color: #232c51;
+  cursor: pointer;
+  border-width: thin;
+  font-size: 13px;
+  padding-left: 5px;
+}
+
+.MuiDialog-paperScrollPaper {
+  width: 450px;
+  /*height: 60%;*/
+}
+
 /*Color selected date in calendar*/
 .react-datepicker__day--selected,
 .react-datepicker__day--in-selecting-range,
@@ -122,4 +140,15 @@
   font-weight: lighter;
   padding: 2px 6px 2px 6px;
   font-size: 13px;
+}
+
+.myPosition {
+  left: 50%;
+  transform: translate(-30%, 0px);
+  bottom: 21px;
+}
+
+#form-dialog-title {
+  background-color: #212529 !important;
+  color: white!important;
 }
