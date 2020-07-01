@@ -244,7 +244,7 @@ const util = {
         switch (taxIndex) {
             case 4.1:
             case "ISLR":
-                kindOfPeople === "Cliente" ? taxInfo.id = 5 : taxInfo.id = 2;
+                kindOfPeople === "Cliente" ? taxInfo.id = 1 : taxInfo.id = 5;
                 taxInfo.name = "ISLR";
                 taxInfo.event = 4.1;
                 break;
@@ -252,7 +252,7 @@ const util = {
             case 4.2:
             case "IVA":
             default:
-                kindOfPeople === "Cliente" ? taxInfo.id = 4 : taxInfo.id = 1;
+                kindOfPeople === "Cliente" ? taxInfo.id = 2 : taxInfo.id = 4;
                 taxInfo.name = "IVA";
                 taxInfo.event = 4.2;
                 break;
@@ -336,7 +336,12 @@ const util = {
             { headerName: 'Fecha factura', field: 'FechaFactura', cellClass: "grid-cell-centered", xeroField: 'invoice_date', filter: 'agTextColumnFilter', filter: 'agTextColumnFilter', width: 130, sortable: true, cellClass: "grid-cell-centered" },
             { headerName: 'Base imponible', field: 'invoice_subtotal', type: 'rightAligned', xeroField: true, calculated: true, formulaName: 'base_taxable', width: 135, sortable: true },
             { headerName: 'Total ' + Tipo, field: 'TotalIVA', headerClass: "grid-cell-centered", xeroField: 'invoice_total_tax', type: 'rightAligned', width: 110, sortable: true },
-            { headerName: '% retenido', field: 'Retencion', xeroField: 'retention_percentage', type: 'rightAligned', hide: Tipo === "IVA" ? false : true, calculated: true, width: 104, sortable: true, cellClass: "grid-cell-centered" },
+            {
+                headerName: '% retenido', field: 'Retencion', xeroField: 'retention_percentage', type: 'rightAligned', hide: Tipo === "IVA" ? false : true, calculated: true, width: 104, sortable: true, cellClass: "grid-cell-centered",
+                valueGetter: function (params) {
+                    return 75;
+                },
+            },
             { headerName: 'Monto retenido', field: 'MontoRetenido', xeroField: true, calculated: true, formulaName: 'retention_amount', type: 'rightAligned', width: 129, sortable: true },
             { headerName: 'Fecha de comprobante', field: 'approval_date', width: 170, sortable: true, editable: true, cellEditor: Datepicker },
             { headerName: 'No. Comprobante', field: 'Comprobante', width: 150, sortable: true, editable: true, cellEditor: NumberValidation },
@@ -380,11 +385,16 @@ const util = {
                 },
             },
             { headerName: 'No. Control', field: 'Control', xeroField: 'invoice_control', filter: 'agTextColumnFilter', filter: 'agTextColumnFilter', width: 120, sortable: true },
-            { headerName: kindOfPeople, field: 'Contacto', xeroField: 'contact_name', headerClass: "centerHeader", filter: 'agTextColumnFilter', width: 248,  sortable: true },
+            { headerName: kindOfPeople, field: 'Contacto', xeroField: 'contact_name', headerClass: "centerHeader", filter: 'agTextColumnFilter', width: 248, sortable: true },
             { headerName: 'Fecha factura', field: 'FechaFactura', xeroField: 'invoice_date', headerClass: "grid-cell-centered", filter: 'agTextColumnFilter', width: 130, sortable: true, cellClass: "grid-cell-centered" },
             { headerName: 'Base imponible', field: 'invoice_subtotal', xeroField: 'invoice_subtotal', width: 135, sortable: true, type: 'rightAligned' },
             { headerName: 'Total ' + Tipo, field: 'TotalIVA', headerClass: "grid-cell-centered", xeroField: 'retained_amount', width: 110, sortable: true, type: 'rightAligned' },
-            { headerName: '% retenido', field: 'Retencion', xeroField: 'retention_percentage', type: 'rightAligned', hide: Tipo === "IVA" ? false : true, calculated: true, width: 104, sortable: true, cellClass: "grid-cell-centered" },
+            {
+                headerName: '% retenido', field: 'Retencion', xeroField: 'retention_percentage', type: 'rightAligned', hide: Tipo === "IVA" ? false : true, calculated: true, width: 104, sortable: true, cellClass: "grid-cell-centered",
+                valueGetter: function () {
+                    return 75;
+                },
+            },
             { headerName: 'Monto retenido', field: 'MontoRetenido', headerClass: "grid-cell-centered", type: 'rightAligned', xeroField: true, calculated: true, formulaName: 'retention_amount', width: 129, sortable: true },
             { headerName: 'Fecha de comprobante', field: 'date', xeroField: 'approval_date', filter: 'agTextColumnFilter', width: 170, sortable: true, cellClass: "grid-cell-centered" },
             { headerName: 'No. Comprobante', field: 'Comprobante', xeroField: 'invoice_number', width: 150, sortable: true },
@@ -396,24 +406,54 @@ const util = {
     CellRendererUp: function (params) {
         var eDiv = document.createElement('div');
         eDiv.className = "file-container";
-        eDiv.innerHTML = '<div class="custom-file-upload">' +
-            '<img border="0" width="18" height="21" src="http://desacrm.quierocasa.com.mx:7002/Images/kiiper_Upload.png"></img>' +
-            '<input id="file_' + params.data.withHoldingId + '" type="file" class="file-upload" id="file-upload" />' +
-            '   </div>' +
-            '</div>';
+
+        var eDivIn = document.createElement('div');
+        eDivIn.className = "custom-file-upload";
+
+        var img = document.createElement('img');
+        img.setAttribute("border", "0");
+        img.setAttribute("width", "18");
+        img.setAttribute("height", "21");
+        img.setAttribute("src", "http://desacrm.quierocasa.com.mx:7002/Images/kiiper_Upload.png");
+        img.setAttribute("style", "cursor: pointer");
+        eDivIn.appendChild(img);
+
+        var inputF = document.createElement('input');
+        inputF.setAttribute("type", "file");
+        inputF.setAttribute("name", "theName");
+        inputF.className = "file-upload";
+        inputF.setAttribute("id", 'file_' + params.data.withHoldingId);
+        inputF.onchange = async function () {
+            var file = inputF.files[0];
+            var reader = new FileReader();
+            // Read file content on file loaded event
+            reader.onload = function () {
+                var label = document.createElement('label');
+                label.setAttribute("style", "display: none");
+                label.style.display = 'none';
+                label.setAttribute("id", "lbl_" + params.data.withHoldingId);
+                label.innerText = reader.result;
+                document.body.appendChild(label);
+            };
+            // Convert data to base64 
+            reader.readAsDataURL(file);
+        };
+        eDivIn.appendChild(inputF);
+
+        eDiv.appendChild(eDivIn);
         return eDiv;
     },
     //Coloca icono de descarga en el grid
     // y se ejecuta laa acción para descargar documento
     /// @param {object} params - parámetro 
     CellRendererP: function (params) {
-
         withHoldingId = params.data.withHoldingId;
         fileName = "Retención de IVA - " + params.data.invoice_number;
         var flag = '<img border="0" width="18" height="21" src="http://desacrm.quierocasa.com.mx:7002/Images/kiiper_Download.png"></img>';
         var eDiv = document.createElement('div');
         eDiv.className = "file-container";
         eDiv.setAttribute("id", "down_" + withHoldingId);
+
         //Función utilooizada ára llamar el archivo en base64
         //Convertirlo a pdf y descargarlo
         eDiv.onclick = async function () {
@@ -550,7 +590,20 @@ const util = {
             </Typography>
         );
     },
-}
+    //Coloca icono de descarga en el grid
+    // y se ejecuta laa acción para descargar documento
+    /// @param {object} dateTimeA - Fecha inicial
+    /// @param {object} dateTimeB - Fecha fin
+    compareDates: function (dateTimeA, dateTimeB) {
+        var momentA = moment(dateTimeA, "DD/MM/YYYY");
+        var momentB = moment(dateTimeB, "DD/MM/YYYY");
+
+        if (momentA > momentB) return 1;
+        else if (momentA < momentB) return -1;
+        else return 0;
+    },
+};
+
 function NumberValidation() { }
 NumberValidation.prototype.init = function (params) {
     let container = document.createElement('div');
@@ -631,7 +684,8 @@ Datepicker.prototype.getValue = function () {
     return this.eInput.value;
 };
 
-Datepicker.prototype.destroy = function () { };
+Datepicker.prototype.destroy = function () {
+};
 
 Datepicker.prototype.isPopup = function () {
     return false;

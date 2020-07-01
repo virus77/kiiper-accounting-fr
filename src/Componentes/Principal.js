@@ -32,8 +32,8 @@ import K from '../Imagenes/kiiper_K.png';
 
 //Componentes
 import util from './Js/util';
-import Compras from './internos/Compras';
-import Ventas from './internos/Ventas';
+import Compras from './internos/Negocio/Compras';
+import Ventas from './internos/Negocio/Ventas';
 import Title from './internos/Title';
 import IframeComponent from './internos/iFrame';
 import BanksConvert from '../Componentes/internos/Banks/BanksConvert';

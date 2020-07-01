@@ -53,7 +53,7 @@ class salesBook extends Component {
     /// solicitados por medio de post para generar el guardado en Xero
     onGetPeriod = async () => {
         if (this.state.value !== "") {
-            let taxbookId = await calls.getBook(this.props.orgIdSelected, this.state.value,
+            let taxbookId = await calls.getSalesBook(this.props.orgIdSelected, this.state.value,
                 moment(this.state.startDateB).format("DD/MM/YYYY"), moment(this.state.startDateA).format("DD/MM/YYYY"),
                 "/salesBook");
 
@@ -133,11 +133,13 @@ class salesBook extends Component {
                                             className={"calendar"}
                                             selected={this.state.startDateB}
                                             onChange={this.handleChangeDatePkB}
+                                            showMonthDropdown
+                                            showYearDropdown
                                         />
                                     </Form.Group>
                                 </Form>
                             </div>
-                            <div className="col-md-1" style={{ marginLeft:20,paddingTop: "8px" }} >
+                            <div className="col-md-1" style={{ marginLeft: 20, paddingTop: "8px" }} >
                                 <Form >
                                     <Form.Group>
                                     </Form.Group>
@@ -157,6 +159,8 @@ class salesBook extends Component {
                                             className={"calendar"}
                                             selected={this.state.startDateA}
                                             onChange={this.handleChangeDatePkA}
+                                            showMonthDropdown
+                                            showYearDropdown
                                         />
                                     </Form.Group>
                                 </Form>

@@ -181,8 +181,6 @@ class FileTransformationInformation extends Component {
     }
 }
 
-/* -------------------------------------- NO BORRAR ¡¡¡SHINGAO!!! ---------------------------------------*/
-
 ///  Componente InputFile para cambiar el estilo del botón 
 /// default del input de tipo file que da el explorador web
 class InputFile extends Component {
