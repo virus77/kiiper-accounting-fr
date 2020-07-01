@@ -38,6 +38,7 @@ import Title from './internos/Title';
 import IframeComponent from './internos/iFrame';
 import BanksConvert from '../Componentes/internos/Banks/BanksConvert';
 import Reports from '../Componentes/internos/Reports/Reports';
+import Declaraciones from '../Componentes/internos/declaraciones/Declaraciones';
 
 //#region estilo
 const drawerWidth = 240;
@@ -280,7 +281,7 @@ export default function Dashboard(props) {
             </table>
           </Navbar.Brand>
           <Navbar.Toggle aria-controls="basic-navbar-nav" />
-          {event === "xeroOrgName" || event === 0.1 || event === 1.1 || event === 1.2 || event === 2.1 || event === 3.1 || event === 3.2 ?
+          {event === "xeroOrgName" || event === 0.1 || event === 1.1 || event === 1.2 || event === 2.1 || event === 2.2 || event === 3.1 || event === 3.2 ?
             <Navbar.Collapse id="basic-navbar-nav">
               <Nav className="mr-auto">
                 <Nav.Link className="navBarOptionSelected" style={{ padding: "0 30px" }} eventKey={0.1} onClick={(event) => handleListItemClick(event, 0.1)} href="#home">Dashboard</Nav.Link>
@@ -290,6 +291,7 @@ export default function Dashboard(props) {
                 </NavDropdown>
                 <NavDropdown style={{ padding: "0 30px" }} title="Contabilidad" id="ddlContabilidadId">
                   <NavDropdown.Item eventKey={2.1} onClick={(event) => handleListItemClick(event, 2.1)} href="#Contabilidad/Bancos">Bancos</NavDropdown.Item>
+                  <NavDropdown.Item eventKey={3.1} onClick={(event) => handleListItemClick(event, 2.2)} href="#Contabilidad/Impuestos">Impuestos</NavDropdown.Item>
                 </NavDropdown>
                 <NavDropdown style={{ padding: "0 30px" }} title="Reportes" id="ddlReportesId">
                   <NavDropdown.Item eventKey={3.1} onClick={(event) => handleListItemClick(event, 3.1)} href="#Reportes/Impuestos">Impuestos</NavDropdown.Item>
@@ -352,6 +354,14 @@ export default function Dashboard(props) {
                       </Paper>
                     </Grid>
                   </Grid> :
+                   event === "xeroOrgName" || event === 2.2 ?
+                   <Grid container spacing={2}>
+                     {/* Recent purchases */}
+                     <Title>Gestión de declaraciones</Title>
+                     <Grid item xs={12}>
+                       <Declaraciones token={props.token} orgIdSelected={orgIdSelected} />
+                     </Grid>
+                   </Grid>:
                   event === "xeroOrgName" || event === 3.1 ?
                     <Grid container spacing={2}>
                       <Grid item xs={12}>
