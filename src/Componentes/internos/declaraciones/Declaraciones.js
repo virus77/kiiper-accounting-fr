@@ -72,7 +72,7 @@ class Declaraciones extends Component {
 
     //Función utilizada para cambiar el estado y llenado del grid dependiendo la selección de IVA/ISLR
     handleListItemClick = (e, index) => {
-
+        
         // Getting data from Xero and building data grid
         util.getAndBuildGridData(index, this.state.activeItem, "Proveedor", this.props.orgIdSelected).then(result => {
 
@@ -112,7 +112,7 @@ class Declaraciones extends Component {
     onMoveData = async (name, val) => {
 
         let arrayToSend = "";
-
+        
         switch (name) {
             case "Por aprobar":
                 // Getting ros selected and building a JSON to send
@@ -354,7 +354,7 @@ class Declaraciones extends Component {
                                         </div>
                                         : activeItem === 'DeclaradosSel' ?
                                             <div className="idDivEnabledSmall" onClick={() => this.onMoveData("Declarados", true)} >
-                                                <span>Por Pagar</span>
+                                                <span>Por pagar</span>
                                             </div> 
                                         : activeItem === 'PorPagarSel' ?
                                             <div className="idDivEnabledSmall" onClick={() => this.onMoveData("Por pagar", true)} >
