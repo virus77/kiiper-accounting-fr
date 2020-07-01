@@ -225,6 +225,26 @@ const util = {
                 statusInfo.id = 1;
                 statusInfo.name = "Aprobados";
                 break;
+            
+            case "Por aprobar":
+                statusInfo.id = 5;
+                statusInfo.name = "Por aprobar";
+                break;
+            
+            case "Declarados":
+                statusInfo.id = 6;
+                statusInfo.name = "Declarados";
+                break;
+            
+            case "Por pagar":
+                statusInfo.id = 7;
+                statusInfo.name = "Por pagar";
+                break;
+
+            case "Pagados":
+                statusInfo.id = 8;
+                statusInfo.name = "Pagados";
+                break;
 
             default:
                 break;
