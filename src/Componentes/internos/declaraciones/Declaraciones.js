@@ -6,15 +6,19 @@ import { Menu } from 'semantic-ui-react'
 import util from '../../Js/util'
 import calls from '../../Js/calls'
 import AlertDismissible from '../Alert'
-import { NavDropdown } from 'react-bootstrap';
+import { NavDropdown, Button } from 'react-bootstrap';
+import Modal from "react-bootstrap/Modal";
 
 //Css
 import 'semantic-ui-css/semantic.min.css'
 import 'ag-grid-community/dist/styles/ag-grid.css';
 import 'ag-grid-community/dist/styles/ag-theme-alpine.css';
 import 'ag-grid-community/dist/styles/ag-grid.css';
-import '../../internos/Css/Grid.scss'
-import '../../internos/Css/alert.css'
+import '../../internos/Css/Grid.scss';
+import '../../internos/Css/alert.css';
+import "bootstrap/dist/css/bootstrap.min.css";
+import '../Css/styles.scss';
+import Autorenew from '@material-ui/icons/Autorenew';
 
 class Declaraciones extends Component {
     constructor(props) {
@@ -49,7 +53,9 @@ class Declaraciones extends Component {
             Tipo: "IVA",
             event: 4.2,
             eventKey: 0,
-            arrayWithholdings: []
+            arrayWithholdings: [],
+            showModal: false,
+            selectedOption: '1'
         }
     };
 
@@ -134,7 +140,7 @@ class Declaraciones extends Component {
             case "Por aprobar":
                 // Getting ros selected and building a JSON to send
                 arrayToSend = this.onFillstate(this.refs.agGrid.api.getSelectedRows(), name);
-
+                this.handleShowModal();
                 if (arrayToSend.length > 0) {
 
                     // Moving received or stored vouchers to cancelled
@@ -305,10 +311,58 @@ class Declaraciones extends Component {
         window.alert('selection changed, ' + rowCount + ' rows selected');*/
     };
 
+    handleCloseModal = () => this.setState({ showModal: false });
+    handleShowModal = () => this.setState({ showModal: true });
+
+    handleOptionChange = event => {
+        console.log("radio", event.target.value)
+        this.setState({
+          selectedOption: event.target.value
+        });
+    }
+
     render() {
         const { activeItem } = this.state
+ 
         return (
             <div style={{ height: "100%" }}>
+                <Modal show={this.state.showModal} onHide={this.handleCloseModal}
+                    aria-labelledby="contained-modal-title-vcenter"
+                    centered
+                    >
+                    <Modal.Header closeButton>
+                        <Modal.Title id="contained-modal-title-vcenter">Aprobar</Modal.Title>
+                    </Modal.Header>
+                    <Modal.Body>
+                    <div className="container">
+                        <div className="row">
+                            <div className="col-sm-12">
+                                <form>
+                                    <div className="radio">
+                                        <label>
+                                            <input type="radio" value="1" checked={this.state.selectedOption === '1'} 
+                                             onChange={this.handleOptionChange}/>
+                                             &nbsp;&nbsp;Aprobar y enviar notificación al cliente
+                                        </label>
+                                    </div>
+                                    <div className="radio">
+                                        <label>
+                                            <input type="radio" value="2" checked={this.state.selectedOption === '2'}  onChange={this.handleOptionChange}/>
+                                            &nbsp;&nbsp;Aprobar y solicitar V.º B.º al cliente
+                                        </label>
+                                    </div>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+
+                    </Modal.Body>
+                    <Modal.Footer>
+                        <Button className="xeroGenerate" onClick={this.handleCloseModal}>
+                            Guardar
+                        </Button>
+                    </Modal.Footer>
+                </Modal>
                 {/*Pintado del dropdownlist de iva/isrl*/}
                 <div>
                     <NavDropdown id="ddlVentas" title={this.state.event === 4.2 ? '≡  Comprobante de retención de IVA  ' : this.state.event === 4.1 ? '≡  Comprobante de retención de ISLR  ' : '≡  Comprobante de retención de IVA  '} >
@@ -364,10 +418,32 @@ class Declaraciones extends Component {
                     <div style={{ borderStyle: "none", flex: "1", display: "flex", justifyContent: "flex-end" }}>
                         {
                             activeItem === 'Por generar'?
-                                <div className="idDibvDisabledsmall">
-                                    <span>Aprobación</span>
-                                </div>:
-                                activeItem === 'Por aprobar'?
+                                <div className="two-buttons-container">
+                                    <div className="idDibvDisabledsmall">
+                                     <span> <Autorenew /> Recargar</span>
+                                    </div>
+                                    <div className="idDibvDisabledsmall">
+                                        <span>Enviar</span>
+                                    </div>
+                                </div>
+                                :activeItem === 'Por aprobar'?
+                                // <div className="two-buttons-container">
+                                //     <div className="idDibvDisabledsmall">
+                                //         <span>Rechazar</span>
+                                //     </div>
+                                //     <div className="idDibvDisabledsmall">
+                                //         <span>Aprobar</span>
+                                //     </div>
+                                // </div>
+                                <div className="two-buttons-container">
+                                    <div className="idDivEnabledSmall" onClick={() => this.onMoveData("Por aprobar", true)} >
+                                        <span>Rechazar</span>
+                                    </div>
+                                    <div className="idDivEnabledSmall" onClick={() => this.onMoveData("Por aprobar", true)} >
+                                        <span>Aprobar</span>
+                                    </div>
+                                </div>
+                                :activeItem === 'Por aprobar'?
                                     <div className="idDibvDisabledsmall">
                                         <span>Aprobar</span>
                                     </div>
@@ -383,15 +459,25 @@ class Declaraciones extends Component {
                                         <div className="idDibvDisabledsmall">
                                             <span>Pagar</span>
                                         </div>
-                                        : activeItem === 'PorGenerarSel' ?
-                                            <div className="idDivEnabledSmall" onClick={() => this.onMoveData("Por generar", true)} >
-                                                <span>Aprobación</span>
-                                            </div>
-                                            : activeItem === 'PorAprobarSel' ?
-                                                <div className="idDivEnabledSmall" onClick={() => this.onMoveData("Por aprobar", true)} >
-                                                    <span>Aprobar</span>
+                                        :activeItem === 'PorGenerarSel' ?
+                                            <div className="two-buttons-container">
+                                                <div className="idDivEnabledSmall" onClick={() => this.onMoveData("Por generar", true)} >
+                                                    <span> <Autorenew /> Recargar</span>
                                                 </div>
-                                                : activeItem === 'AprobadosSel' ?
+                                                <div className="idDivEnabledSmall" onClick={() => this.onMoveData("Por generar", true)} >
+                                                    <span>Enviar</span>
+                                                </div>
+                                            </div>
+                                            :activeItem === 'PorAprobarSel' ?
+                                                <div className="two-buttons-container">
+                                                    <div className="idDivEnabledSmall" onClick={() => this.onMoveData("Por aprobar", true)} >
+                                                        <span>Rechazar</span>
+                                                    </div>
+                                                    <div className="idDivEnabledSmall" onClick={() => this.onMoveData("Por aprobar", true)} >
+                                                        <span>Aprobar</span>
+                                                    </div>
+                                                </div>
+                                                :activeItem === 'AprobadosSel' ?
                                                     <div className="idDivEnabledSmall" onClick={() => this.onMoveData("Aprobados", true)} >
                                                         <span>Declarar</span>
                                                     </div>
