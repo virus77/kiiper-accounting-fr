@@ -444,7 +444,7 @@ const util = {
 
         var seeCommitmentColumn = ['Declarados', 'Por pagar', 'Pagados'];
         var seePaymentColumn = ['Por pagar', 'Pagados'];
-        var seeCertificateColumn = ['Declarado','Por pagar', 'Pagados'];
+        var seeCertificateColumn = ['Declarados', 'Pagados'];
 
         var columnDefs = [
             //#region hidden rows
@@ -476,40 +476,46 @@ const util = {
                     }
                 },
             },
-            { headerName: 'Fecha Límite', field: 'FechaLimite', xeroField: 'invoice_control', filter: 'agTextColumnFilter', filter: 'agTextColumnFilter', width: 164, sortable: true },
+            { headerName: 'Fecha Límite', field: 'FechaLimite', xeroField: 'invoice_control', filter: 'agTextColumnFilter', filter: 'agTextColumnFilter', width: 150, sortable: true },
             { headerName: 'Base sujeta a retención', field: 'invoice_subtotal', xeroField: 'invoice_subtotal', width: 164, sortable: true, type: 'rightAligned' },
             {
-                headerName: 'Total retenido', field: 'Retencion', xeroField: 'retention_percentage', type: 'rightAligned', calculated: true, width: 164, sortable: true, cellClass: "grid-cell-centered",
+                headerName: 'Total retenido', field: 'Retencion', xeroField: 'retention_percentage', type: 'rightAligned', calculated: true, width: 120, sortable: true, cellClass: "grid-cell-centered",
                 valueGetter: function () {
                     return 75;
                 },
             },
             {
-                headerName: 'Aprobado por', field: 'AprobadoPor', xeroField: 'aprobado_por', type: 'rightAligned',  hide: statusName === "Aprobados" ? false : true, calculated: true, width: 164, sortable: true, cellClass: "grid-cell-centered",
+                headerName: 'Aprobado por', field: 'AprobadoPor', xeroField: 'aprobado_por', type: 'rightAligned',  hide: statusName === "Aprobados" ? false : true, calculated: true, width: 120, sortable: true, cellClass: "grid-cell-centered",
                 valueGetter: function () {
                     return 75;
                 },
             },
             {
-                headerName: 'Auxiliar', field: 'Auxiliar', xeroField: 'auxiliar', type: 'rightAligned', calculated: true, width: 164, sortable: true, cellClass: "grid-cell-centered",
+                headerName: 'Esperando Cliente', field: 'EsperandoCliente', xeroField: 'esperando_cliente', type: 'rightAligned',  hide: statusName === "Aprobados" ? false : true, calculated: true, width: 140, sortable: true, cellClass: "grid-cell-centered",
                 valueGetter: function () {
                     return 75;
                 },
             },
             {
-                headerName: 'Compromiso', field: 'compromiso', xeroField: 'compromiso', type: 'rightAligned',  hide: !seeCommitmentColumn.includes(statusName), calculated: true, width: 164, sortable: true, cellClass: "grid-cell-centered",
+                headerName: 'Auxiliar', field: 'Auxiliar', xeroField: 'auxiliar', type: 'rightAligned', calculated: true, width: 110, sortable: true, cellClass: "grid-cell-centered",
                 valueGetter: function () {
                     return 75;
                 },
             },
             {
-                headerName: 'Pago', field: 'Pago', xeroField: 'pago', type: 'rightAligned', hide: !seePaymentColumn.includes(statusName), calculated: true, width: 164, sortable: true, cellClass: "grid-cell-centered",
+                headerName: 'Compromiso', field: 'compromiso', xeroField: 'compromiso', type: 'rightAligned',  hide: !seeCommitmentColumn.includes(statusName), calculated: true, width: 110, sortable: true, cellClass: "grid-cell-centered",
                 valueGetter: function () {
                     return 75;
                 },
             },
             {
-                headerName: 'Ceriticado', field: 'Certificado', xeroField: 'certificado', type: 'rightAligned', hide: !seeCertificateColumn.includes(statusName), calculated: true, width: 164, sortable: true, cellClass: "grid-cell-centered",
+                headerName: 'Pago', field: 'Pago', xeroField: 'pago', type: 'rightAligned', hide: !seePaymentColumn.includes(statusName), calculated: true, width: 110, sortable: true, cellClass: "grid-cell-centered",
+                valueGetter: function () {
+                    return 75;
+                },
+            },
+            {
+                headerName: 'Certificado', field: 'Certificado', xeroField: 'certificado', type: 'rightAligned', hide: !seeCertificateColumn.includes(statusName), calculated: true, width: 110, sortable: true, cellClass: "grid-cell-centered",
                 valueGetter: function () {
                     return 75;
                 },
