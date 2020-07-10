@@ -444,7 +444,7 @@ const util = {
 
         var seeCommitmentColumn = ['Declarados', 'Por pagar', 'Pagados'];
         var seePaymentColumn = ['Por pagar', 'Pagados'];
-        var seeCertificateColumn = ['Declarado', 'Pagados'];
+        var seeCertificateColumn = ['Declarados', 'Pagados'];
 
         var columnDefs = [
             //#region hidden rows

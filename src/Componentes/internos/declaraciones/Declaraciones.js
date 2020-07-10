@@ -348,7 +348,7 @@ class Declaraciones extends Component {
                                     <div className="radio">
                                         <label>
                                             <input type="radio" value="2" checked={this.state.selectedOption === '2'}  onChange={this.handleOptionChange}/>
-                                            &nbsp;&nbsp;Aprobar y solicitar V.º B.º al cliente
+                                            &nbsp;&nbsp;Aprobar y solicitar Visto Bueno al cliente
                                         </label>
                                     </div>
                                 </form>
@@ -427,22 +427,22 @@ class Declaraciones extends Component {
                                     </div>
                                 </div>
                                 :activeItem === 'Por aprobar'?
-                                // <div className="two-buttons-container">
-                                //     <div className="idDibvDisabledsmall">
-                                //         <span>Rechazar</span>
-                                //     </div>
-                                //     <div className="idDibvDisabledsmall">
-                                //         <span>Aprobar</span>
-                                //     </div>
-                                // </div>
                                 <div className="two-buttons-container">
-                                    <div className="idDivEnabledSmall" onClick={() => this.onMoveData("Por aprobar", true)} >
+                                    <div className="idDibvDisabledsmall">
                                         <span>Rechazar</span>
                                     </div>
-                                    <div className="idDivEnabledSmall" onClick={() => this.onMoveData("Por aprobar", true)} >
+                                    <div className="idDibvDisabledsmall">
                                         <span>Aprobar</span>
                                     </div>
                                 </div>
+                                // <div className="two-buttons-container">
+                                //     <div className="idDivEnabledSmall" onClick={() => this.onMoveData("Por aprobar", true)} >
+                                //         <span>Rechazar</span>
+                                //     </div>
+                                //     <div className="idDivEnabledSmall" onClick={() => this.onMoveData("Por aprobar", true)} >
+                                //         <span>Aprobar</span>
+                                //     </div>
+                                // </div>
                                 :activeItem === 'Por aprobar'?
                                     <div className="idDibvDisabledsmall">
                                         <span>Aprobar</span>
