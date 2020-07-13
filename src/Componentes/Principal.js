@@ -146,7 +146,7 @@ export default function Dashboard(props) {
   var organizations = fillDropDownList(props);
 
   const [event, eventKey] = React.useState(-1);
-  const handleListItemClick = (event, index) => { eventKey(index); }
+  const handleListItemClick = (event, index) => { eventKey(index); selectMenuOption(event); }
   const fixedHeightPaper = clsx(classes.paper, classes.fixedHeight);
 
   // Change selected value from dropdownlist when press left button
@@ -158,6 +158,12 @@ export default function Dashboard(props) {
 
   // Selected option from organizations List. Initialazed at zero
   const [orgNameSelected, setorgNameSelected] = useState("");
+
+  // Stores banks show module again flag
+  const [showModuleAgain, setShowModuleAgain] = useState(false);
+
+  // Stores breadcrumb path
+  const [breadcrumbPath, setBreadcrumbPath] = useState("");
 
   //Cambia el estatus del evento del clic en el DeopDownList
   let handleClick = (item) => {
@@ -185,6 +191,23 @@ export default function Dashboard(props) {
     }
   }
 
+  // When selecting menu option
+  const selectMenuOption = (event) => {
+    const parent = event.target.parentNode;
+    const parentId = parent.getAttribute("aria-labelledby");
+    const selectedClass = "navBarOptionSelected";
+    document.querySelectorAll(`.${selectedClass}`).forEach((item) => {
+      item.classList.remove(selectedClass);
+    });
+
+    if (parentId) {
+      document.getElementById(parentId).classList.add(selectedClass);
+    }
+    else {
+      event.target.classList.add(selectedClass);
+    }
+  }
+
   //Asigna el cuadro al texto dependiendo si es org o grup
   let kiiper_PurpleSquare = "http://desacrm.quierocasa.com.mx:7002/Images/kiiper_PurpleSquare.png";
   let kiiper_BlueSquare = "http://desacrm.quierocasa.com.mx:7002/Images/kiiper_BlueSquare.png";
@@ -196,7 +219,7 @@ export default function Dashboard(props) {
         <Toolbar className={classes.toolbar}>
           <Typography component="h1" variant="h6" color="inherit" noWrap className={classes.title}>
             {event === -1 ? "Kiiper" :
-              <img style={{height:"20px"}} src={K} alt="img-K" />}
+              <img style={{ height: "20px" }} src={K} alt="img-K" />}
           </Typography>
           {/* icon Busqueda*/}
           <IconButton color="inherit">
@@ -279,7 +302,7 @@ export default function Dashboard(props) {
             </Navbar.Collapse> :
             null}
         </Navbar>
-        <Container maxWidth="lg" style={{ height: "calc(100% - 105px)", padding:"20px!important" }} className={classes.container}>
+        <Container maxWidth="lg" style={{ height: "calc(100% - 105px)", padding: "20px!important" }} className={classes.container}>
           {event === "xeroOrgName" || event === 0.1 ?
             <Grid container spacing={2}>
               {/* Dashboard */}
@@ -310,13 +333,26 @@ export default function Dashboard(props) {
                 event === "xeroOrgName" || event === 2.1 ?
                   <Grid container spacing={2}>
                     {/* Breadcrumb  */}
-                    <div class="breadcrumbClass">
-                      <Title eventKey={2.1} onClick={(event) => handleListItemClick(event, 2.1)}>Bancos</Title>
-                        <span id="breadcrumbPath"></span>
+                    <div className="breadcrumbClass" style={{ display: "flex" }}>
+                      <div id="moduleTitle" style={{ cursor: "pointer" }} onClick={(event) => { setShowModuleAgain(true); setBreadcrumbPath(""); }}>
+                        <Title>Bancos</Title>
+                      </div>
+                      <span
+                        id="breadcrumbPath"
+                        style={{
+                          marginLeft: 10,
+                          fontWeight: 700,
+                          marginBottom: 10,
+                          display: "flex",
+                          alignItems: "flex-end",
+                          fontSize: "1.2em",
+                          color: "#9680ED"
+                        }}
+                      >{breadcrumbPath}</span>
                     </div>
                     <Grid item xs={12}>
                       <Paper className={classes.paper}>
-                        < BanksConvert orgIdSelected={orgIdSelected} />
+                        < BanksConvert setBreadcrumbPath={setBreadcrumbPath} setShowModuleAgain={setShowModuleAgain} showModuleAgain={showModuleAgain} orgIdSelected={orgIdSelected} />
                       </Paper>
                     </Grid>
                   </Grid> :
@@ -328,16 +364,7 @@ export default function Dashboard(props) {
                         </Paper>
                       </Grid>
                     </Grid> :
-                    event === "xeroOrgName" || event === 3.2 ?
-                      <Grid container spacing={2}>
-                        <Title>Libro fiscal de compras</Title>
-                        <Grid item xs={12}>
-                          <Paper className={classes.paper}>
-                            <FiscalReportPurchase orgIdSelected={orgIdSelected} orgNameSelected={orgNameSelected} />
-                          </Paper>
-                        </Grid>
-                      </Grid> :
-                      null}
+                    null}
           {/* Copyright */}
           <Box pt={4}>
             <util.Copyright />

@@ -2,6 +2,10 @@ import React from 'react';
 import styles from './sales.module.css';
 import { Doughnut } from 'react-chartjs-2';
 import {PieChart, Tooltip, Cell, Pie} from 'recharts'
+import { AgGridReact } from 'ag-grid-react';
+
+import 'ag-grid-community/dist/styles/ag-grid.css';
+import 'ag-grid-community/dist/styles/ag-theme-alpine.css';
 
 
 // const data = {
@@ -29,73 +33,72 @@ import {PieChart, Tooltip, Cell, Pie} from 'recharts'
 //     }]
 // }
 
-// const data = {
-//     datasets: [{
-//         data: [1440000, 2000000, 3000000],
-//         backgroundColor: [
-//             'rgba(255, 99, 132, 1)',
-//             'rgba(54, 162, 235, 1)',
-//             'rgba(255, 206, 86, 1)',
-//         ]
-//     }],
+const data = {
+    datasets: [{
+        data: [1440000, 2000000, 3000000],
+        backgroundColor: [
+            '#5EFEFF',
+            '#9680ED',
+            '#232C51',
+        ]
+    }],
 
-//     // These labels appear in the legend and in the tooltips when hovering different arcs
-//     labels: [
-//         'Red',
-//         'Yellow',
-//         'Blue'
-//     ],
+    // These labels appear in the legend and in the tooltips when hovering different arcs
+    labels: [
+        'Dayne Guarimara',
+        'Eduardo Alvarez',
+        'Alcaldia Municipio Girardot'
+    ],
     
-//     options: {
+    options: {
 
-//     }
-// };
+    }
+};
 
-// const sales = (props) =>{
-//   return (
-//     <div className={styles.Sales} >
-//       <div className={styles.SalesTable}>
-//         <div className={styles.Title}>
-//             Overdue invoices
-//         </div>
-//       </div>
-//       <div className={styles.SalesChart}>
-//         <div className={styles.Title}>
-//           Top Customers to pay
-//         </div>
-//         <Doughnut data={data} legend={false} />
-//       </div>
-//     </div>
-//   );
-// };
+const dataTable = [
+    {behind: 'Carlos',  amount: '12345', percentage: '5'},
+    {behind: 'Andres',  amount: '1235', percentage: '6'},
+    {behind: 'Maria',   amount: '2356', percentage: '20'},
+    {behind: 'Andrea',  amount: '49058', percentage: '10'},
+    {behind: 'Pedro',   amount: '03945', percentage: '42'}
+]
 
-const data = [
-  { name: 'Group A', value: 400 },
-  { name: 'Group B', value: 300 },
-  { name: 'Group C', value: 300 },
-  { name: 'Group D', value: 200 },
-];
-const COLORS = ['#0088FE', '#00C49F', '#FFBB28', '#FF8042'];
+const TableData = () =>(
+    dataTable.map((item)=>(
+        <>
+        <tr className={styles.TableData} >
+            <td className={styles.TableRow}>
+                {item.behind}
+            </td>
+            <td className={styles.TableRow}>
+                {item.amount}
+            </td>
+            <td className={styles.TableRow}>
+                {item.percentage}
+            </td>
+        </tr>
+        </>
+    ))
+)
 
 
-// const CustomTooltip = (props) =>(
-//   <div className={styles.MyTooltip} >
-//     Test
-//   </div>
-// )
+const columnDefs = {
+  columnDefs: [
+      {headerName: "Behind", field: "behind", sortable: false, filter: true},
+      {headerName: "Amount", field: "amount", sortable: false, filter: true},
+      {headerName: "%", field: "percentage", sortable: false, filter: true},
+  ]
+}
 
-const CustomTooltip = ({ active, payload, label }) => {
-  if (active) {
-    return (
-      <div  className={styles.MyTooltip}>
-        <p >{`${label} : ${payload[0].value}`}</p>
-        {/* <p >{getIntroOfPage(label)}</p> */}
-        <p >Anything you want can be displayed here.</p>
-      </div>
-    );
-  }
-
-  return null;
+const rowData = {
+  rowData: [
+      { behind: "1 month", amount: "12345", percentage:'3%'},
+      { behind: "1 month", amount: "12345", percentage:'3%'},
+      { behind: "1 month", amount: "12345", percentage:'3%'},
+      { behind: "1 month", amount: "12345", percentage:'3%'},
+      { behind: "1 month", amount: "12345", percentage:'3%'},
+      { behind: "1 month", amount: "12345", percentage:'3%'}
+  ]
 };
 
 const sales = (props) =>{
@@ -103,30 +106,22 @@ const sales = (props) =>{
     <div className={styles.Sales} >
       <div className={styles.SalesTable}>
         <div className={styles.Title}>
-            Overdue invoices
+            Overdue Bills
+        </div>
+        <div className="ag-theme-alpine" style={ {height: '800px', width: '100%'} }>
+            <AgGridReact
+                columnDefs={columnDefs.columnDefs}
+                rowData={rowData.rowData}
+                colWidth={150}
+                >
+            </AgGridReact>
         </div>
       </div>
       <div className={styles.SalesChart}>
         <div className={styles.Title}>
-          Top Customers to pay
+          Main suppliers to be paid
         </div>
-        <PieChart width={200} height={200} style={{display:'flex', justifyContent:'center', alignItems:'center', alignSelf:'center'}}>
-          <Pie
-            data={data}
-            cx={80}
-            cy={80}
-            innerRadius={60}
-            outerRadius={80}
-            fill="#8884d8"
-            paddingAngle={5}
-            dataKey="value"
-          >
-            {
-              data.map((entry, index) => <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />)
-            }
-          </Pie>
-          <Tooltip content={<CustomTooltip/>}/>
-        </PieChart>
+        <Doughnut data={data} legend={false} />
       </div>
     </div>
   );

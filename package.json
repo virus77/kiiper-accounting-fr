@@ -19,6 +19,7 @@
     "bootstrap": "^4.4.1",
     "chart.js": "^2.9.3",
     "font-awesome": "^4.7.0",
+    "date-fns": "^2.14.0",
     "install": "^0.13.0",
     "jquery": "^3.5.0",
     "jquery-ui": "^1.12.1",
@@ -63,5 +64,7 @@
       "last 1 safari version"
     ]
   },
-  "devDependencies": {}
+  "devDependencies": {
+    "font-awesome": "^4.7.0"
+  }
 }

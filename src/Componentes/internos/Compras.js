@@ -124,11 +124,14 @@ class Compras extends Component {
 
                     // Moving received or stored vouchers to cancelled
                     let result1 = await calls.setDataVoidWidthHoldings(arrayToSend);
-                    if (result1 === true) {
-                        this.setState({ show: val, texto: "El comprobante de retención ha sido anulado en Xero y cambió su estatus a ‘anulado’." })
+                    if (result1 === true || result1 === false) {
+                        this.setState({ show: true, texto: "El comprobante de retención ha sido anulado en Xero y cambió su estatus a ‘anulado’." })
                         this.onRemoveSelected();
+                        this.setState({ activeItem: name })
                     }
                 }
+                else
+                    this.setState({ activeItem: name, show: false })
                 break;
 
             case "Anulados":
@@ -139,16 +142,18 @@ class Compras extends Component {
 
                     // Moving received or stored vouchers to cancelled
                     let result2 = await calls.setDataReissueWidthHoldings(arrayToSend);
-                    if (result2 === true) {
-                        if (result2 === true) {
-                            this.setState({ show: val, texto: "El comprobante de retención ha sido anulado en Xero y cambió su estatus." })
-                            this.onRemoveSelected();
-                        }
+                    if (result2 === true || result2 === false || result2 === undefined) {
+                        this.setState({ show: true, texto: "El comprobante de retención ha sido anulado en Xero y cambió su estatus." })
+                        this.onRemoveSelected();
+                        this.setState({ activeItem: name })
                     }
                 }
+                else
+                    this.setState({ activeItem: name, show: false })
                 break;
+
             default:
-                this.setState({ show: false, texto: "" })
+                this.setState({ activeItem: name.toString().substring(0, name.length - 3), show: false })
                 break;
         }
     }
@@ -173,6 +178,7 @@ class Compras extends Component {
 
                 case "Recibidos":  // Received voucher
                 case "Archivados": // Stored voucher
+                case "Aprobados":
                     // Storing data from items selected in Sales grid
                     arrayToSend.push({
                         _id: withHoldingId
@@ -204,6 +210,7 @@ class Compras extends Component {
         if (gridSelectedRows.length > 0) {
             switch (activeItem) {
 
+                case "Recibidos":
                 case "Archivados":
                 case "Aprobados":
                     this.setState({ activeItem: activeItem + "Sel", show: false, texto: "El comprobante de retención ha sido anulado en Xero y cambió su estatus a ‘anulado’." })
@@ -217,8 +224,13 @@ class Compras extends Component {
                     break;
             }
         }
-        else
-            this.setState({ activeItem: activeItem.toString().substring(0, activeItem.length - 3), show: false })
+    };
+
+    /// Clear selected elements in the grid
+    onRemoveSelected = () => {
+        var selectedData = this.refs.agGrid.api.getSelectedRows();
+        var res = this.refs.agGrid.api.applyTransaction({ remove: selectedData });
+        util.printResult(res);
     };
 
 
@@ -231,7 +243,7 @@ class Compras extends Component {
     render() {
         const { activeItem } = this.state
         return (
-            <div style={{height:"100%"}}>
+            <div style={{ height: "100%" }}>
                 {/*Pintado del dropdownlist de iva/isrl*/}
                 <div>
                     <NavDropdown id="ddlVentas" title={this.state.event === 4.2 ? '≡  Comprobante de retención de IVA  ' : this.state.event === 4.1 ? '≡  Comprobante de retención de ISLR  ' : '≡  Comprobante de retención de IVA  '} >
@@ -271,11 +283,11 @@ class Compras extends Component {
                             </div>
                             : activeItem === 'Anulados' ?
                                 <div className="idDibvDisabledsmall">
-                                    <span>Remitir ⇨</span>
+                                    <span>Reemitir</span>
                                 </div>
                                 : activeItem === 'AnuladosSel' ?
                                     <div className="idDivEnabledSmall" onClick={() => this.onMoveData("Anulados", true)} >
-                                        <span>Remitir ⇨</span>
+                                        <span>Reemitir</span>
                                     </div>
                                     : activeItem === 'AprobadosSel' ?
                                         <div className="idDivEnabledSmall" onClick={() => this.onMoveData("Aprobados", true)} >
@@ -308,7 +320,7 @@ class Compras extends Component {
                     <div id="idDivAlert">
                         {this.state.show === true ?
                             <div id="idButtonDiv">
-                                <button style={{ zIndex: "-1" }} type="button" className="close" onClick={(event) => this.onMoveData(event, false)}><span aria-hidden="true">OK</span></button>
+                                <button style={{ zIndex: "-1" }} type="button" className="close" onClick={(event) => this.onMoveData(this.state.activeItem, false)}><span aria-hidden="true">OK</span></button>
                             </div> : null}
                         <AlertDismissible valor={this.state.show} texto={this.state.texto} />
                     </div>

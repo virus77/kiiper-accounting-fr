@@ -1,7 +1,11 @@
 import React from 'react';
 import styles from './purchases.module.css';
 import { Doughnut } from 'react-chartjs-2';
-import {PieChart, Tooltip, Cell, Pie} from 'recharts'
+import {PieChart, Tooltip, Cell, Pie} from 'recharts';
+import { AgGridReact } from 'ag-grid-react';
+
+import 'ag-grid-community/dist/styles/ag-grid.css';
+import 'ag-grid-community/dist/styles/ag-theme-alpine.css';
 
 
 // const data = {
@@ -33,9 +37,9 @@ const data = {
     datasets: [{
         data: [1440000, 2000000, 3000000],
         backgroundColor: [
-            'rgba(255, 99, 132, 1)',
-            'rgba(54, 162, 235, 1)',
-            'rgba(255, 206, 86, 1)',
+            '#5EFEFF',
+            '#9680ED',
+            '#232C51',
         ]
     }],
 
@@ -51,31 +55,24 @@ const data = {
     }
 };
 
-const dataTable = [
-    {behind: 'Carlos',  amount: '12345', percentage: '5'},
-    {behind: 'Andres',  amount: '1235', percentage: '6'},
-    {behind: 'Maria',   amount: '2356', percentage: '20'},
-    {behind: 'Andrea',  amount: '49058', percentage: '10'},
-    {behind: 'Pedro',   amount: '03945', percentage: '42'}
-]
+const columnDefs = {
+    columnDefs: [
+        {headerName: "Behind", field: "behind", sortable: false, filter: true},
+        {headerName: "Amount", field: "amount", sortable: false, filter: true},
+        {headerName: "%", field: "percentage", sortable: false, filter: true},
+    ]
+}
 
-const TableData = () =>(
-    dataTable.map((item)=>(
-        <>
-        <tr className={styles.TableData} >
-            <td className={styles.TableRow}>
-                {item.behind}
-            </td>
-            <td className={styles.TableRow}>
-                {item.amount}
-            </td>
-            <td className={styles.TableRow}>
-                {item.percentage}
-            </td>
-        </tr>
-        </>
-    ))
-)
+const rowData = {
+    rowData: [
+        { behind: "1 month", amount: "12345", percentage:'3%'},
+        { behind: "1 month", amount: "12345", percentage:'3%'},
+        { behind: "1 month", amount: "12345", percentage:'3%'},
+        { behind: "1 month", amount: "12345", percentage:'3%'},
+        { behind: "1 month", amount: "12345", percentage:'3%'},
+        { behind: "1 month", amount: "12345", percentage:'3%'}
+    ]
+};
 
 const purchases = (props) =>{
   return (
@@ -84,24 +81,14 @@ const purchases = (props) =>{
         <div className={styles.Title}>
             Overdue Bills
         </div>
-        <table className={styles.MyTable}>
-            <colgroup>
-                <col span="1" style={{width:'35%'}}/>
-                <col span="1" style={{width:'35%'}}/>
-                <col span="1" style={{width:'30%'}}/>
-            </colgroup>
-            <thead style={{width:'100%'}}>
-                <tr>
-                    <th className={styles.ColumnTitle}>Behind</th>
-                    <th className={styles.ColumnTitle}>Amount</th>
-                    <th className={styles.ColumnTitle}>%</th>
-                </tr>
-            </thead>
-            <tbody style={{width:'100%'}}>
-                <div></div>
-                <TableData/>
-            </tbody>
-        </table>
+        <div className="ag-theme-alpine" style={ {height: '800px', width: '100%'} }>
+            <AgGridReact
+                columnDefs={columnDefs.columnDefs}
+                rowData={rowData.rowData}
+                colWidth={150}
+                >
+            </AgGridReact>
+        </div>
       </div>
       <div className={styles.SalesChart}>
         <div className={styles.Title}>

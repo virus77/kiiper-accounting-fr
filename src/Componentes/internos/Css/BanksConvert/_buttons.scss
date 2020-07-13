@@ -1,12 +1,13 @@
 .button-pill-blue {
     font-family:"Muli",sans-serif;
     display: flex;
-    padding: 10px 25px;
-    margin: 0 auto;
+    padding: 5px 15px;
     background: #5540c2;
     color: #fff;
     border-radius: 10px;
     border: none;
+    align-items: center;
+    font-size: 0.9em;
 
     & .text {
         font-weight: bold;
