@@ -1,56 +1,82 @@
 .container-transformation {
-    width: 700px;
-    margin-left: auto;
-    margin-right: auto;
-    background-color: #f5f6fa;
-    padding: 40px;
-    border-radius:10px;
-    
-    & h3 {
-        color: #232c51;
-        font-family: "Muli",sans-serif;
-    }
-
-    & .file-path {
-        color: #232c51;
-        font-weight: bold;
-    }
+	margin-left: 5px;
+	margin-right: 5px;
+	padding: 20px;
+	font-size: 0.9em;
+	border: 1px solid #f5f6fa;
+	border-radius: 10px;
+	position: relative;
 }
 
-.container-transformation ul{
-    list-style-type: disc!important;
+.container-transformation img.searchBankRecords {
+	position: absolute;
+	top: 10px;
+	right: 10px;
+	height: 30px;
+	width: 30px;
+}
+
+.container-transformation img.searchBankRecords:hover {
+	filter: brightness(0.5);
+	cursor: pointer;
+}
+
+.container-transformation h3 {
+	color: #232c51;
+	font-family: "Muli", sans-serif;
+	margin-top: 0;
+}
+
+.container-transformation .file-path {
+	color: #232c51;
+	font-weight: bold;
+}
+
+.container-transformation strong {
+	font-weight: bold;
+	color: #7962e3;
+}
+
+.container-transformation ul {
+	list-style-type: disc !important;
+}
+
+.descriptionOrderedList {
+	padding: 15px 0 0 15px;
+}
+
+.descriptionUnorderedList {
+	padding: 5px 0 15px 15px;
 }
 
 .ag-cell-label-container .ag-header-cell-label {
-    justify-content: center;
+	justify-content: center;
 }
 
 .inputFileContainer {
-    display: flex;
-    align-items: center;
+	display: flex;
+	align-items: center;
 }
 
 .inputFile {
-    width: 0.1px;
-    height: 0.1px;
-    opacity: 0;
-    overflow: hidden;
-    position: absolute;
-    z-index: -1;
+	width: 0.1px;
+	height: 0.1px;
+	opacity: 0;
+	overflow: hidden;
+	position: absolute;
+	z-index: -1;
 }
 
 .inputFileLabel {
-    font-size: 0.9em;
-    margin: 0;
-    color: #2F9FB7;
-    background-color: #efeff7;
-    border: 1px solid #e5e5ea;
-    padding: 5px 15px;
-    cursor: pointer; /* "hand" cursor */
+	font-size: 0.9em;
+	margin: 0;
+	background-color: #efeff7;
+	border: 1px solid #e5e5ea;
+	padding: 5px 15px;
+	cursor: pointer;
+	border-radius: 10px;
 }
 
-.inputFileLabel:hover{
-    background-color: #e5e5f3;
-    color: #9680ED;
+.inputFileLabel:hover {
+	background-color: #e5e5f3;
 }
-

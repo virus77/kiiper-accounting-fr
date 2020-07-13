@@ -206,6 +206,37 @@ export default function Dashboard(props) {
     }
   }
 
+  /// Resets banks modulo
+  const resetBanksModule = () => {
+
+    // Reset breadcrumb
+    setShowModuleAgain(true);
+    setBreadcrumbPath("");
+
+    // Hides conversion panel and shows accordion panel
+    const accordionPanel = document.getElementById("accordionPanel");
+    accordionPanel.classList.remove("hideAccordionPanelClass");
+
+    // Deleting any bank selection class
+    const banks = [...document.querySelectorAll(".bankSelectionClass")];
+    banks.forEach(item => item.classList.remove("bankSelectionClass"));
+  }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
   //Asigna el cuadro al texto dependiendo si es org o grup
   let kiiper_PurpleSquare = "http://desacrm.quierocasa.com.mx:7002/Images/kiiper_PurpleSquare.png";
   let kiiper_BlueSquare = "http://desacrm.quierocasa.com.mx:7002/Images/kiiper_BlueSquare.png";
@@ -332,7 +363,7 @@ export default function Dashboard(props) {
                   <Grid container spacing={2}>
                     {/* Breadcrumb  */}
                     <div className="breadcrumbClass" style={{ display: "flex" }}>
-                      <div id="moduleTitle" style={{ cursor: "pointer" }} onClick={(event) => { setShowModuleAgain(true); setBreadcrumbPath(""); }}>
+                      <div id="moduleTitle" style={{ cursor: "pointer" }} onClick={(event) => { setShowModuleAgain(true); setBreadcrumbPath(""); resetBanksModule() }}>
                         <Title>Bancos</Title>
                       </div>
                       <span
@@ -354,23 +385,23 @@ export default function Dashboard(props) {
                       </Paper>
                     </Grid>
                   </Grid> :
-                   event === "xeroOrgName" || event === 2.2 ?
-                   <Grid container spacing={2}>
-                     {/* Recent purchases */}
-                     <Title>Gestión de declaraciones</Title>
-                     <Grid item xs={12}>
-                       <Declaraciones token={props.token} orgIdSelected={orgIdSelected} />
-                     </Grid>
-                   </Grid>:
-                  event === "xeroOrgName" || event === 3.1 ?
+                  event === "xeroOrgName" || event === 2.2 ?
                     <Grid container spacing={2}>
+                      {/* Recent purchases */}
+                      <Title>Gestión de declaraciones</Title>
                       <Grid item xs={12}>
-                        <Paper className={classes.paper}>
-                          < Reports orgIdSelected={orgIdSelected} />
-                        </Paper>
+                        <Declaraciones token={props.token} orgIdSelected={orgIdSelected} />
                       </Grid>
                     </Grid> :
-                    null}
+                    event === "xeroOrgName" || event === 3.1 ?
+                      <Grid container spacing={2}>
+                        <Grid item xs={12}>
+                          <Paper className={classes.paper}>
+                            < Reports orgIdSelected={orgIdSelected} />
+                          </Paper>
+                        </Grid>
+                      </Grid> :
+                      null}
           {/* Copyright */}
           <Box pt={4}>
             <util.Copyright />

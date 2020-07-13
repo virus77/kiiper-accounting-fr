@@ -186,7 +186,6 @@ input[type="password"]::-ms-reveal:hover {
 /* Logo */
 .MuiTypography-h6{
   line-height: 1!important;
-  font-family: "Muli";
   font-weight:700!important
 }
 

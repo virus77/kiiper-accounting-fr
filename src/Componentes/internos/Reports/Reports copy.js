@@ -75,6 +75,8 @@ class Reports extends Component {
 
         this.handleClickLibroCompras = this.handleClickLibroCompras.bind(this);
         this.handleClickLibroVentas = this.handleClickLibroVentas.bind(this);
+        this.handleClickRetencionesIVA = this.handleClickRetencionesIVA.bind(this);
+        this.handleClickRetencionesISLR = this.handleClickRetencionesISLR.bind(this);
     }
 
     componentDidMount() { }
@@ -212,6 +214,133 @@ class Reports extends Component {
             this.setState({
                 msgLibroVentas: 'Las fechas son inválidas',
             });
+        }
+    };
+
+    /* Funciones Retenciones de IVA */
+    handleChangeStartDateRetencionesIVA = date => {
+        let startDate = moment(date).format("DD/MM/YYYY");
+        let endDate = moment(document.getElementById("dtpkHastaRetencionesIVA").value).format("DD/MM/YYYY");
+        if (util.compareDates(startDate, endDate) === 1) {
+            this.setState({ msgRetencionesIVA: 'Fecha desde, no puede ser mayor a fecha hasta' });
+        } else {
+            this.setState({ startDateRetencionesIVA: date, msgRetencionesIVA: '' });
+        }
+    };
+
+    handleChangeFinishDateRetencionesIVA = date => {
+        let endDate = moment(date).format("DD/MM/YYYY");
+        let StartDate = moment(document.getElementById("dtpkDesdeRetencionesIVA").value).format("DD/MM/YYYY");
+        if (util.compareDates(endDate, StartDate) === -1) {
+            this.setState({ msgRetencionesIVA: 'Fecha hasta, no puede ser menor a fecha desde' });
+        } else {
+            this.setState({ finishDateRetencionesIVA: date, msgRetencionesIVA: '', setOpen: true, tipo: "IVA" });
+        }
+    };
+
+    handleClickRetencionesIVA = e => {
+        console.log("handleClick RetencionesIVA", e)
+        if (e.target.value === "3") {
+            this.setState({
+                showDateRetencionesIVA: true,
+                optionSelectedRetencionesIVA: e.id
+            });
+        } else {
+            this.setState({
+                showDateRetencionesIVA: false,
+                optionSelectedRetencionesIVA: e.id
+            });
+        }
+    };
+
+    /// Funcion utilizada para obtener el periodo y enviar los parámetros 
+    /// solicitados por medio de post para generar el guardado en Xero
+    onGetPeriodRetencionesIVA = async () => {
+
+        let x = moment(this.state.startDateRetencionesIVA);
+        let y = moment(this.state.finishDateRetencionesIVA);
+        let z = moment(this.state.duDate);
+
+        if (x.isBefore(y)) {
+
+            this.setState({ msgRetencionesIVA: '', });
+
+            let taxbookId = await calls.getBookRetention(this.props.orgIdSelected, this.state.optionSelectedRetencionesIVA,
+                y.format("DD/MM/YYYY"), x.format("DD/MM/YYYY"), z.format("DD/MM/YYYY"), "/taxIVAReport");
+
+            if (taxbookId.data === false)
+                console.log("Ocurrió un problema al momento de guardar en Xero");
+            else {
+                this.setState({ IdStatementIVA: taxbookId.data, setOpen: false });
+                alert("El preriodo se guardo correctamente en Xero");
+            }
+        } else {
+            this.setState({
+                msgRetencionesIVA: 'Las fechas son inválidas',
+            });
+        }
+
+    };
+
+    /* Funciones  Retenciones Retenciones de ISLR */
+
+    handleChangeStartDateRetencionesISLR = date => {
+        let startDate = moment(date).format("DD/MM/YYYY");
+        let endDate = moment(document.getElementById("dtpkHastaRetencionesISLR").value).format("DD/MM/YYYY");
+        if (util.compareDates(startDate, endDate) === 1) {
+            this.setState({ msgRetencionesISLR: 'Fecha desde, no puede ser mayor a fecha hasta' });
+        } else {
+            this.setState({ startDateRetencionesISLR: date, msgRetencionesISLR: '' });
+        }
+    };
+
+    handleChangeFinishDateRetencionesISLR = date => {
+        let endDate = moment(date).format("DD/MM/YYYY");
+        let StartDate = moment(document.getElementById("dtpkDesdeRetencionesISLR").value).format("DD/MM/YYYY");
+        if (util.compareDates(endDate, StartDate) === -1) {
+            this.setState({ msgRetencionesISLR: 'Fecha hasta, no puede ser menor a fecha desde' });
+        } else {
+            this.setState({ finishDateRetencionesISLR: date, msgRetencionesISLR: '', setOpen: true, tipo: "ISLR" });
+        }
+    };
+
+    handleClickRetencionesISLR = e => {
+        console.log("handleClick RetencionesISLR", e);
+        if (e.target.value === "3") {
+            this.setState({
+                showDateRetencionesISLR: true,
+                optionSelectedRetencionesISLR: e.id
+            });
+        } else {
+            this.setState({
+                showDateRetencionesISLR: false,
+                optionSelectedRetencionesISLR: e.id
+            });
+        }
+    };
+
+    /// Funcion utilizada para obtener el periodo y enviar los parámetros 
+    /// solicitados por medio de post para generar el guardado en Xero
+    onGetPeriodRetencionesISLR = async () => {
+
+        let x = moment(this.state.startDateRetencionesISLR);
+        let y = moment(this.state.finishDateRetencionesISLR);
+        let z = moment(this.state.duDate);
+        if (x.isBefore(y)) {
+
+            this.setState({ msgRetencionesISLR: '', });
+
+            let taxbookId = await calls.getBookRetention(this.props.orgIdSelected, this.state.optionSelectedRetencionesISLR,
+                y.format("DD/MM/YYYY"), x.format("DD/MM/YYYY"), z.format("DD/MM/YYYY"), "/taxISLRReport");
+
+            if (taxbookId.data === false)
+                console.log("Ocurrió un problema al momento de guardar en Xero");
+            else {
+                this.setState({ IdStatementISLR: taxbookId.data, setOpen: false });
+                alert("El preriodo se guardo correctamente en Xero");
+            }
+        } else {
+            this.setState({ msgRetencionesISLR: 'Las fechas son inválidas' });
         }
     };
 
@@ -397,6 +526,166 @@ class Reports extends Component {
                                     </div>
                                 </Card.Body>
                             </Card>
+                        </div>
+                    </div>
+                    <hr className="separator" />
+                    <div className="report-container">
+                        <h2> Retenciones </h2>
+                        <div className="flex-container">
+                            <Card className="card-container">
+                                <Card.Body>
+                                    <Card.Title>Retenciones de ISLR</Card.Title>
+                                    <hr className="separator" />
+                                    <Card.Text>
+                                        <div className="flex-container">
+                                            <div>Período:</div>
+                                            <Form>
+                                                <Form.Group>
+                                                    <Form.Control as="select" className="ddlPeriodo" value={this.state.optionSelectedRetencionesISLR}
+                                                        onChange={this.handleClickRetencionesISLR} >
+                                                        <option value="0">Seleccionar...</option>
+                                                        <option value="1">Mes actual</option>
+                                                        <option value="2">Mes anterior</option>
+                                                        <option value="3">Personalizado</option>
+                                                    </Form.Control>
+                                                </Form.Group>
+                                            </Form>
+                                        </div>
+                                        {this.state.showDateRetencionesISLR ?
+                                            <div className="date-container">
+                                                <div className="inline-date">
+                                                    <div className="time-interval">Desde:</div>
+                                                    <DatePicker
+                                                        id="dtpkDesdeRetencionesISLR"
+                                                        className={"calendar"}
+                                                        selected={this.state.startDateRetencionesISLR}
+                                                        onChange={this.handleChangeStartDateRetencionesISLR}
+                                                        locale="es"
+                                                        showMonthDropdown
+                                                        showYearDropdown
+                                                    />
+                                                </div>
+                                                <div className="inline-date">
+                                                    <div className="time-interval">Hasta:</div>
+                                                    <DatePicker
+                                                        id="dtpkHastaRetencionesISLR"
+                                                        className={"calendar"}
+                                                        selected={this.state.finishDateRetencionesISLR}
+                                                        onChange={this.handleChangeFinishDateRetencionesISLR}
+                                                        locale="es"
+                                                        showMonthDropdown
+                                                        showYearDropdown
+                                                    />
+                                                </div>
+                                            </div> : null
+                                        }
+                                        <span className="error-msg">{this.state.msgRetencionesISLR}</span>
+                                        <br />
+                                        <div style={{ paddingLeft: "10px" }} >
+                                            <span style={{ cursor: "pointer" }} onClick={(event) => this.onDownloadExcel("ISLR")} >
+                                                <img border="0" src={ExcelImage} />
+                                            </span>
+                                        </div>
+                                    </Card.Text>
+                                </Card.Body>
+                            </Card>
+                            <Card className="card-container">
+                                <Card.Body>
+                                    <Card.Title>Retenciones de IVA</Card.Title>
+                                    <hr className="separator" />
+                                    <Card.Text>
+                                        <div className="flex-container">
+                                            <div>Período:</div>
+                                            <Form>
+                                                <Form.Group>
+                                                    <Form.Control as="select" className="ddlPeriodo" value={this.state.optionSelectedRetencionesIVA}
+                                                        onChange={this.handleClickRetencionesIVA} >
+                                                        <option value="0">Seleccionar...</option>
+                                                        <option value="1">Mes actual</option>
+                                                        <option value="2">Mes anterior</option>
+                                                        <option value="3">Personalizado</option>
+                                                    </Form.Control>
+                                                </Form.Group>
+                                            </Form>
+                                        </div>
+                                        {this.state.showDateRetencionesIVA ?
+                                            <div className="date-container">
+                                                <div className="inline-date">
+                                                    <div className="time-interval">Desde:</div>
+                                                    <DatePicker
+                                                        id="dtpkDesdeRetencionesIVA"
+                                                        className={"calendar"}
+                                                        selected={this.state.startDateRetencionesIVA}
+                                                        onChange={this.handleChangeStartDateRetencionesIVA}
+                                                        locale="es"
+                                                        showMonthDropdown
+                                                        showYearDropdown
+                                                    />
+                                                </div>
+                                                <div className="inline-date">
+                                                    <div className="time-interval">Hasta:</div>
+                                                    <DatePicker
+                                                        id="dtpkHastaRetencionesIVA"
+                                                        className={"calendar"}
+                                                        selected={this.state.finishDateRetencionesIVA}
+                                                        onChange={this.handleChangeFinishDateRetencionesIVA}
+                                                        locale="es"
+                                                        showMonthDropdown
+                                                        showYearDropdown
+                                                    />
+                                                </div>
+                                            </div> : null
+                                        }
+                                        <span className="error-msg">{this.state.msgRetencionesIVA}</span>
+                                        <br />
+                                        <div style={{ paddingLeft: "10px" }} >
+                                            <span style={{ cursor: "pointer" }} onClick={(event) => this.onDownloadExcel("IVA")} >
+                                                <img border="0" src={ExcelImage} />
+                                            </span>
+                                        </div>
+                                    </Card.Text>
+                                </Card.Body>
+                            </Card>
+                            <Dialog open={this.state.setOpen} aria-labelledby="form-dialog-title">
+                                <DialogTitle id="form-dialog-title">
+                                    <span style={{ color: "white" }}>¡Atención!</span>
+                                </DialogTitle>
+                                <DialogContent style={{ color: "#212529" }}>
+                                    <DialogContentText >
+                                        ¿Está seguro que desea generar el reporte?
+                                        <br />
+                                        <br />
+                                Este archivo será borrador de una declaración. De ser así,
+                                favor de ingresar la fecha límite de pago
+                                </DialogContentText>
+                                Fecha Límite:
+                                <br />
+                                    <DatePicker
+                                        id="dtpDueDate"
+                                        className={"calendarDueDate"}
+                                        selected={this.state.dueDate}
+                                        onChange={this.handleChangeDueDate}
+                                        locale="es"
+                                        showMonthDropdown
+                                        showYearDropdown
+                                    />
+                                </DialogContent>
+                                <div className="date-container">
+                                    <div className="inline-date">
+                                        <Button className="xeroGenerate" onClick={(event) => this.state.tipo === "IVA" ? this.onGetPeriodRetencionesIVA() : this.onGetPeriodRetencionesISLR()} color="primary">
+                                            Aceptar
+                                    </Button>
+                                    </div>
+                                    <div className="inline-date">
+                                        <div>
+                                            <Button className="xeroGenerate" onClick={(event) => this.handleClose()} color="primary">
+                                                Cancelar
+                                        </Button>
+                                        </div>
+                                    </div>
+                                </div>
+                                <br />
+                            </Dialog>
                         </div>
                     </div>
                 </div >
