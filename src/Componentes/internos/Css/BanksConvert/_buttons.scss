@@ -1,27 +1,31 @@
 .button-pill-blue {
-    font-family:"Muli",sans-serif;
-    display: flex;
-    padding: 5px 15px;
-    background: #5540c2;
-    color: #fff;
-    border-radius: 10px;
-    border: none;
-    align-items: center;
-    font-size: 0.9em;
+	font-family: "Muli", sans-serif;
+	display: flex;
+	padding: 5px 15px;
+	background: #232c51;
+	color: #fff;
+	border-radius: 10px;
+	border: none;
+	align-items: center;
+	font-size: 0.9em;
 
-    & .text {
-        font-weight: bold;
-        margin: 0 auto;
-    }
+	& .text {
+		font-weight: bold;
+		margin: 0 auto;
+	}
+}
+
+.button-pill-blue:hover {
+	background: #5540c2;
 }
 
 .button-load-file {
-    background: #9680ED !important;
-    color: white !important;
+	background: #9680ed !important;
+	color: white !important;
 }
 
 .margin-left-button {
-    margin-left: 42px !important;
-    font-family: "Muli",sans-serif;
-    font-weight: 100;
+	margin-left: 42px !important;
+	font-family: "Muli", sans-serif;
+	font-weight: 100;
 }

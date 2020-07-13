@@ -14,13 +14,10 @@ const calls = {
     getOrgConceptsInfo: (taxInfo, statusInfo, orgIdSelected) => {
 
         // Organization selected by user previously
-        //let orgIdDefault = orgIdSelected ? orgIdSelected : "5ea086c97cc16250b45f82e1";
-
-        let orgIdDefault = "5ea086c97cc16250b45f82e1";
-
+        let orgIdDefault = orgIdSelected ? orgIdSelected : "5ee993a0f9addb8a8cf25c4f";
         // Testing validation purposes
         orgIdDefault =
-            orgIdDefault === "5ec440712075680004eff014" ?
+            orgIdDefault === "5ee993a0f9addb8a8cf25c4f" ?
                 "5ea086c97cc16250b45f82e1" :
                 orgIdDefault;
 
@@ -56,7 +53,7 @@ const calls = {
         const fetchConfig = { method: 'GET' };
 
         // Fetch URL with parameters
-        const fetchURL = "/downloadWithholding" + `?withholdingId=${withholdingId}`;
+        const fetchURL = `/downloadWithholding?withholdingId=${withholdingId}`;
 
         return (
 
@@ -274,26 +271,99 @@ const calls = {
     /// Petición para obtener cuentas bancarias de una empresa en Xero
     /// @param {text} taxbookId - id que regresa getSalesBook or getPurchaseBook
     /// @param {text} endPoint - Ruta de acceso al Endpoint dependiendo si es compras o venntas
-    getDocumentByTaxbookId: async (valor, endPoint) => {
+    getDocumentByTaxbookId: (valor, endPoint) => {
         let taxbookId = valor;
         taxbookId = taxbookId.replace(/['"]+/g, '');
-
-        const fetchConfig = { method: 'GET' };
 
         // Fetch URL with parameters
         const fetchURL = endPoint + `?taxbookId=${taxbookId}`;
 
         return (
-
             // Fetching data from the endpoint
-            await fetch(fetchURL, fetchConfig)
-                .then(res => res.text())
-                .then(data => { return { data: data } })
-                .catch((error) => {
+            fetch(fetchURL)
+                .then(res => res.json())
+                .then(data => {
+                    return {
+                        data: data
+                    }
+                }).catch((error) => {
                     console.log(error);
                     return false;
                 })
+        )
+    },
+
+    /// Petición para obtener el libro de Compras y ventas en Xero
+    /// deppendiendo del periodo
+    /// @param {text} id_organisation - organisation id
+    /// @param {text} initialDate - Format date DD/MM/YYYY"
+    /// @param {text} endDate -  Format date DD/MM/YYYY"
+    /// @param {text} dueDate -  Format date DD/MM/YYYY"
+    /// @param {text} endPoint - Ruta de acceso al Endpoint dependiendo si es compras o venntas
+    getBookRetention: async (id_organisation, Periodo, initialDate, endDate, endPoint, dueDate) => {
+
+        switch (Periodo) {
+            case "1":
+                let Range = util.getmonthRange();
+                initialDate = Range.firstDay;
+                endDate = Range.lastDay;
+                break;
+
+            case "2":
+                let PreviousRange = util.getPreviousRange();
+                initialDate = PreviousRange.firstDay;
+                endDate = PreviousRange.lastDay;
+                break;
+
+            default:
+                break;
+        }
+
+        var param = {
+            id_organisation: id_organisation,
+            initialDate: initialDate,
+            endDate: endDate,
+            dueDate: dueDate
+        };
+
+        return (
+            await fetch(endPoint, {
+                method: 'POST',
+                body: JSON.stringify(param),
+                headers: {
+                    "Content-type": "application/json; charset=UTF-8",
+                    "Access-Control-Allow-Origin": "*",
+                },
+            }).then(res => res.text()
+            ).then(data => {
+                return { data: data }
+            })
         );
+    },
+
+    /// Petición para obtener cuentas bancarias de una empresa en Xero
+    /// @param {text} taxbookId - id que regresa getSalesBook or getPurchaseBook
+    /// @param {text} endPoint - Ruta de acceso al Endpoint dependiendo si es compras o venntas
+    getDocumentByIdStatement: (valor, endPoint) => {
+        let id_statement = valor;
+        id_statement = id_statement.replace(/['"]+/g, '');
+
+        // Fetch URL with parameters
+        const fetchURL = endPoint + `?id_statement=${id_statement}`;
+
+        return (
+            // Fetching data from the endpoint
+            fetch(fetchURL)
+                .then(res => res.json())
+                .then(data => {
+                    return {
+                        data: data
+                    }
+                }).catch((error) => {
+                    console.log(error);
+                    return false;
+                })
+        )
     },
 }
 
