@@ -1,35 +1,105 @@
+.jss14 {
+	padding: 0 !important;
+}
+
+.makeStyles-paper-14 {
+	overflow: hidden !important;
+}
+
+.makeStyles-paper-14,
+.MuiPaper-elevation1 {
+	height: auto !important;
+}
+
 .padding-accordion-bank {
-    padding: 20px 0;
-    font-weight:100;
+	font-weight: 100;
+	display: flex;
+	flex: 1;
+}
+
+#accordionPanel {
+	margin: 20px 0 20px 20px;
+	display: flex;
+	flex-direction: column;
+	overflow-y: auto;
+	flex: 1;
 }
 
 .color-blue-background {
-    color: #232c51;
+	color: #232c51;
 }
 
 .underline {
-    text-decoration: underline !important;
-    font-weight: bold;
-    cursor: pointer;
-    color: #7158E2!important;
+	text-decoration: underline !important;
+	font-weight: bold;
+	cursor: pointer;
+	color: #7158e2 !important;
 }
 
 .accordion-flex {
-    display: flex;
-    justify-content: space-between;
+	display: flex;
+	justify-content: space-between;
 }
 
 .container-button-load {
-    display: flex;
-    justify-content: space-between;
+	display: flex;
+	justify-content: space-between;
 }
 
-.acoordionOptionArrow img{
-    height:10px;
+.acoordionOptionArrow img {
+	height: 10px;
 }
 
-.arrowUp{
-    transform:rotate(180deg);
-    -webkit-transform: rotate(180deg);
-    display: block;
+.arrowUp {
+	transform: rotate(180deg);
+	-webkit-transform: rotate(180deg);
+	display: block;
+}
+
+#conversionPanel {
+	margin: 20px;
+	flex: 2.5;
+	border-radius: 10px;
+}
+
+#conversionSubPanel {
+	display: flex;
+}
+
+.accordionBankItem {
+	background: #f5f6fa;
+	border: 1px solid #ebeefa;
+	border-radius: 10px;
+	margin-bottom: 3px;
+	font-weight: 600;
+	color: rgba(35, 44, 81, 0.7);
+	display: flex;
+	align-items: center;
+}
+
+.accordionBankItem:hover {
+	cursor: pointer;
+}
+
+.bankSelectionClass{
+	background: #dbdeef!important;
+}
+
+.accordionBankItem span {
+	flex: 1;
+	padding:8px 10px;
+	border-radius: 10px;
+}
+
+.accordionBankItem span:hover{
+	background-color: #eef0f7;
+}
+
+.hideAccordionPanelClass {
+	display: none !important;
+}
+
+.makeStyles-paper-14,
+.MuiPaper-elevation1 {
+	height: 100% !important;
 }
