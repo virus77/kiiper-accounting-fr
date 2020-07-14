@@ -48,6 +48,31 @@ const util = {
             })
         );
     },
+    getAndBuildGridDataDeclaration: (dropDownListEvent, statusName, orgIdSelected, kindOfPeople = "") => {
+
+        // Retrieving and setting data to perform a request to Xero
+        const statusInfo = util.getStatusInfoConceptDeclaration(statusName);
+        const taxInfo = util.getTaxInfoConceptDeclaration(dropDownListEvent);
+        const isEditableGrid = util.knowIfGridHeadersEditable(statusInfo);
+
+        return (
+
+            // Getting specific organization data
+            calls.getStatements(orgIdSelected, taxInfo.id, statusInfo.id).then(result => {
+
+                // Build grid data structured with editable columns
+                const structure = util.fillWorkspaceGrid(
+                    result.data, taxInfo, isEditableGrid, kindOfPeople, statusName, "declaracion"
+                );
+
+                return {
+                    structure: structure,
+                    taxInfo: taxInfo,
+                    statusInfo: statusInfo
+                }
+            })
+        );
+    },
     /// After getting the data from the organization in the function
     /// getOrgConceptsInfo the data is porcessed to give the right format
     /// @param {array} items - data requested from server
@@ -267,6 +292,80 @@ const util = {
 
         return statusInfo;
     },
+
+    getStatusInfoConceptDeclaration: (statusName) => {
+        let statusInfo = {
+            id: 1,
+            name: "Por generar"
+        };
+
+        switch (statusName) {
+
+            case "Por generar":
+                statusInfo.id = 1;
+                statusInfo.name = "Por generar";
+                break;
+
+            case "Por aprobar":
+                statusInfo.id = 2;
+                statusInfo.name = "Por aprobar";
+                break;
+
+            case "Aprobados":
+                statusInfo.id = 3;
+                statusInfo.name = "Aprobados";
+                break;
+
+            case "Por declarar":
+                statusInfo.id = 4;
+                statusInfo.name = "Por declarar";
+                break;
+
+            case "Por pagar":
+                statusInfo.id = 5;
+                statusInfo.name = "Por pagar";
+                break;
+
+            case "Pagados":
+                statusInfo.id = 6;
+                statusInfo.name = "Pagados";
+                break;
+
+            default:
+                break;
+        }
+
+        return statusInfo;
+    },
+    /// Helps to get the kind of tax of a voucher
+    /// @param {float} taxIndex - The index configured by tax in DropDownList events property
+    getTaxInfoConceptDeclaration: (taxIndex) => {
+
+        // Defining tax info depending on index configured in the DropDownList
+        // taxinfo.id - its the internal id Xero gives the tax, in order to request
+        // taxinfo.name - its used to rendering porpuses in Ventas component
+        let taxInfo = {};
+
+        switch (taxIndex) {
+            case 2:
+            case "ISLR":
+                taxInfo.name = "ISLR";
+                taxInfo.event = 2;
+                taxInfo.id = 2; 
+                break;
+
+            case 1:
+            case "IVA":
+            default:
+                taxInfo.name = "IVA";
+                taxInfo.event = 1;
+                taxInfo.id = 1;
+                break;
+        }
+
+        return taxInfo;
+    },
+
     /// Helps to get the kind of tax of a voucher
     /// @param {float} taxIndex - The index configured by tax in DropDownList events property
     getTaxInfoConcept: (taxIndex, kindOfPeople) => {
@@ -442,18 +541,13 @@ const util = {
     /// @param {object} kindOfPeople - Indica si es cliente o proveedor 
     returnHeaderDeclaration: function (Tipo, kindOfPeople, statusName) {
 
-        var seeCommitmentColumn = ['Declarados', 'Por pagar', 'Pagados'];
+        var seeCommitmentColumn = ['Por declarar', 'Por pagar', 'Pagados'];
         var seePaymentColumn = ['Por pagar', 'Pagados'];
-        var seeCertificateColumn = ['Declarados', 'Pagados'];
+        var seeCertificateColumn = ['Por declarar', 'Pagados'];
 
         var columnDefs = [
             //#region hidden rows
-            { headerName: 'withHoldingId', field: 'withHoldingId', xeroField: '_id', hide: true },
-            //iid_tax_type: El tipo de impuesto; donde 1 es retenciones de IVA, 2 es retenciones de ISLR, 3 es retenciones 
-            //de IVA a notas de crédito, 4 es retenciones de IVA a facturas de venta, y 5 es retenciones de ISLR a facturas de venta
-            { headerName: 'ISLR / IVA', field: 'id_tax_type', xeroField: 'id_tax_type', hide: true },
-            //id_status: El estatus del comprobante; donde 1 es borrador, 2 es aprobado, 3 es anulado, y 4 es archivado
-            { headerName: 'B_A_A_A', field: 'id_status', xeroField: 'id_status', hide: true },
+            { headerName: 'statementId', field: 'statementId', xeroField: '_id', hide: true },
             //#endregion hidden rows
             {
                 headerName: 'Nombre', field: 'Nombre', xeroField: 'invoice_number', width: 164,
@@ -491,7 +585,13 @@ const util = {
                 },
             },
             {
-                headerName: 'Esperando Cliente', field: 'EsperandoCliente', xeroField: 'esperando_cliente', type: 'rightAligned',  hide: statusName === "Aprobados" ? false : true, calculated: true, width: 140, sortable: true, cellClass: "grid-cell-centered",
+                headerName: 'Status', field: 'status', xeroField: 'status', type: 'rightAligned',  hide: statusName === "Aprobados" ? false : true, calculated: true, width: 140, sortable: true, cellClass: "grid-cell-centered",
+                valueGetter: function () {
+                    return 75;
+                },
+            },
+            {
+                headerName: 'Cuenta Xero', field: 'cuentaXero', xeroField: 'cuentaXero', type: 'rightAligned',  hide: statusName != "Por Generar" ? false : true, calculated: true, width: 120, sortable: true, cellClass: "grid-cell-centered",
                 valueGetter: function () {
                     return 75;
                 },
