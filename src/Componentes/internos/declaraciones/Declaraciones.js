@@ -19,6 +19,7 @@ import '../../internos/Css/alert.css';
 import "bootstrap/dist/css/bootstrap.min.css";
 import '../Css/styles.scss';
 import Autorenew from '@material-ui/icons/Autorenew';
+import DropdownList from 'react-widgets/lib/DropdownList';
 
 class Declaraciones extends Component {
     constructor(props) {
@@ -51,20 +52,28 @@ class Declaraciones extends Component {
             setShow: true,
             texto: "",
             Tipo: "IVA",
-            event: 4.2,
+            event: 2,
             eventKey: 0,
             arrayWithholdings: [],
             showModal: false,
-            selectedOption: '1'
+            selectedOption: '1',
+            accounts: [],
+            showModalAccounts: false,
+            bankAccountCode: null,
+            bankReference: null
         }
     };
 
     //#region Métodos de ciclo de vida
     componentWillMount() {
 
-        // Getting data from Xero and building data grid
-        util.getAndBuildGridData(null, "Por generar", "Proveedor", this.props.orgIdSelected, 'declaracion').then(result => {
+        calls.getBankAccounts(this.props.orgIdSelected).then(result => {
+            if(result.data !== undefined ) this.setState({ accounts: result.data });
+            //console.log("data", result.data);
+        });
 
+        // Getting data from Xero and building data grid
+        util.getAndBuildGridDataDeclaration(null, "Por generar", this.props.orgIdSelected).then(result => {
             // Setting component state
             this.setState({
                 rowData: result.structure.gridItems,
@@ -78,9 +87,9 @@ class Declaraciones extends Component {
 
     //Función utilizada para cambiar el estado y llenado del grid dependiendo la selección de IVA/ISLR
     handleListItemClick = (e, index) => {
-        
+
         // Getting data from Xero and building data grid
-        util.getAndBuildGridData(index, this.state.activeItem, "Proveedor", this.props.orgIdSelected, 'declaracion').then(result => {
+        util.getAndBuildGridDataDeclaration(index, this.state.activeItem, this.props.orgIdSelected).then(result => {
 
             // Setting component state
             this.setState({
@@ -94,14 +103,14 @@ class Declaraciones extends Component {
         });
     }
 
-    //Función utilizada para cambiar el estado y llenado del frid delendiendo del clic en el menu superior del mismo
+    //Función utilizada para cambiar el estado y llenado del grid delendiendo del clic en el menu superior del mismo
     handleItemClick = (e, name) => {
 
         // Cleaning rows selected on grid
         this.refs.agGrid.api.deselectAll();
 
         // Getting data from Xero and building data grid
-        util.getAndBuildGridData(this.state.event, name.name, "Proveedor", this.props.orgIdSelected, 'declaracion').then(result => {
+        util.getAndBuildGridDataDeclaration(this.state.event, name.name, this.props.orgIdSelected).then(result => {
 
             // Setting component state
             this.setState({
@@ -125,11 +134,11 @@ class Declaraciones extends Component {
                 arrayToSend = this.onFillstate(this.refs.agGrid.api.getSelectedRows(), name);
 
                 if (arrayToSend.length > 0) {
+                    const retencionType = (this.state.event) === 1? 'ISLR': 'IVA';
 
-                    // Moving received or stored vouchers to cancelled
                     let result1 = await calls.setDataVoidWidthHoldings(arrayToSend);
                     if (result1 === true || result1 === false) {
-                        this.setState({ show: true, texto: "El comprobante de retención ha sido anulado en Xero y cambió su estatus a ‘anulado’." })
+                        this.setState({ show: true, texto: `La declaracion de retención de ${retencionType} ha sido enviada a aprobación.` })
                         this.onRemoveSelected();
                         this.setState({ activeItem: name })
                     }
@@ -142,14 +151,23 @@ class Declaraciones extends Component {
                 arrayToSend = this.onFillstate(this.refs.agGrid.api.getSelectedRows(), name);
                 this.handleShowModal();
                 if (arrayToSend.length > 0) {
-
-                    // Moving received or stored vouchers to cancelled
-                    let result1 = await calls.setDataVoidWidthHoldings(arrayToSend);
-                    if (result1 === true || result1 === false) {
-                        this.setState({ show: true, texto: "El comprobante de retención ha sido anulado en Xero y cambió su estatus a ‘anulado’." })
-                        this.onRemoveSelected();
-                        this.setState({ activeItem: name })
+                    const retencionType = (this.state.event) === 1? 'ISLR': 'IVA';
+                    if (val) {
+                        let result1 = await calls.registerStatement(arrayToSend);
+                        if (result1 === true || result1 === false) {
+                            this.setState({ show: true, texto: `La declaracion de retención de ${retencionType} ha sido aprobada.` });
+                            this.onRemoveSelected();
+                            this.setState({ activeItem: name })
+                        }
+                    } else {
+                        let result1 = await calls.denyStatement(arrayToSend);
+                        if (result1 === true || result1 === false) {
+                            this.setState({ show: true, texto: `La declaracion de retención de ${retencionType} ha sido rechaza.` })
+                            this.onRemoveSelected();
+                            this.setState({ activeItem: name })
+                        }
                     }
+                    
                 }
                 else
                     this.setState({ activeItem: name, show: false })
@@ -159,11 +177,11 @@ class Declaraciones extends Component {
                 arrayToSend = this.onFillstate(this.refs.agGrid.api.getSelectedRows(), name);
 
                 if (arrayToSend.length > 0) {
-
+                    const retencionType = (this.state.event) === 1? 'ISLR': 'IVA';
                     // Moving received or stored vouchers to cancelled
                     let result1 = await calls.setDataVoidWidthHoldings(arrayToSend);
                     if (result1 === true || result1 === false) {
-                        this.setState({ show: true, texto: "El comprobante de retención ha sido anulado en Xero y cambió su estatus a ‘anulado’." })
+                        this.setState({ show: true, texto: "la declaracion de retencion de IVA/SLR ha sido enviar a aprobacion y enviamos notifcacion al cliente." })
                         this.onRemoveSelected();
                         this.setState({ activeItem: name })
                     }
@@ -171,16 +189,16 @@ class Declaraciones extends Component {
                 else
                     this.setState({ activeItem: name, show: false })
                 break;
-            case "Declarados":
+            case "Por declarar":
                 // Getting ros selected and building a JSON to send
                 arrayToSend = this.onFillstate(this.refs.agGrid.api.getSelectedRows(), name);
 
                 if (arrayToSend.length > 0) {
 
                     // Moving received or stored vouchers to cancelled
-                    let result1 = await calls.setDataVoidWidthHoldings(arrayToSend);
+                    let result1 = await calls.registerStatement(arrayToSend);
                     if (result1 === true || result1 === false) {
-                        this.setState({ show: true, texto: "El comprobante de retención ha sido anulado en Xero y cambió su estatus a ‘anulado’." })
+                        this.setState({ show: true, texto: "El comprobante de retención ha sido declarado en Xero y cambió su estatus a ‘anulado’." })
                         this.onRemoveSelected();
                         this.setState({ activeItem: name })
                     }
@@ -191,13 +209,13 @@ class Declaraciones extends Component {
             case "Por pagar":
                 // Getting ros selected and building a JSON to send
                 arrayToSend = this.onFillstate(this.refs.agGrid.api.getSelectedRows(), name);
-
+                this.handleShowModalAccounts();
                 if (arrayToSend.length > 0) {
 
                     // Moving received or stored vouchers to cancelled
-                    let result1 = await calls.setDataVoidWidthHoldings(arrayToSend);
+                    let result1 = await calls.payStatement(arrayToSend);
                     if (result1 === true || result1 === false) {
-                        this.setState({ show: true, texto: "El comprobante de retención ha sido anulado en Xero y cambió su estatus a ‘anulado’." })
+                        this.setState({ show: true, texto: "El comprobante de retención ha sido pagado en Xero y cambió su estatus a ‘pagados’." })
                         this.onRemoveSelected();
                         this.setState({ activeItem: name })
                     }
@@ -221,8 +239,7 @@ class Declaraciones extends Component {
         // Gathering items selected information
         gridSelectedRows.forEach(selectedRow => {
 
-            // Voucher data to be send or used in validation
-            const withHoldingId = selectedRow.withHoldingId;
+            const statementId = selectedRow.statementId;
 
             // Defining JSON oject to add to list of voucher to send
             // in voucher view action button 
@@ -231,31 +248,34 @@ class Declaraciones extends Component {
                 case "Por generar":
                     // Storing data from items selected in Sales grid
                     arrayToSend.push({
-                       _id: withHoldingId
+                       _id: statementId
                    });
                    break;
                 case "Por aprobar":
                      // Storing data from items selected in Sales grid
                      arrayToSend.push({
-                        _id: withHoldingId
+                        _id: statementId
                     });
                     break;
                 case "Aprobados":
                      // Storing data from items selected in Sales grid
                      arrayToSend.push({
-                        _id: withHoldingId
+                        _id: statementId
                     });
                     break;
-                case "Declarados":
+                case "Por declarar":
                      // Storing data from items selected in Sales grid
                      arrayToSend.push({
-                        _id: withHoldingId
+                        _id: statementId,
+                        commitmentFile: selectedRow.compromiso,
+                        warrantFile: selectedRow.Certificado
                     });
                     break;
                 case "Por pagar":
                      // Storing data from items selected in Sales grid
                      arrayToSend.push({
-                        _id: withHoldingId
+                        _id: statementId,
+                        paymentFile: selectedRow.pago
                     });
                     break;
                 default:
@@ -285,7 +305,7 @@ class Declaraciones extends Component {
                 case "Aprobados":
                     this.setState({ activeItem: activeItem + "Sel", show: false, texto: "El comprobante de retención ha sido declarado en Xero y cambió su estatus a ‘declarado’." })
                     break;
-                case "Declarados":
+                case "Por declarar":
                     this.setState({ activeItem: activeItem + "Sel", show: false, texto: "El comprobante de retención ha pasado a por pagar en Xero y cambió su estatus a ‘Por Pagar’." })
                     break;
                 case "Por pagar":
@@ -297,6 +317,10 @@ class Declaraciones extends Component {
         }
     };
 
+    onReloadStatement = async (statementId) => {
+        let result = await calls.updateStatement(statementId);
+    }
+
     /// Clear selected elements in the grid
     onRemoveSelected = () => {
         var selectedData = this.refs.agGrid.api.getSelectedRows();
@@ -304,7 +328,10 @@ class Declaraciones extends Component {
         util.printResult(res);
     };
 
-
+    onDownloadAuxiliarTaxReport = async(statementId) => {
+        let result = await calls.getDownloadAuxiliarTaxReport(statementId);
+    }
+ 
     //Función onchange del grid
     onSelectionChanged = event => {
         /* var rowCount = event.api.getSelectedNodes().length;
@@ -314,10 +341,24 @@ class Declaraciones extends Component {
     handleCloseModal = () => this.setState({ showModal: false });
     handleShowModal = () => this.setState({ showModal: true });
 
+    handleCloseModalAccounts = () => this.setState({ showModalAccounts: false });
+    handleShowModalAccounts = () => this.setState({ showModalAccounts: true });
+
     handleOptionChange = event => {
-        console.log("radio", event.target.value)
         this.setState({
           selectedOption: event.target.value
+        });
+    }
+
+    handleDropdownAccounts = event => {
+        this.setState({
+          bankAccountCode: event.code
+        });
+    }
+
+    handleInputAccounts = event => {
+        this.setState({
+            bankReference: event.target.value
         });
     }
 
@@ -326,6 +367,7 @@ class Declaraciones extends Component {
  
         return (
             <div style={{ height: "100%" }}>
+                {/* [Por aprobar] Modal de enviar notificacion al cliente */}
                 <Modal show={this.state.showModal} onHide={this.handleCloseModal}
                     aria-labelledby="contained-modal-title-vcenter"
                     centered
@@ -363,11 +405,57 @@ class Declaraciones extends Component {
                         </Button>
                     </Modal.Footer>
                 </Modal>
+
+                {/* [Por pagar] Modal eleccion cuenta bancaria y numero de referencia*/}
+
+                <Modal show={this.state.showModalAccounts} onHide={this.handleCloseModalAccounts}
+                    aria-labelledby="contained-modal-title-vcenter"
+                    centered
+                    >
+                    <Modal.Header closeButton>
+                        <Modal.Title id="contained-modal-title-vcenter">Pago</Modal.Title>
+                    </Modal.Header>
+                    <Modal.Body>
+                    <div className="container">
+                        <div className="row">
+                            <div className="col-sm-12">
+                                <form>
+                                    <div className="dropdown-container">
+                                        <label>
+                                            Banco: &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                                        </label>
+                                        <DropdownList
+                                            style={{ width: "240px" }}
+                                            filter
+                                            onChange={this.handleDropdownAccounts}
+                                            data={this.state.accounts}
+                                            allowCreate="onFilter"
+                                            valueField="code"
+                                            textField="name"/>
+                                    </div>
+                                    <div className="dropdown-container">
+                                        <label>
+                                            Referencia: &nbsp;&nbsp;
+                                        </label>
+                                        <input onChange={this.handleInputAccounts}/>
+                                    </div>
+                                    <div className="accounts-button">
+                                        <Button className="xeroGenerate" onClick={this.handleCloseModalAccounts}>
+                                            Contabilizar
+                                        </Button>
+                                    </div>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+
+                    </Modal.Body>
+                </Modal>
                 {/*Pintado del dropdownlist de iva/isrl*/}
                 <div>
-                    <NavDropdown id="ddlVentas" title={this.state.event === 4.2 ? '≡  Comprobante de retención de IVA  ' : this.state.event === 4.1 ? '≡  Comprobante de retención de ISLR  ' : '≡  Comprobante de retención de IVA  '} >
-                        <NavDropdown.Item eventKey={4.1} onClick={(event) => this.handleListItemClick(event, 4.1)} href="#Reportes/ISLR"><span className="ddlComVenLabel"> Comprobante de retención de ISLR </span></NavDropdown.Item>
-                        <NavDropdown.Item eventKey={4.2} onClick={(event) => this.handleListItemClick(event, 4.2)} href="#Reportes/IVA"><span className="ddlComVenLabel"> Comprobante de retención de IVA </span></NavDropdown.Item>
+                    <NavDropdown id="ddlVentas" title={this.state.event === 1 ? '≡  Comprobante de retención de IVA  ' : this.state.event === 2 ? '≡  Comprobante de retención de ISLR  ' : '≡  Comprobante de retención de IVA  '} >
+                        <NavDropdown.Item eventKey={2} onClick={(event) => this.handleListItemClick(event, 2)} href="#Reportes/ISLR"><span className="ddlComVenLabel"> Comprobante de retención de ISLR </span></NavDropdown.Item>
+                        <NavDropdown.Item eventKey={1} onClick={(event) => this.handleListItemClick(event, 1)} href="#Reportes/IVA"><span className="ddlComVenLabel"> Comprobante de retención de IVA </span></NavDropdown.Item>
                     </NavDropdown>
                 </div>
                 {/*Pintado de grid dependiendo del menu superior del grid*/}
@@ -397,11 +485,11 @@ class Declaraciones extends Component {
                                 <span >Aprobados</span>}
                     </Menu.Item>
                     <Menu.Item
-                        name='Declarados'
-                        active={activeItem === 'Declarados' ? true : false}
+                        name='Por declarar'
+                        active={activeItem === 'Por declarar' ? true : false}
                         onClick={this.handleItemClick}>
-                        {activeItem === 'Anulados' ? <span style={{ color: "#7158e2" }} >Declarados</span> :
-                            <span >Declarados</span>}
+                        {activeItem === 'Anulados' ? <span style={{ color: "#7158e2" }} >Por declarar</span> :
+                            <span >Por declarar</span>}
                     </Menu.Item>
                     <Menu.Item
                         name='Por pagar'
@@ -420,7 +508,7 @@ class Declaraciones extends Component {
                             activeItem === 'Por generar'?
                                 <div className="two-buttons-container">
                                     <div className="idDibvDisabledsmall">
-                                     <span> <Autorenew /> Recargar</span>
+                                     <span> <Autorenew /> Actualizar</span>
                                     </div>
                                     <div className="idDibvDisabledsmall">
                                         <span>Enviar</span>
@@ -451,14 +539,17 @@ class Declaraciones extends Component {
                                         <div className="idDibvDisabledsmall">
                                             <span>Declarar</span>
                                         </div>
-                                        :activeItem === 'Declarados' ?
+                                        :activeItem === 'Por declarar' ?
                                         <div className="idDibvDisabledsmall">
-                                            <span>Por Pagar</span>
+                                            <span>Declarar</span>
                                         </div>
                                         :activeItem === 'Por pagar' ?
                                         <div className="idDibvDisabledsmall">
                                             <span>Pagar</span>
                                         </div>
+                                        // <div className="idDivEnabledSmall" onClick={() => this.onMoveData("Por pagar", true)} >
+                                        // <span>Pagar</span>
+                                        // </div> 
                                         :activeItem === 'PorGenerarSel' ?
                                             <div className="two-buttons-container">
                                                 <div className="idDivEnabledSmall" onClick={() => this.onMoveData("Por generar", true)} >
@@ -470,7 +561,7 @@ class Declaraciones extends Component {
                                             </div>
                                             :activeItem === 'PorAprobarSel' ?
                                                 <div className="two-buttons-container">
-                                                    <div className="idDivEnabledSmall" onClick={() => this.onMoveData("Por aprobar", true)} >
+                                                    <div className="idDivEnabledSmall" onClick={() => this.onMoveData("Por aprobar", false)} >
                                                         <span>Rechazar</span>
                                                     </div>
                                                     <div className="idDivEnabledSmall" onClick={() => this.onMoveData("Por aprobar", true)} >
@@ -481,9 +572,9 @@ class Declaraciones extends Component {
                                                     <div className="idDivEnabledSmall" onClick={() => this.onMoveData("Aprobados", true)} >
                                                         <span>Declarar</span>
                                                     </div>
-                                                    : activeItem === 'DeclaradosSel' ?
-                                                        <div className="idDivEnabledSmall" onClick={() => this.onMoveData("Declarados", true)} >
-                                                            <span>Por pagar</span>
+                                                    : activeItem === 'PordeclararSel' ?
+                                                        <div className="idDivEnabledSmall" onClick={() => this.onMoveData("Por declarar", true)} >
+                                                            <span>Declarar</span>
                                                         </div> 
                                                     : activeItem === 'PorPagarSel' ?
                                                         <div className="idDivEnabledSmall" onClick={() => this.onMoveData("Por pagar", true)} >
@@ -506,7 +597,7 @@ class Declaraciones extends Component {
                                     activeItem === "Aprobados" ?
                                         util.createDataDrid(this.state.columnDefs, this.state.rowData, this.state.rowSelection, this.state.defaultColDef,
                                             this.state.components, this.onRowSelected.bind(this), this.onSelectionChanged.bind(this)) :
-                                        activeItem === "Declarados" ?
+                                        activeItem === "Por declarar" ?
                                             util.createDataDrid(this.state.columnDefs, this.state.rowData, this.state.rowSelection, this.state.defaultColDef,
                                                 this.state.components, this.onRowSelected.bind(this), this.onSelectionChanged.bind(this)) :
                                             activeItem === "Por pagar" ?
