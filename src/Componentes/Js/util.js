@@ -10,6 +10,10 @@ import 'jquery-ui/themes/base/datepicker.css';
 import 'jquery-ui/ui/core';
 import 'jquery-ui/ui/widgets/datepicker';
 
+import Download from '../../Imagenes/downloadDocument.svg';
+import Upload from '../../Imagenes/uploadDocument.svg';
+
+
 // Declaring momenty object
 var moment = require('moment'); // require
 
@@ -635,7 +639,7 @@ const util = {
         img.setAttribute("border", "0");
         img.setAttribute("width", "18");
         img.setAttribute("height", "21");
-        img.setAttribute("src", "./src/Imagenes/uploadDocument.svg");
+        img.setAttribute("src", Upload);
         img.setAttribute("style", "cursor: pointer");
         eDivIn.appendChild(img);
 
@@ -670,7 +674,7 @@ const util = {
     CellRendererP: function (params) {
         withHoldingId = params.data.withHoldingId;
         fileName = "Retención de IVA - " + params.data.invoice_number;
-        var flag = '<img border="0" width="18" height="21" src="./src/Imagenes/downloadDocument.svg"></img>';
+        var flag = '<img border="0" width="18" height="21" src="' + {Download} +'"></img>';
         var eDiv = document.createElement('div');
         eDiv.className = "file-container";
         eDiv.setAttribute("id", "down_" + withHoldingId);
