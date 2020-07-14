@@ -316,9 +316,9 @@ const util = {
                 statusInfo.name = "Aprobados";
                 break;
 
-            case "Declarados":
+            case "Por declarar":
                 statusInfo.id = 4;
-                statusInfo.name = "Declarados";
+                statusInfo.name = "Por declarar";
                 break;
 
             case "Por pagar":
@@ -541,9 +541,9 @@ const util = {
     /// @param {object} kindOfPeople - Indica si es cliente o proveedor 
     returnHeaderDeclaration: function (Tipo, kindOfPeople, statusName) {
 
-        var seeCommitmentColumn = ['Declarados', 'Por pagar', 'Pagados'];
+        var seeCommitmentColumn = ['Por declarar', 'Por pagar', 'Pagados'];
         var seePaymentColumn = ['Por pagar', 'Pagados'];
-        var seeCertificateColumn = ['Declarados', 'Pagados'];
+        var seeCertificateColumn = ['Por declarar', 'Pagados'];
 
         var columnDefs = [
             //#region hidden rows
@@ -585,7 +585,13 @@ const util = {
                 },
             },
             {
-                headerName: 'Esperando Cliente', field: 'EsperandoCliente', xeroField: 'esperando_cliente', type: 'rightAligned',  hide: statusName === "Aprobados" ? false : true, calculated: true, width: 140, sortable: true, cellClass: "grid-cell-centered",
+                headerName: 'Status', field: 'status', xeroField: 'status', type: 'rightAligned',  hide: statusName === "Aprobados" ? false : true, calculated: true, width: 140, sortable: true, cellClass: "grid-cell-centered",
+                valueGetter: function () {
+                    return 75;
+                },
+            },
+            {
+                headerName: 'Cuenta Xero', field: 'cuentaXero', xeroField: 'cuentaXero', type: 'rightAligned',  hide: statusName != "Por Generar" ? false : true, calculated: true, width: 120, sortable: true, cellClass: "grid-cell-centered",
                 valueGetter: function () {
                     return 75;
                 },
