@@ -373,7 +373,7 @@ const calls = {
             }
         };
 
-        return fetch(`/getStatements?id_organisation=${id_organisation}&id_tax_type=${id_tax_type}&id_statement_status=${id_statement_status}`, fetchConfig)
+        return fetch(`/getStatements?id_organisation=5ea086c97cc16250b45f82e1&id_tax_type=${id_tax_type}&id_statement_status=${id_statement_status}`, fetchConfig)
             .then(res => res.json())
             .then(data => {
                 return {
