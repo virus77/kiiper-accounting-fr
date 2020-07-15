@@ -498,6 +498,86 @@ const calls = {
             })
         );
     },
+
+    /// Generar una declaración (enviar una declaración desde el estatus Por generar a Por aprobar)
+    /// @param {array} arrayStatement el cual es un arreglo que contiene 
+    /// “id_statement” (ID de la declaración asociado a la petición /getStatements)
+    generateStatement: async (data) => {
+
+        var param = {
+            arrayStatement: data,
+        };
+
+        return (
+            await fetch('/generateStatement', {
+                method: 'POST',
+                body: param,
+            }).then(res => res.text()
+            ).then(data => {
+                return { data: data }
+            })
+        );
+    },
+
+    /// Aprobar una declaración (enviar una declaración desde el estatus Por aprobar a Aprobados)
+    /// @param {array} arrayStatement el cual es un arreglo que contiene 
+    /// “id_statement” (ID de la declaración asociado a la petición /getStatements)
+    approveStatement: async (data) => {
+
+        var param = {
+            arrayStatement: data,
+        };
+
+        return (
+            await fetch('/approveStatement', {
+                method: 'POST',
+                body: param,
+            }).then(res => res.text()
+            ).then(data => {
+                return { data: data }
+            })
+        );
+    },
+
+    /// Aprobar una declaración por parte del cliente (enviar una declaración desde el estatus 
+    /// Por aprobar a Aprobados dependiendo de acción enviada por correo electrónico)
+    /// “id_statement” (ID de la declaración asociado a la petición /getStatements)
+    approveStatementClient: async (id_statement) => {
+
+        var param = {
+            id_statement: id_statement,
+        };
+
+        return (
+            await fetch('/approveStatementClient', {
+                method: 'POST',
+                body: param,
+            }).then(res => res.text()
+            ).then(data => {
+                return { data: data }
+            })
+        );
+    },
+
+    /// Declarar un registro de declaración (enviar una declaración desde el estatus Aprobados a Declarados
+    /// @param {array} arrayStatement el cual es un arreglo que contiene 
+    /// “id_statement” (ID de la declaración asociado a la petición /getStatements)
+    declareStatement: async (id_statement) => {
+
+        var param = {
+            id_statement: id_statement,
+        };
+
+        return (
+            await fetch('/declareStatement', {
+                method: 'POST',
+                body: param,
+            }).then(res => res.text()
+            ).then(data => {
+                return { data: data }
+            })
+        );
+    },
 }
 
 export default calls;
