@@ -574,10 +574,10 @@ const util = {
                     }
                 },
             },
-            { headerName: 'Fecha Límite', field: 'FechaLimite', xeroField: 'invoice_control', filter: 'agTextColumnFilter', filter: 'agTextColumnFilter', width: 150, sortable: true },
-            { headerName: 'Base sujeta a retención', field: 'invoice_subtotal', xeroField: 'invoice_subtotal', width: 164, sortable: true, type: 'rightAligned' },
+            { headerName: 'Fecha Límite', field: 'due_date', xeroField: 'due_date', filter: 'agTextColumnFilter', filter: 'agTextColumnFilter', width: 150, sortable: true },
+            { headerName: 'Base sujeta a retención', field: 'statement_total_amount', xeroField: 'statement_total_amount', width: 164, sortable: true, type: 'rightAligned' },
             {
-                headerName: 'Total retenido', field: 'Retencion', xeroField: 'retention_percentage', type: 'rightAligned', calculated: true, width: 120, sortable: true, cellClass: "grid-cell-centered",
+                headerName: 'Total retenido', field: 'statement_total_tax', xeroField: 'statement_total_tax', type: 'rightAligned', calculated: true, width: 120, sortable: true, cellClass: "grid-cell-centered",
                 valueGetter: function () {
                     return 75;
                 },
