@@ -306,7 +306,7 @@ class Declaraciones extends Component {
                     this.setState({ activeItem: activeItem + "Sel", show: false, texto: "El comprobante de retención ha sido declarado en Xero y cambió su estatus a ‘declarado’." })
                     break;
                 case "Por declarar":
-                    this.setState({ activeItem: activeItem + "Sel", show: false, texto: "El comprobante de retención ha pasado a por pagar en Xero y cambió su estatus a ‘Por Pagar’." })
+                    this.setState({ activeItem: activeItem + "Sel", show: false, texto: "El comprobante de retención ha pasado a Por pagar en Xero y cambió su estatus a ‘Por pagar’." })
                     break;
                 case "Por pagar":
                     this.setState({ activeItem: activeItem + "Sel", show: false, texto: "El comprobante de retención ha sido pagado en Xero y cambió su estatus a ‘pagados’." })
@@ -453,9 +453,9 @@ class Declaraciones extends Component {
                 </Modal>
                 {/*Pintado del dropdownlist de iva/isrl*/}
                 <div>
-                    <NavDropdown id="ddlVentas" title={this.state.event === 1 ? '≡  Comprobante de retención de IVA  ' : this.state.event === 2 ? '≡  Comprobante de retención de ISLR  ' : '≡  Comprobante de retención de IVA  '} >
-                        <NavDropdown.Item eventKey={2} onClick={(event) => this.handleListItemClick(event, 2)} href="#Reportes/ISLR"><span className="ddlComVenLabel"> Comprobante de retención de ISLR </span></NavDropdown.Item>
-                        <NavDropdown.Item eventKey={1} onClick={(event) => this.handleListItemClick(event, 1)} href="#Reportes/IVA"><span className="ddlComVenLabel"> Comprobante de retención de IVA </span></NavDropdown.Item>
+                    <NavDropdown id="ddlVentas" title={this.state.event === 1 ? '≡  Retenciones de IVA  ' : this.state.event === 2 ? '≡  Retenciones de ISLR  ' : '≡  Retenciones de IVA  '} >
+                        <NavDropdown.Item eventKey={2} onClick={(event) => this.handleListItemClick(event, 2)} href="#Reportes/ISLR"><span className="ddlComVenLabel"> Retenciones de ISLR </span></NavDropdown.Item>
+                        <NavDropdown.Item eventKey={1} onClick={(event) => this.handleListItemClick(event, 1)} href="#Reportes/IVA"><span className="ddlComVenLabel"> Retenciones de IVA </span></NavDropdown.Item>
                     </NavDropdown>
                 </div>
                 {/*Pintado de grid dependiendo del menu superior del grid*/}
@@ -472,9 +472,9 @@ class Declaraciones extends Component {
                         name='Por aprobar'
                         active={activeItem === 'Por aprobar' ? true : false}
                         onClick={this.handleItemClick}>
-                        {activeItem === 'Por aprobar' ? <span style={{ color: "#7158e2" }} >Por Aprobar</span> :
-                            activeItem === 'PorAprobarSel' ? <span style={{ color: "#7158e2" }} >Por Aprobar</span> :
-                                <span >Por Aprobar</span>}
+                        {activeItem === 'Por aprobar' ? <span style={{ color: "#7158e2" }} >Por aprobar</span> :
+                            activeItem === 'PorAprobarSel' ? <span style={{ color: "#7158e2" }} >Por aprobar</span> :
+                                <span >Por aprobar</span>}
                     </Menu.Item>
                     <Menu.Item
                         name='Aprobados'
