@@ -82,7 +82,7 @@ const util = {
     /// @param {array} items - data requested from server
     /// @param {string} taxInfo - tax info with id and name
     /// @param {boolean} isAnEditableGrid - If the grid will have editable columns
-    fillWorkspaceGrid: (items, taxInfo, isAnEditableGrid, kindOfPeople, statusName, section = null) => {
+    fillWorkspaceGrid: (items, taxInfo, isAnEditableGrid, kindOfPeople, statusName, section) => {
 
         let gridItems = [];
         let headersTemplate = [];
@@ -574,7 +574,7 @@ const util = {
                     }
                 },
             },
-            { headerName: 'Fecha Límite', field: 'due_date', xeroField: 'due_date', filter: 'agTextColumnFilter', filter: 'agTextColumnFilter', width: 150, sortable: true },
+            { headerName: 'Fecha Límite', field: 'FechaLimite', xeroField: 'due_date', filter: 'agTextColumnFilter', filter: 'agTextColumnFilter', width: 150, sortable: true },
             { headerName: 'Base sujeta a retención', field: 'statement_total_amount', xeroField: 'statement_total_amount', width: 164, sortable: true, type: 'rightAligned' },
             {
                 headerName: 'Total retenido', field: 'statement_total_tax', xeroField: 'statement_total_tax', type: 'rightAligned', calculated: true, width: 120, sortable: true, cellClass: "grid-cell-centered",
