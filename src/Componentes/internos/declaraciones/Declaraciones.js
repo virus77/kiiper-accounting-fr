@@ -136,7 +136,7 @@ class Declaraciones extends Component {
                 if (arrayToSend.length > 0) {
                     const retencionType = (this.state.event) === 1? 'ISLR': 'IVA';
 
-                    let result1 = await calls.setDataVoidWidthHoldings(arrayToSend);
+                    let result1 = await calls.generateStatement(arrayToSend);
                     if (result1 === true || result1 === false) {
                         this.setState({ show: true, texto: `La declaracion de retención de ${retencionType} ha sido enviada a aprobación.` })
                         this.onRemoveSelected();
@@ -153,7 +153,7 @@ class Declaraciones extends Component {
                 if (arrayToSend.length > 0) {
                     const retencionType = (this.state.event) === 1? 'ISLR': 'IVA';
                     if (val) {
-                        let result1 = await calls.registerStatement(arrayToSend);
+                        let result1 = await calls.approveStatement(arrayToSend);
                         if (result1 === true || result1 === false) {
                             this.setState({ show: true, texto: `La declaracion de retención de ${retencionType} ha sido aprobada.` });
                             this.onRemoveSelected();
@@ -179,9 +179,9 @@ class Declaraciones extends Component {
                 if (arrayToSend.length > 0) {
                     const retencionType = (this.state.event) === 1? 'ISLR': 'IVA';
                     // Moving received or stored vouchers to cancelled
-                    let result1 = await calls.setDataVoidWidthHoldings(arrayToSend);
+                    let result1 = await calls.declareStatement(arrayToSend);
                     if (result1 === true || result1 === false) {
-                        this.setState({ show: true, texto: "la declaracion de retencion de IVA/SLR ha sido enviar a aprobacion y enviamos notifcacion al cliente." })
+                        this.setState({ show: true, texto: `La declaración de retención de ${retencionType} ha sido enviada a aprobación y envíamos notifcación al cliente.` })
                         this.onRemoveSelected();
                         this.setState({ activeItem: name })
                     }
@@ -194,11 +194,11 @@ class Declaraciones extends Component {
                 arrayToSend = this.onFillstate(this.refs.agGrid.api.getSelectedRows(), name);
 
                 if (arrayToSend.length > 0) {
-
+                    const retencionType = (this.state.event) === 1? 'ISLR': 'IVA';
                     // Moving received or stored vouchers to cancelled
                     let result1 = await calls.registerStatement(arrayToSend);
                     if (result1 === true || result1 === false) {
-                        this.setState({ show: true, texto: "El comprobante de retención ha sido declarado en Xero y cambió su estatus a ‘anulado’." })
+                        this.setState({ show: true, texto: `La declaración de retención de ${retencionType} ha sido declarado en Xero y ha sido enviada a Pagados.` })
                         this.onRemoveSelected();
                         this.setState({ activeItem: name })
                     }
@@ -211,11 +211,11 @@ class Declaraciones extends Component {
                 arrayToSend = this.onFillstate(this.refs.agGrid.api.getSelectedRows(), name);
                 this.handleShowModalAccounts();
                 if (arrayToSend.length > 0) {
-
+                    const retencionType = (this.state.event) === 1? 'ISLR': 'IVA';
                     // Moving received or stored vouchers to cancelled
                     let result1 = await calls.payStatement(arrayToSend);
                     if (result1 === true || result1 === false) {
-                        this.setState({ show: true, texto: "El comprobante de retención ha sido pagado en Xero y cambió su estatus a ‘pagados’." })
+                        this.setState({ show: true, texto: `La declaración de retención de ${retencionType} ha sido pagado en Xero y ha sido enviada a Pagados.` })
                         this.onRemoveSelected();
                         this.setState({ activeItem: name })
                     }
