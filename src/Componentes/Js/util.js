@@ -13,7 +13,6 @@ import 'jquery-ui/ui/widgets/datepicker';
 import Download from '../../Imagenes/downloadDocument.svg';
 import Upload from '../../Imagenes/uploadDocument.svg';
 
-
 // Declaring momenty object
 var moment = require('moment'); // require
 
