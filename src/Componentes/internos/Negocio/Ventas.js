@@ -400,7 +400,7 @@ class Ventas extends Component {
                 </Menu>
                 {/*Pintado de grid dependiendo del flujo de los botones*/}
                 <div style={{ width: '100%', height: '100%' }}>
-                    <div id="salesGrid" style={{ height: '400px', width: '100%' }} className="ag-theme-alpine">
+                    <div id="salesGrid" style={{ height: '446px', width: '100%' }} className="ag-theme-alpine">
                         {activeItem === "Pendientes" ?
                             util.createDataDrid(this.state.columnDefs, this.state.rowData, {},
                                 this.state.components, this.onRowSelected.bind(this), this.onSelectionChanged.bind(this)) :
