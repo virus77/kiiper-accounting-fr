@@ -23,6 +23,8 @@
 	flex-direction: column;
 	overflow-y: auto;
 	flex: 1;
+	overflow: auto;
+	max-height: calc(100vh - 220px);
 }
 
 .color-blue-background {
