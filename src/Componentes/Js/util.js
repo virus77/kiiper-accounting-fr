@@ -296,7 +296,6 @@ const util = {
 
         return statusInfo;
     },
-
     getStatusInfoConceptDeclaration: (statusName) => {
         let statusInfo = {
             id: 1,
@@ -369,7 +368,6 @@ const util = {
 
         return taxInfo;
     },
-
     /// Helps to get the kind of tax of a voucher
     /// @param {float} taxIndex - The index configured by tax in DropDownList events property
     getTaxInfoConcept: (taxIndex, kindOfPeople) => {
@@ -577,6 +575,14 @@ const util = {
             { headerName: 'Fecha Límite', field: 'FechaLimite', xeroField: 'due_date', filter: 'agTextColumnFilter', filter: 'agTextColumnFilter', width: 150, sortable: true },
             { headerName: 'Base sujeta a retención', field: 'invoice_subtotal', xeroField: 'statement_total_amount', width: 164, sortable: true, type: 'rightAligned' },
             { headerName: 'Total retenido', field: 'Retencion', xeroField: 'statement_total_tax', type: 'rightAligned', calculated: true, width: 120, sortable: true, cellClass: "grid-cell-centered" },
+            { headerName: 'Fecha Límite', field: 'due_date', xeroField: 'due_date', filter: 'agTextColumnFilter', filter: 'agTextColumnFilter', width: 150, sortable: true },
+            { headerName: 'Base sujeta a retención', field: 'statement_total_amount', xeroField: 'statement_total_amount', width: 164, sortable: true, type: 'rightAligned' },
+            {
+                headerName: 'Total retenido', field: 'statement_total_tax', xeroField: 'statement_total_tax', type: 'rightAligned', calculated: true, width: 120, sortable: true, cellClass: "grid-cell-centered",
+                valueGetter: function () {
+                    return 75;
+                },
+            },
             {
                 headerName: 'Aprobado por', field: 'AprobadoPor', xeroField: 'aprobado_por', type: 'rightAligned',  hide: statusName === "Aprobados" ? false : true, calculated: true, width: 120, sortable: true, cellClass: "grid-cell-centered",
             },
