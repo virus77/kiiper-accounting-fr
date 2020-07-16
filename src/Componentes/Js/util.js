@@ -259,9 +259,9 @@ const util = {
                 statusInfo.name = "Archivados";
                 break;
 
-            // No cambiar por 2 chinga
+            // El bueno es el 2
             case "Aprobados":
-                statusInfo.id = 1;
+                statusInfo.id = 2;
                 statusInfo.name = "Aprobados";
                 break;
             
@@ -380,7 +380,7 @@ const util = {
         switch (taxIndex) {
             case 4.1:
             case "ISLR":
-                kindOfPeople === "Cliente" ? taxInfo.id = 1 : taxInfo.id = 5;
+                kindOfPeople === "Cliente" ? taxInfo.id = 5 : taxInfo.id = 2;
                 taxInfo.name = "ISLR";
                 taxInfo.event = 4.1;
                 break;
@@ -388,7 +388,7 @@ const util = {
             case 4.2:
             case "IVA":
             default:
-                kindOfPeople === "Cliente" ? taxInfo.id = 2 : taxInfo.id = 4;
+                kindOfPeople === "Cliente" ? taxInfo.id = 4 : taxInfo.id = 1;
                 taxInfo.name = "IVA";
                 taxInfo.event = 4.2;
                 break;
