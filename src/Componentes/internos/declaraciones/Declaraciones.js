@@ -136,7 +136,7 @@ class Declaraciones extends Component {
                 if (arrayToSend.length > 0) {
                     const retencionType = (this.state.event) === 1? 'ISLR': 'IVA';
 
-                    let result1 = await calls.setDataVoidWidthHoldings(arrayToSend);
+                    let result1 = await calls.generateStatement(arrayToSend);
                     if (result1 === true || result1 === false) {
                         this.setState({ show: true, texto: `La declaracion de retención de ${retencionType} ha sido enviada a aprobación.` })
                         this.onRemoveSelected();
@@ -153,7 +153,7 @@ class Declaraciones extends Component {
                 if (arrayToSend.length > 0) {
                     const retencionType = (this.state.event) === 1? 'ISLR': 'IVA';
                     if (val) {
-                        let result1 = await calls.registerStatement(arrayToSend);
+                        let result1 = await calls.approveStatement(arrayToSend);
                         if (result1 === true || result1 === false) {
                             this.setState({ show: true, texto: `La declaracion de retención de ${retencionType} ha sido aprobada.` });
                             this.onRemoveSelected();
@@ -179,9 +179,9 @@ class Declaraciones extends Component {
                 if (arrayToSend.length > 0) {
                     const retencionType = (this.state.event) === 1? 'ISLR': 'IVA';
                     // Moving received or stored vouchers to cancelled
-                    let result1 = await calls.setDataVoidWidthHoldings(arrayToSend);
+                    let result1 = await calls.declareStatement(arrayToSend);
                     if (result1 === true || result1 === false) {
-                        this.setState({ show: true, texto: "la declaracion de retencion de IVA/SLR ha sido enviar a aprobacion y enviamos notifcacion al cliente." })
+                        this.setState({ show: true, texto: `La declaración de retención de ${retencionType} ha sido enviada a aprobación y envíamos notifcación al cliente.` })
                         this.onRemoveSelected();
                         this.setState({ activeItem: name })
                     }
@@ -194,11 +194,11 @@ class Declaraciones extends Component {
                 arrayToSend = this.onFillstate(this.refs.agGrid.api.getSelectedRows(), name);
 
                 if (arrayToSend.length > 0) {
-
+                    const retencionType = (this.state.event) === 1? 'ISLR': 'IVA';
                     // Moving received or stored vouchers to cancelled
                     let result1 = await calls.registerStatement(arrayToSend);
                     if (result1 === true || result1 === false) {
-                        this.setState({ show: true, texto: "El comprobante de retención ha sido declarado en Xero y cambió su estatus a ‘anulado’." })
+                        this.setState({ show: true, texto: `La declaración de retención de ${retencionType} ha sido declarado en Xero y ha sido enviada a Pagados.` })
                         this.onRemoveSelected();
                         this.setState({ activeItem: name })
                     }
@@ -211,11 +211,11 @@ class Declaraciones extends Component {
                 arrayToSend = this.onFillstate(this.refs.agGrid.api.getSelectedRows(), name);
                 this.handleShowModalAccounts();
                 if (arrayToSend.length > 0) {
-
+                    const retencionType = (this.state.event) === 1? 'ISLR': 'IVA';
                     // Moving received or stored vouchers to cancelled
                     let result1 = await calls.payStatement(arrayToSend);
                     if (result1 === true || result1 === false) {
-                        this.setState({ show: true, texto: "El comprobante de retención ha sido pagado en Xero y cambió su estatus a ‘pagados’." })
+                        this.setState({ show: true, texto: `La declaración de retención de ${retencionType} ha sido pagado en Xero y ha sido enviada a Pagados.` })
                         this.onRemoveSelected();
                         this.setState({ activeItem: name })
                     }
@@ -306,7 +306,7 @@ class Declaraciones extends Component {
                     this.setState({ activeItem: activeItem + "Sel", show: false, texto: "El comprobante de retención ha sido declarado en Xero y cambió su estatus a ‘declarado’." })
                     break;
                 case "Por declarar":
-                    this.setState({ activeItem: activeItem + "Sel", show: false, texto: "El comprobante de retención ha pasado a por pagar en Xero y cambió su estatus a ‘Por Pagar’." })
+                    this.setState({ activeItem: activeItem + "Sel", show: false, texto: "El comprobante de retención ha pasado a Por pagar en Xero y cambió su estatus a ‘Por pagar’." })
                     break;
                 case "Por pagar":
                     this.setState({ activeItem: activeItem + "Sel", show: false, texto: "El comprobante de retención ha sido pagado en Xero y cambió su estatus a ‘pagados’." })
@@ -453,9 +453,9 @@ class Declaraciones extends Component {
                 </Modal>
                 {/*Pintado del dropdownlist de iva/isrl*/}
                 <div>
-                    <NavDropdown id="ddlVentas" title={this.state.event === 1 ? '≡  Comprobante de retención de IVA  ' : this.state.event === 2 ? '≡  Comprobante de retención de ISLR  ' : '≡  Comprobante de retención de IVA  '} >
-                        <NavDropdown.Item eventKey={2} onClick={(event) => this.handleListItemClick(event, 2)} href="#Reportes/ISLR"><span className="ddlComVenLabel"> Comprobante de retención de ISLR </span></NavDropdown.Item>
-                        <NavDropdown.Item eventKey={1} onClick={(event) => this.handleListItemClick(event, 1)} href="#Reportes/IVA"><span className="ddlComVenLabel"> Comprobante de retención de IVA </span></NavDropdown.Item>
+                    <NavDropdown id="ddlVentas" title={this.state.event === 1 ? '≡  Retenciones de IVA  ' : this.state.event === 2 ? '≡  Retenciones de ISLR  ' : '≡  Retenciones de IVA  '} >
+                        <NavDropdown.Item eventKey={2} onClick={(event) => this.handleListItemClick(event, 2)} href="#Reportes/ISLR"><span className="ddlComVenLabel"> Retenciones de ISLR </span></NavDropdown.Item>
+                        <NavDropdown.Item eventKey={1} onClick={(event) => this.handleListItemClick(event, 1)} href="#Reportes/IVA"><span className="ddlComVenLabel"> Retenciones de IVA </span></NavDropdown.Item>
                     </NavDropdown>
                 </div>
                 {/*Pintado de grid dependiendo del menu superior del grid*/}
@@ -472,9 +472,9 @@ class Declaraciones extends Component {
                         name='Por aprobar'
                         active={activeItem === 'Por aprobar' ? true : false}
                         onClick={this.handleItemClick}>
-                        {activeItem === 'Por aprobar' ? <span style={{ color: "#7158e2" }} >Por Aprobar</span> :
-                            activeItem === 'PorAprobarSel' ? <span style={{ color: "#7158e2" }} >Por Aprobar</span> :
-                                <span >Por Aprobar</span>}
+                        {activeItem === 'Por aprobar' ? <span style={{ color: "#7158e2" }} >Por aprobar</span> :
+                            activeItem === 'PorAprobarSel' ? <span style={{ color: "#7158e2" }} >Por aprobar</span> :
+                                <span >Por aprobar</span>}
                     </Menu.Item>
                     <Menu.Item
                         name='Aprobados'
