@@ -15,34 +15,76 @@ code {
 @font-face {
   font-family: 'Muli';
   font-style: normal;
-  font-weight: 400;
-  src: local('Muli-Regular'), url(./fonts/muli/Muli-Regular.ttf) format('truetype');
-}
-
-@font-face {
-  font-family: 'Muli';
-  font-style: normal;
-  font-weight: 300;
+  font-weight: 100;
   src: local('Muli-Light'), url(./fonts/muli/Muli-Light.ttf) format('truetype');
 }
 
 @font-face {
   font-family: 'Muli';
   font-style: italic;
-  font-weight: 300;
+  font-weight: 100;
   src: local('Muli-LightItalic'), url(./fonts/muli/Muli-LightItalic.ttf) format('truetype');
 }
 
 @font-face {
   font-family: 'Muli';
+  font-style: normal;
+  font-weight: 300;
+  src: local('Muli-Regular'), url(./fonts/muli/Muli-Regular.ttf) format('truetype');
+}
+
+@font-face {
+  font-family: 'Muli';
   font-style: italic;
-  font-weight: normal;
+  font-weight: 300;
   src: local('Muli-Italic'), url(./fonts/muli/Muli-Italic.ttf) format('truetype');
+}
+
+@font-face {
+  font-family: 'Muli';
+  font-style: normal;
+  font-weight: 500;
+  src: local('Muli-SemiBold'), url(./fonts/muli/Muli-SemiBold.ttf) format('truetype');
+}
+
+@font-face {
+  font-family: 'Muli';
+  font-style: normal;
+  font-weight: 700;
+  src: local('Muli-Bold'), url(./fonts/muli/Muli-Bold.ttf) format('truetype');
 }
 
 @font-face {
   font-family: 'Goldplay';
   font-style: normal;
-  font-weight: normal;
+  font-weight: 100;
   src: local('Goldplay-Light'), url(./fonts/goldplay/Goldplay-Light.otf) format('opentype');
+}
+
+@font-face {
+  font-family: 'Goldplay';
+  font-style: normal;
+  font-weight: 700;
+  src: local('Goldplay-Bold'), url(./fonts/goldplay/Goldplay-Bold.otf) format('opentype');
+}
+
+@font-face {
+  font-family: 'Goldplay';
+  font-style: normal;
+  font-weight: 400;
+  src: local('Goldplay-Medium'), url(./fonts/goldplay/Goldplay-Medium.otf) format('opentype');
+}
+
+@font-face {
+  font-family: 'Goldplay';
+  font-style: normal;
+  font-weight: 300;
+  src: local('Goldplay-Regular'), url(./fonts/goldplay/Goldplay-Regular.otf) format('opentype');
+}
+
+@font-face {
+  font-family: 'Goldplay';
+  font-style: normal;
+  font-weight: 500;
+  src: local('Goldplay-SemiBold'), url(./fonts/goldplay/Goldplay-SemiBold.otf) format('opentype');
 }
