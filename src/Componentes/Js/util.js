@@ -534,7 +534,7 @@ const util = {
             },
             { headerName: 'Monto retenido', field: 'MontoRetenido', headerClass: "grid-cell-centered", type: 'rightAligned', xeroField: true, calculated: true, formulaName: 'retention_amount', width: 129, sortable: true },
             { headerName: 'Fecha de comprobante', field: 'date', xeroField: 'approval_date', filter: 'agTextColumnFilter', width: 170, sortable: true, cellClass: "grid-cell-centered" },
-            { headerName: 'No. Comprobante', field: 'Comprobante', xeroField: 'invoice_number', width: 150, sortable: true },
+            { headerName: 'No. Comprobante', field: 'Comprobante', xeroField: 'correlative', width: 150, sortable: true },
             { headerName: '', field: 'file', width: 60, cellRenderer: this.CellRendererP }
         ]
         return (columnDefs)
