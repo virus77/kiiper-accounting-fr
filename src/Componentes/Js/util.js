@@ -13,6 +13,7 @@ import 'jquery-ui/ui/widgets/datepicker';
 import Download from '../../Imagenes/downloadDocument.svg';
 import Upload from '../../Imagenes/uploadDocument.svg';
 
+
 // Declaring momenty object
 var moment = require('moment'); // require
 
@@ -95,9 +96,9 @@ const util = {
             default:
                 // Deciding which kind of headers use depending on parameters
                 headersTemplate =
-                isAnEditableGrid ?
-                    util.returnHeader(taxInfo.name, kindOfPeople) :
-                    util.returnHeaderFlow(taxInfo.name, kindOfPeople, statusName);
+                    isAnEditableGrid ?
+                        util.returnHeader(taxInfo.name, kindOfPeople) :
+                        util.returnHeaderFlow(taxInfo.name, kindOfPeople, statusName);
                 break;
         }
 
@@ -258,22 +259,22 @@ const util = {
                 statusInfo.name = "Archivados";
                 break;
 
-            // El bueno es el 2
+            // No cambiar
             case "Aprobados":
                 statusInfo.id = 2;
                 statusInfo.name = "Aprobados";
                 break;
-            
+
             case "Por aprobar":
                 statusInfo.id = 5;
                 statusInfo.name = "Por aprobar";
                 break;
-            
+
             case "Declarados":
                 statusInfo.id = 6;
                 statusInfo.name = "Declarados";
                 break;
-            
+
             case "Por pagar":
                 statusInfo.id = 7;
                 statusInfo.name = "Por pagar";
@@ -353,7 +354,7 @@ const util = {
             case "ISLR":
                 taxInfo.name = "ISLR";
                 taxInfo.event = 2;
-                taxInfo.id = 2; 
+                taxInfo.id = 2;
                 break;
 
             case 1:
@@ -367,6 +368,7 @@ const util = {
 
         return taxInfo;
     },
+
     /// Helps to get the kind of tax of a voucher
     /// @param {float} taxIndex - The index configured by tax in DropDownList events property
     getTaxInfoConcept: (taxIndex, kindOfPeople) => {
@@ -574,28 +576,20 @@ const util = {
             { headerName: 'Fecha Límite', field: 'FechaLimite', xeroField: 'due_date', filter: 'agTextColumnFilter', filter: 'agTextColumnFilter', width: 150, sortable: true },
             { headerName: 'Base sujeta a retención', field: 'invoice_subtotal', xeroField: 'statement_total_amount', width: 164, sortable: true, type: 'rightAligned' },
             { headerName: 'Total retenido', field: 'Retencion', xeroField: 'statement_total_tax', type: 'rightAligned', calculated: true, width: 120, sortable: true, cellClass: "grid-cell-centered" },
-            { headerName: 'Fecha Límite', field: 'due_date', xeroField: 'due_date', filter: 'agTextColumnFilter', filter: 'agTextColumnFilter', width: 150, sortable: true },
-            { headerName: 'Base sujeta a retención', field: 'statement_total_amount', xeroField: 'statement_total_amount', width: 164, sortable: true, type: 'rightAligned' },
             {
-                headerName: 'Total retenido', field: 'statement_total_tax', xeroField: 'statement_total_tax', type: 'rightAligned', calculated: true, width: 120, sortable: true, cellClass: "grid-cell-centered",
-                valueGetter: function () {
-                    return 75;
-                },
+                headerName: 'Aprobado por', field: 'AprobadoPor', xeroField: 'aprobado_por', type: 'rightAligned', hide: statusName === "Aprobados" ? false : true, calculated: true, width: 120, sortable: true, cellClass: "grid-cell-centered",
             },
             {
-                headerName: 'Aprobado por', field: 'AprobadoPor', xeroField: 'aprobado_por', type: 'rightAligned',  hide: statusName === "Aprobados" ? false : true, calculated: true, width: 120, sortable: true, cellClass: "grid-cell-centered",
+                headerName: 'Status', field: 'status', xeroField: 'status', type: 'rightAligned', hide: statusName === "Aprobados" ? false : true, calculated: true, width: 140, sortable: true, cellClass: "grid-cell-centered",
             },
             {
-                headerName: 'Status', field: 'status', xeroField: 'status', type: 'rightAligned',  hide: statusName === "Aprobados" ? false : true, calculated: true, width: 140, sortable: true, cellClass: "grid-cell-centered",
-            },
-            {
-                headerName: 'Cuenta Xero', field: 'cuentaXero', xeroField: 'cuentaXero', type: 'rightAligned',  hide: statusName != "Por Generar" ? false : true, calculated: true, width: 120, sortable: true, cellClass: "grid-cell-centered",
+                headerName: 'Cuenta Xero', field: 'cuentaXero', xeroField: 'cuentaXero', type: 'rightAligned', hide: statusName != "Por Generar" ? false : true, calculated: true, width: 120, sortable: true, cellClass: "grid-cell-centered",
             },
             {
                 headerName: 'Auxiliar', field: 'Auxiliar', xeroField: 'auxiliar', type: 'rightAligned', calculated: true, width: 110, sortable: true, cellClass: "grid-cell-centered",
             },
             {
-                headerName: 'Compromiso', field: 'compromiso', xeroField: 'compromiso', type: 'rightAligned',  hide: !seeCommitmentColumn.includes(statusName), calculated: true, width: 110, sortable: true, cellClass: "grid-cell-centered",
+                headerName: 'Compromiso', field: 'compromiso', xeroField: 'compromiso', type: 'rightAligned', hide: !seeCommitmentColumn.includes(statusName), calculated: true, width: 110, sortable: true, cellClass: "grid-cell-centered",
             },
             {
                 headerName: 'Pago', field: 'Pago', xeroField: 'pago', type: 'rightAligned', hide: !seePaymentColumn.includes(statusName), calculated: true, width: 110, sortable: true, cellClass: "grid-cell-centered",
@@ -653,7 +647,7 @@ const util = {
     CellRendererP: function (params) {
         withHoldingId = params.data.withHoldingId;
         fileName = "Retención de IVA - " + params.data.invoice_number;
-        var flag = '<img border="0" width="18" height="21" src="' + {Download} +'"></img>';
+        var flag = '<img border="0" width="18" height="21" src="' + { Download } + '"></img>';
         var eDiv = document.createElement('div');
         eDiv.className = "file-container";
         eDiv.setAttribute("id", "down_" + withHoldingId);

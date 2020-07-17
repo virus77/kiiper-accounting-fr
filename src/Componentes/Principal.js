@@ -332,7 +332,7 @@ export default function Dashboard(props) {
             </Navbar.Collapse> :
             null}
         </Navbar>
-        <Container maxWidth="lg" style={{ height: "calc(100% - 105px)", padding: "20px!important" }} className={classes.container}>
+        <Container maxWidth="lg" style={{ padding: "20px!important" }} className={classes.container}>
           {event === "xeroOrgName" || event === 0.1 ?
             <Grid container spacing={2}>
               {/* Dashboard */}
