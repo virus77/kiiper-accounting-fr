@@ -24,7 +24,7 @@ import "react-datepicker/dist/react-datepicker.css";
 import "../Css/books.css";
 
 /// Imágenes
-import ExcelImage from "../Css/kiiper_Excel.png";
+import ExcelImage from "../Css/kiiper_Excel.svg";
 
 registerLocale("es", es);
 var moment = require("moment"); /// require
@@ -70,6 +70,7 @@ class Reports extends Component {
 			setOpen: false,
 			tipo: "",
 			dueDate: new Date(),
+			errorMsg: ""
 		};
 
 		this.handleClickLibroCompras = this.handleClickLibroCompras.bind(this);
@@ -90,9 +91,10 @@ class Reports extends Component {
 		if (util.compareDates(startDate, endDate) === 1) {
 			this.setState({
 				msgLibroCompras: "Fecha desde, no puede ser mayor a fecha hasta",
+				errorMsg: "error-msg"
 			});
 		} else {
-			this.setState({ startDateLibroCompras: date, msgLibroCompras: "" });
+			this.setState({ startDateLibroCompras: date, msgLibroCompras: "", errorMsg: "" });
 		}
 	};
 
@@ -104,9 +106,10 @@ class Reports extends Component {
 		if (util.compareDates(endDate, StartDate) === -1) {
 			this.setState({
 				msgLibroCompras: "Fecha hasta, no puede ser menor a fecha desde",
+				errorMsg: "error-msg"
 			});
 		} else {
-			this.setState({ finishDateLibroCompras: date, msgLibroCompras: "" });
+			this.setState({ finishDateLibroCompras: date, msgLibroCompras: "", errorMsg: "" });
 		}
 	};
 
@@ -134,6 +137,7 @@ class Reports extends Component {
 		if (x.isBefore(y)) {
 			this.setState({
 				msgLibroCompras: "",
+				errorMsg: ""
 			});
 
 			let taxbookId = await calls.getBook(
@@ -153,6 +157,7 @@ class Reports extends Component {
 		} else {
 			this.setState({
 				msgLibroCompras: "Las fechas son inválidas",
+				errorMsg: "error-msg"
 			});
 		}
 	};
@@ -297,11 +302,17 @@ class Reports extends Component {
 					<div className="flex-container">
 						<Card className="card-container">
 							<Card.Body>
+								<span
+									className="excelBookGenerator"
+									onClick={(event) => this.onDownloadExcel("Compras")}
+								>
+									<img border="0" src={ExcelImage} />
+								</span>
 								<Card.Title>Libro de Compras</Card.Title>
 								<hr className="separator" />
 								<Card.Text>
-									<div className="flex-container">
-										<div  className="fieldLabel">Período:</div>
+									<div className="date-container" style={{marginRight:30}}>
+										<div className="fieldLabel">Período:</div>
 										<Form>
 											<Form.Group>
 												<Form.Control
@@ -320,7 +331,7 @@ class Reports extends Component {
 									</div>
 									{this.state.showDateLibroCompras ? (
 										<div className="date-container">
-											<div className="inline-date" style={{marginLeft:0}}>
+											<div className="inline-date" style={{ marginLeft: 0 }}>
 												<div className="time-interval fieldLabel">Desde: </div>
 												<DatePicker
 													id="dtpkDesdeCompras"
@@ -346,14 +357,13 @@ class Reports extends Component {
 											</div>
 										</div>
 									) : null}
-									<span className="error-msg">
+								</Card.Text>
+								
+								<span className={this.state.errorMsg}>
 										{this.state.msgLibroCompras}
 									</span>
-								</Card.Text>
-								<div className="date-container">
-									<br />
-									<br />
-									<div className="myPosition inline-date">
+								<div className="action-container">
+									<div className="inline-date">
 										<Button
 											className="xeroGenerate"
 											onClick={() => {
@@ -363,25 +373,21 @@ class Reports extends Component {
 											Generar
 										</Button>
 									</div>
-									<div className="myPosition inline-date">
-										<div>
-											<span
-												style={{ cursor: "pointer" }}
-												onClick={(event) => this.onDownloadExcel("Compras")}
-											>
-												<img border="0" src={ExcelImage} />
-											</span>
-										</div>
-									</div>
 								</div>
 							</Card.Body>
 						</Card>
 						<Card className="card-container">
 							<Card.Body>
+								<span
+									className="excelBookGenerator"
+									onClick={(event) => this.onDownloadExcel("Ventas")}
+								>
+									<img border="0" src={ExcelImage} />
+								</span>
 								<Card.Title>Libros de Ventas</Card.Title>
 								<hr className="separator" />
 								<Card.Text>
-									<div className="flex-container">
+									<div className="date-container" style={{marginRight:30}}>
 										<div className="fieldLabel">Período:</div>
 										<Form>
 											<Form.Group>
@@ -401,7 +407,7 @@ class Reports extends Component {
 									</div>
 									{this.state.showDateLibroVentas ? (
 										<div className="date-container">
-											<div className="inline-date"  style={{marginLeft:0}}>
+											<div className="inline-date" style={{ marginLeft: 0 }}>
 												<div className="time-interval fieldLabel">Desde:</div>
 												<DatePicker
 													id="dtpkDesdeVentas"
@@ -427,11 +433,10 @@ class Reports extends Component {
 											</div>
 										</div>
 									) : null}
-									<span className="error-msg">{this.state.msgLibroVentas}</span>
 								</Card.Text>
-								<div className="date-container">
-									<div className="myPosition inline-date">
-										<br />
+								
+								<div className="action-container">
+									<div className="inline-date">
 										<Button
 											className="xeroGenerate"
 											onClick={() => {
@@ -440,16 +445,6 @@ class Reports extends Component {
 										>
 											Generar
 										</Button>
-									</div>
-									<div className="myPosition inline-date">
-										<div>
-											<span
-												style={{ cursor: "pointer" }}
-												onClick={(event) => this.onDownloadExcel("Ventas")}
-											>
-												<img border="0" src={ExcelImage} />
-											</span>
-										</div>
 									</div>
 								</div>
 							</Card.Body>

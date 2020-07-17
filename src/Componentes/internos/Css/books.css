@@ -49,15 +49,18 @@
 	border-width: thin;
 	font-size: 0.9em;
 	box-sizing: border-box;
-	margin-left: 10px;
 	font-family: "Muli", sans-serif;
 	font-weight: 400;
 	background-color: #f5f6fa;
 }
 
+.ddlPeriodo:active, .ddlPeriodo:focus {
+  border-style: none!important;
+}
+
 /*txtDate de los periodos*/
 .calendar {
-	width: 90px;
+	width: 100%;
 	border-radius: 7px;
 	border-style: none;
 	color: rgba(35, 44, 81, 0.6);
@@ -137,10 +140,6 @@
 	width: 30px;
 }
 
-.react-datepicker-wrapper {
-	margin-left: 10px;
-}
-
 .react-datepicker__header {
 	border-color: #f2f2f2;
 	background: #fcfcfc;
@@ -149,12 +148,6 @@
 	font-weight: lighter;
 	padding: 2px 6px 2px 6px;
 	font-size: 13px;
-}
-
-.myPosition {
-	left: 50%;
-	transform: translate(-30%, 0px);
-	bottom: 21px;
 }
 
 #form-dialog-title {
