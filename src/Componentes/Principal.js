@@ -366,18 +366,7 @@ export default function Dashboard(props) {
                       <div id="moduleTitle" style={{ cursor: "pointer" }} onClick={(event) => { setShowModuleAgain(true); setBreadcrumbPath(""); resetBanksModule() }}>
                         <Title>Bancos</Title>
                       </div>
-                      <span
-                        id="breadcrumbPath"
-                        style={{
-                          marginLeft: 10,
-                          fontWeight: 700,
-                          marginBottom: 10,
-                          display: "flex",
-                          alignItems: "flex-end",
-                          fontSize: "1.2em",
-                          color: "#9680ED"
-                        }}
-                      >{breadcrumbPath}</span>
+                      <span id="breadcrumbPath">{breadcrumbPath}</span>
                     </div>
                     <Grid item xs={12}>
                       <Paper className={classes.paper}>
@@ -395,6 +384,10 @@ export default function Dashboard(props) {
                     </Grid> :
                     event === "xeroOrgName" || event === 3.1 ?
                       <Grid container spacing={2}>
+                      <div className="breadcrumbClass" style={{ display: "flex" }}>
+                        <div id="moduleTitle"><Title>Reportes</Title></div>
+                        <span id="breadcrumbPath">&gt; Impuestos</span>
+                      </div>
                         <Grid item xs={12}>
                           <Paper className={classes.paper}>
                             < Reports orgIdSelected={orgIdSelected} />

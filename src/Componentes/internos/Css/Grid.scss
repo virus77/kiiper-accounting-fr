@@ -101,6 +101,17 @@ h5:last-child {
 	justify-content: center;
 }
 
+/** Breadcrumb */
+#breadcrumbPath{
+	margin-left: 10px;
+      font-weight: 700;
+      margin-bottom: 10px;
+      display: flex;
+      align-items: flex-end;
+      font-size: 1.2em;
+      color: #9680ED;
+}
+
 /* Div botón a la derecha*/
 #idItemRight {
 	flex: 1;
