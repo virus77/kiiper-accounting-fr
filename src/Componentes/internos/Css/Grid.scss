@@ -101,15 +101,22 @@ h5:last-child {
 	justify-content: center;
 }
 
+/** Breadcrumb container */
+.breadcrumbClass{
+	display: flex;
+	align-items: center;
+}
+
 /** Breadcrumb */
 #breadcrumbPath{
 	margin-left: 10px;
-      font-weight: 700;
+      font-weight: 500;
       margin-bottom: 10px;
       display: flex;
       align-items: flex-end;
       font-size: 1.2em;
-      color: #9680ED;
+	color: #9680ED;
+	font-family: "Goldplay",sans-serif;
 }
 
 /* Div botón a la derecha*/

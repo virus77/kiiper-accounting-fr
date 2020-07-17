@@ -1,10 +1,14 @@
 .flex-container {
 	display: flex;
+	font-weight: 100;
+	align-items: center;
 }
 
 .report-title {
 	margin: 0 10px 10px 0;
 	text-align: right;
+	font-weight: 400;
+	color: #232c51;
 }
 
 .card-container {
@@ -12,12 +16,33 @@
 	margin: 0 10px;
 }
 
+.card-title {
+	font-weight: 500;
+	font-size: 1em;
+	font-family: "Goldplay",sans-serif;
+	color: #232c51;
+}
+
 .card {
 	border: 1px solid #f5f6fa;
 }
 
+.card-body hr{
+	border-top-color: #f5f6fa;
+}
+
 .report-container {
 	padding: 10px 10px 20px;
+}
+
+.form-group{
+	margin: 0;
+}
+
+.fieldLabel {
+	font-weight: 400;
+	color: #4327D0;
+	font-weight: 0.9em;
 }
 
 .btn-generate {
@@ -29,8 +54,8 @@
 
 .inline-date {
 	display: flex;
-	justify-content: space-evenly;
 	align-items: baseline;
+	margin-left: 20px;
 
 	& .time-interval {
 		margin-right: 10px;
@@ -39,9 +64,8 @@
 
 .date-container {
 	display: flex;
-	justify-content: space-evenly;
 	flex-direction: row;
-	padding-top: 10px;
+	margin: 10px 0;
 }
 
 .error-msg {

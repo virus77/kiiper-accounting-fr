@@ -96,16 +96,16 @@ class App extends Component {
             </div>
             <div className="formulario">
               <div className="col-12" style={{ display: "flex", flexDirection: "column", alignItems: "center" }}>
-              <div style={{ padding: "0", fontSize: "2.5em", color: "#232C51", fontWeight: "bold" }}>
+              <h1 style={{ padding: "0", fontSize: "2.5em", color: "#232C51" }}>
                   Bienvenidos a kiiper
-                    </div>
-                <div style={{ padding: "25px 0px 0px 0px", fontSize: "1.5em", color: "#232C51" }}>
+                    </h1>
+                <h2 style={{ margin: "0", fontSize: "1.5em", color: "#232C51", fontWeight: 300 }}>
                   Accounting routines done!
-                    </div>
+                    </h2>
                 {/* <div style={{ padding: "45px 35px 0px 35px", fontSize: "12pt", color: "#232C51" }}>
                   Para continuar debes ingresar tus datos e iniciar sesión
                     </div>*/}
-                <Form style={{ padding: "50px 0px 0px 0px", fontSize: "0.9em", color: "#232C51" }}>
+                <Form style={{ padding: "50px 0px 0px 0px", fontSize: "1em", color: "#232C51" }}>
                   {/* <Form.Group controlId="formBasicEmail">
                       <Form.Label >Correo electrónico: </Form.Label>
                       <Form.Control type="email" placeholder="ej. nombre@corrreo.com" />
@@ -133,7 +133,7 @@ class App extends Component {
                       </Row>
                     </div>*/}
                   <div style={{ padding: "0px 0px 0px 0px" }}>
-                    <Button style={{fontFamily:"'Muli',sans-serif",fontWeight:"700"}} type="submit" id="xeroSyncAnchor" onClick={() => { this.onIniciarProceso() }}>
+                    <Button style={{fontFamily:"'Muli',sans-serif",fontWeight:100}} type="submit" id="xeroSyncAnchor" onClick={() => { this.onIniciarProceso() }}>
                       Iniciar sesión
                       </Button>
                   </div>

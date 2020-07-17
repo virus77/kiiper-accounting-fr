@@ -301,7 +301,7 @@ class Reports extends Component {
 								<hr className="separator" />
 								<Card.Text>
 									<div className="flex-container">
-										<div>Período:</div>
+										<div  className="fieldLabel">Período:</div>
 										<Form>
 											<Form.Group>
 												<Form.Control
@@ -320,8 +320,8 @@ class Reports extends Component {
 									</div>
 									{this.state.showDateLibroCompras ? (
 										<div className="date-container">
-											<div className="inline-date">
-												<div className="time-interval">Desde: </div>
+											<div className="inline-date" style={{marginLeft:0}}>
+												<div className="time-interval fieldLabel">Desde: </div>
 												<DatePicker
 													id="dtpkDesdeCompras"
 													className={"calendar"}
@@ -333,7 +333,7 @@ class Reports extends Component {
 												/>
 											</div>
 											<div className="inline-date">
-												<div className="time-interval">Hasta: </div>
+												<div className="time-interval fieldLabel">Hasta: </div>
 												<DatePicker
 													id="dtpkHastaCompras"
 													className={"calendar"}
@@ -382,7 +382,7 @@ class Reports extends Component {
 								<hr className="separator" />
 								<Card.Text>
 									<div className="flex-container">
-										<div>Período:</div>
+										<div className="fieldLabel">Período:</div>
 										<Form>
 											<Form.Group>
 												<Form.Control
@@ -401,8 +401,8 @@ class Reports extends Component {
 									</div>
 									{this.state.showDateLibroVentas ? (
 										<div className="date-container">
-											<div className="inline-date">
-												<div className="time-interval">Desde:</div>
+											<div className="inline-date"  style={{marginLeft:0}}>
+												<div className="time-interval fieldLabel">Desde:</div>
 												<DatePicker
 													id="dtpkDesdeVentas"
 													className={"calendar"}
@@ -414,7 +414,7 @@ class Reports extends Component {
 												/>
 											</div>
 											<div className="inline-date">
-												<div className="time-interval">Hasta:</div>
+												<div className="time-interval fieldLabel">Hasta:</div>
 												<DatePicker
 													id="dtpkHastaVentas"
 													className={"calendar"}
