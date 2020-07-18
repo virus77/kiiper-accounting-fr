@@ -376,3 +376,14 @@ html .ui-button.ui-state-disabled:hover {
 	border-radius: 5px;
 	color: #6c757d;
 }
+
+.ag-theme-alpine .ag-header-cell, .ag-theme-alpine .ag-header-group-cell
+{
+	padding-left: 18px;
+	padding-right: 0px;
+}
+
+.ag-theme-alpine .ag-ltr .ag-header-select-all
+{
+	margin-right: 0px!important;
+}

@@ -127,9 +127,7 @@ class Reports extends Component {
 
         if (x.isBefore(y)) {
 
-            this.setState({
-                msgLibroCompras: '',
-            });
+            this.setState({ msgLibroCompras: '' });
 
             let taxbookId = await calls.getBook(this.props.orgIdSelected, this.state.optionSelectedLibroCompras,
                 y.format("DD/MM/YYYY"), x.format("DD/MM/YYYY"), "/purchasesBook");
@@ -138,6 +136,7 @@ class Reports extends Component {
                 console.log("Ocurrió un problema al momento de guardar en Xero");
             else {
                 this.setState({ taxbookIdCompras: taxbookId.data });
+                this.onDownloadExcel("Compras");
                 alert("El preriodo se guardo correctamente en Xero");
             }
         } else {
@@ -194,9 +193,7 @@ class Reports extends Component {
 
         if (x.isBefore(y)) {
 
-            this.setState({
-                msgLibroVentas: '',
-            });
+            this.setState({ msgLibroVentas: '' });
 
             let taxbookId = await calls.getBook(this.props.orgIdSelected, this.state.optionSelectedLibroVentas,
                 y.format("DD/MM/YYYY"), x.format("DD/MM/YYYY"), "/purchasesBook");
@@ -205,6 +202,7 @@ class Reports extends Component {
                 console.log("Ocurrió un problema al momento de guardar en Xero");
             else {
                 this.setState({ taxbookIdVenntas: taxbookId.data });
+                this.onDownloadExcel("Ventas");
                 alert("El preriodo se guardo correctamente en Xero");
             }
 
@@ -222,23 +220,19 @@ class Reports extends Component {
         let resp = "";
         switch (origen) {
             case "Ventas":
-                //await calls.getDocumentByTaxbookId(this.state.taxbookIdVentas, "/generateSalesBook");
-                resp = await calls.getDocumentByTaxbookId("5ee552b80446db0b64bf49f9", "/generateSalesBook");
+                await calls.getDocumentByTaxbookId(this.state.taxbookIdVentas, "/generateSalesBook");
                 break;
 
             case "Compras":
-                //await calls.getDocumentByTaxbookId(this.state.taxbookIdCompras, "/generatePurchasesBook");
-                resp = await calls.getDocumentByTaxbookId("5ee552b80446db0b64bf49f9", "/generatePurchasesBook");
+                await calls.getDocumentByTaxbookId(this.state.taxbookIdCompras, "/generatePurchasesBook");
                 break;
 
             case "IVA":
-                //await calls.getDocumentByIdStatement(this.state.IdStatementIVA, "/downloadAuxiliarTaxReport");
-                resp = await calls.getDocumentByIdStatement("5ee552b80446db0b64bf49f9", "/downloadAuxiliarTaxReport");
+                await calls.getDocumentByIdStatement(this.state.IdStatementIVA, "/downloadAuxiliarTaxReport");
                 break;
 
             case "ISLR":
-                //await calls.getDocumentByIdStatement(this.state.IdStatementISLR, "/downloadAuxiliarTaxReport");
-                resp = await calls.getDocumentByIdStatement("5ee552b80446db0b64bf49f9", "/downloadAuxiliarTaxReport");
+                await calls.getDocumentByIdStatement(this.state.IdStatementISLR, "/downloadAuxiliarTaxReport");
                 break;
 
             default:
@@ -278,8 +272,8 @@ class Reports extends Component {
                                                     <Form.Control as="select" className="ddlPeriodo" value={this.state.optionSelectedLibroCompras}
                                                         onChange={this.handleClickLibroCompras} >
                                                         <option value="0">Seleccionar...</option>
-                                                        <option value="1">Mes actual</option>
-                                                        <option value="2">Mes anterior</option>
+                                                        {/* <option value="1">Mes actual</option>
+                                                        <option value="2">Mes anterior</option>*/}
                                                         <option value="3">Personalizado</option>
                                                     </Form.Control>
                                                 </Form.Group>
@@ -321,14 +315,7 @@ class Reports extends Component {
                                         <div className="myPosition inline-date">
                                             <Button className="xeroGenerate" onClick={() => { this.onGetPeriodLibroCompras() }}>
                                                 Generar
-                                    </Button>
-                                        </div>
-                                        <div className="myPosition inline-date">
-                                            <div>
-                                                <span style={{ cursor: "pointer" }} onClick={(event) => this.onDownloadExcel("Compras")} >
-                                                    <img border="0" src={ExcelImage} />
-                                                </span>
-                                            </div>
+                                            </Button>
                                         </div>
                                     </div>
                                 </Card.Body>
@@ -345,8 +332,8 @@ class Reports extends Component {
                                                     <Form.Control as="select" className="ddlPeriodo" value={this.state.optionSelectedLibroVentas}
                                                         onChange={this.handleClickLibroVentas} >
                                                         <option value="0">Seleccionar...</option>
-                                                        <option value="1">Mes actual</option>
-                                                        <option value="2">Mes anterior</option>
+                                                        {/* < <option value="1">Mes actual</option>
+                                                        <option value="2">Mes anterior</option>*/}
                                                         <option value="3">Personalizado</option>
                                                     </Form.Control>
                                                 </Form.Group>
@@ -386,13 +373,6 @@ class Reports extends Component {
                                         <div className="myPosition inline-date">
                                             <br />
                                             <Button className="xeroGenerate" onClick={() => { this.onGetPeriodLibroVentas() }}>Generar</Button>
-                                        </div>
-                                        <div className="myPosition inline-date" >
-                                            <div>
-                                                <span style={{ cursor: "pointer" }} onClick={(event) => this.onDownloadExcel("Ventas")} >
-                                                    <img border="0" src={ExcelImage} />
-                                                </span>
-                                            </div>
                                         </div>
                                     </div>
                                 </Card.Body>

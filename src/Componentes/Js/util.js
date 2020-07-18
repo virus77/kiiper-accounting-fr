@@ -468,11 +468,11 @@ const util = {
                     return params.columnApi.getRowGroupColumns().length === 0;
                 },
             },
-            { headerName: 'No. Control', field: 'Control', xeroField: 'invoice_control', filter: 'agTextColumnFilter', filter: 'agTextColumnFilter', width: 120, sortable: true },
+            { headerName: 'No. Control', field: 'Control', xeroField: 'invoice_control', filter: 'agTextColumnFilter', width: 110, sortable: true},
             { headerName: kindOfPeople, field: 'Contacto', xeroField: 'contact_name', headerClass: "centerHeader", filter: 'agTextColumnFilter', width: 248, sortable: true },
             { headerName: 'Fecha factura', field: 'FechaFactura', cellClass: "grid-cell-centered", xeroField: 'invoice_date', filter: 'agTextColumnFilter', filter: 'agTextColumnFilter', width: 130, sortable: true, cellClass: "grid-cell-centered" },
-            { headerName: 'Base imponible', field: 'invoice_subtotal', type: 'rightAligned', xeroField: true, calculated: true, formulaName: 'base_taxable', width: 135, sortable: true },
-            { headerName: 'Total ' + Tipo, field: 'TotalIVA', headerClass: "grid-cell-centered", xeroField: 'invoice_total_tax', type: 'rightAligned', width: 110, sortable: true },
+            { headerName: 'Base imponible', field: 'invoice_subtotal', xeroField: true, calculated: true, formulaName: 'base_taxable', width: 135, sortable: true, type: 'rightAligned' },
+            { headerName: 'Total ' + Tipo, field: 'TotalIVA', xeroField: 'invoice_total_tax', type: 'rightAligned', width: 110, sortable: true },
             {
                 headerName: '% retenido', field: 'Retencion', xeroField: 'retention_percentage', type: 'rightAligned', hide: Tipo === "IVA" ? false : true, calculated: true, width: 104, sortable: true, cellClass: "grid-cell-centered",
                 valueGetter: function (params) {
@@ -499,6 +499,7 @@ const util = {
             { headerName: 'ISLR / IVA', field: 'id_tax_type', xeroField: 'id_tax_type', hide: true },
             //id_status: El estatus del comprobante; donde 1 es borrador, 2 es aprobado, 3 es anulado, y 4 es archivado
             { headerName: 'B_A_A_A', field: 'id_status', xeroField: 'id_status', hide: true },
+            { headerName: 'reissued', field: 'reissued', xeroField: 'reissued', hide: true },
             //#endregion hidden rows
             {
                 headerName: 'No. Factura', field: 'NoFactura', xeroField: 'invoice_number', width: 125,
@@ -511,9 +512,7 @@ const util = {
                         case statusName !== "Anulados":
                             return params.columnApi.getRowGroupColumns().length === 0;
 
-                        case params.data.reissued === "":
                         case params.data.reissued === true:
-                        case params.data.reissued === undefined:
                             break;
 
                         default:
@@ -521,20 +520,20 @@ const util = {
                     }
                 },
             },
-            { headerName: 'No. Control', field: 'Control', xeroField: 'invoice_control', filter: 'agTextColumnFilter', filter: 'agTextColumnFilter', width: 120, sortable: true },
+            { headerName: 'No. Control', field: 'Control', xeroField: 'invoice_control', filter: 'agTextColumnFilter', width: 110, sortable: true},
             { headerName: kindOfPeople, field: 'Contacto', xeroField: 'contact_name', headerClass: "centerHeader", filter: 'agTextColumnFilter', width: 248, sortable: true },
-            { headerName: 'Fecha factura', field: 'FechaFactura', xeroField: 'invoice_date', headerClass: "grid-cell-centered", filter: 'agTextColumnFilter', width: 130, sortable: true, cellClass: "grid-cell-centered" },
+            { headerName: 'Fecha factura', field: 'FechaFactura', xeroField: 'invoice_date', filter: 'agTextColumnFilter', width: 130, sortable: true, cellClass: "grid-cell-centered" },
             { headerName: 'Base imponible', field: 'invoice_subtotal', xeroField: 'invoice_subtotal', width: 135, sortable: true, type: 'rightAligned' },
-            { headerName: 'Total ' + Tipo, field: 'TotalIVA', headerClass: "grid-cell-centered", xeroField: 'retained_amount', width: 110, sortable: true, type: 'rightAligned' },
+            { headerName: 'Total ' + Tipo, field: 'TotalIVA', xeroField: 'retained_amount', width: 110, sortable: true, type: 'rightAligned' },
             {
-                headerName: '% retenido', field: 'Retencion', xeroField: 'retention_percentage', type: 'rightAligned', hide: Tipo === "IVA" ? false : true, calculated: true, width: 104, sortable: true, cellClass: "grid-cell-centered",
+                headerName: '% retenido', field: 'Retencion', xeroField: 'retention_percentage', hide: Tipo === "IVA" ? false : true, calculated: true, width: 104, sortable: true, cellClass: "grid-cell-centered", type: 'rightAligned',
                 valueGetter: function () {
                     return 75;
                 },
             },
-            { headerName: 'Monto retenido', field: 'MontoRetenido', headerClass: "grid-cell-centered", type: 'rightAligned', xeroField: true, calculated: true, formulaName: 'retention_amount', width: 129, sortable: true },
+            { headerName: 'Monto retenido', field: 'MontoRetenido', xeroField: true, calculated: true, formulaName: 'retention_amount', width: 129, sortable: true, headerClass: "grid-cell-centered", type: 'rightAligned' },
             { headerName: 'Fecha de comprobante', field: 'date', xeroField: 'approval_date', filter: 'agTextColumnFilter', width: 170, sortable: true, cellClass: "grid-cell-centered" },
-            { headerName: 'No. Comprobante', field: 'Comprobante', xeroField: 'correlative', width: 150, sortable: true },
+            { headerName: 'No. Comprobante', field: 'Comprobante', xeroField: 'correlative', width: 200, sortable: true , cellClass: "grid-cell-centered", type: 'rightAligned'},
             { headerName: '', field: 'file', width: 60, cellRenderer: this.CellRendererP }
         ]
         return (columnDefs)
