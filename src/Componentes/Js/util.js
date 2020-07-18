@@ -195,6 +195,10 @@ const util = {
                                     itemValue = util.getTaxInfoConcept(itemValue);
                                     break;
 
+                                case "Comprobante":
+
+                                    break;
+
                                 default:
                                     itemValue = util.formatMoney(itemValue.toFixed(2));
                                     break;
@@ -460,7 +464,7 @@ const util = {
             { headerName: 'reissued', field: 'reissued', xeroField: 'reissued', hide: true },
             //#endregion hidden rows
             {
-                headerName: 'No. Factura', field: 'NoFactura', xeroField: 'invoice_number', width: 125,
+                headerName: 'No. Factura', field: 'NoFactura', xeroField: 'invoice_number', width: 125, cellClass: "grid-cell-Left",
                 headerCheckboxSelection: function (params) {
                     return params.columnApi.getRowGroupColumns().length === 0;
                 },
@@ -468,7 +472,7 @@ const util = {
                     return params.columnApi.getRowGroupColumns().length === 0;
                 },
             },
-            { headerName: 'No. Control', field: 'Control', xeroField: 'invoice_control', filter: 'agTextColumnFilter', width: 110, sortable: true},
+            { headerName: 'No. Control', field: 'Control', xeroField: 'invoice_control', filter: 'agTextColumnFilter', width: 100, sortable: true, cellClass: "grid-cell-Left" },
             { headerName: kindOfPeople, field: 'Contacto', xeroField: 'contact_name', headerClass: "centerHeader", filter: 'agTextColumnFilter', width: 248, sortable: true },
             { headerName: 'Fecha factura', field: 'FechaFactura', cellClass: "grid-cell-centered", xeroField: 'invoice_date', filter: 'agTextColumnFilter', filter: 'agTextColumnFilter', width: 130, sortable: true, cellClass: "grid-cell-centered" },
             { headerName: 'Base imponible', field: 'invoice_subtotal', xeroField: true, calculated: true, formulaName: 'base_taxable', width: 135, sortable: true, type: 'rightAligned' },
@@ -502,7 +506,7 @@ const util = {
             { headerName: 'reissued', field: 'reissued', xeroField: 'reissued', hide: true },
             //#endregion hidden rows
             {
-                headerName: 'No. Factura', field: 'NoFactura', xeroField: 'invoice_number', width: 125,
+                headerName: 'No. Factura', field: 'NoFactura', xeroField: 'invoice_number', width: 125, cellClass: "grid-cell-Left",
                 headerCheckboxSelection: function (params) {
                     return params.columnApi.getRowGroupColumns().length === 0;
                 },
@@ -520,20 +524,20 @@ const util = {
                     }
                 },
             },
-            { headerName: 'No. Control', field: 'Control', xeroField: 'invoice_control', filter: 'agTextColumnFilter', width: 110, sortable: true},
+            { headerName: 'No. Control', field: 'Control', xeroField: 'invoice_control', filter: 'agTextColumnFilter', width: 100, sortable: true, cellClass: "grid-cell-Left" },
             { headerName: kindOfPeople, field: 'Contacto', xeroField: 'contact_name', headerClass: "centerHeader", filter: 'agTextColumnFilter', width: 248, sortable: true },
             { headerName: 'Fecha factura', field: 'FechaFactura', xeroField: 'invoice_date', filter: 'agTextColumnFilter', width: 130, sortable: true, cellClass: "grid-cell-centered" },
             { headerName: 'Base imponible', field: 'invoice_subtotal', xeroField: 'invoice_subtotal', width: 135, sortable: true, type: 'rightAligned' },
             { headerName: 'Total ' + Tipo, field: 'TotalIVA', xeroField: 'retained_amount', width: 110, sortable: true, type: 'rightAligned' },
             {
-                headerName: '% retenido', field: 'Retencion', xeroField: 'retention_percentage', hide: Tipo === "IVA" ? false : true, calculated: true, width: 104, sortable: true, cellClass: "grid-cell-centered", type: 'rightAligned',
+                headerName: '% retenido', field: 'Retencion', xeroField: 'retention_percentage', hide: Tipo === "IVA" ? false : true, calculated: true, width: 104, sortable: true, cellClass: "grid-cell-cenLeft", type: 'rightAligned',
                 valueGetter: function () {
                     return 75;
                 },
             },
             { headerName: 'Monto retenido', field: 'MontoRetenido', xeroField: true, calculated: true, formulaName: 'retention_amount', width: 129, sortable: true, headerClass: "grid-cell-centered", type: 'rightAligned' },
             { headerName: 'Fecha de comprobante', field: 'date', xeroField: 'approval_date', filter: 'agTextColumnFilter', width: 170, sortable: true, cellClass: "grid-cell-centered" },
-            { headerName: 'No. Comprobante', field: 'Comprobante', xeroField: 'correlative', width: 200, sortable: true , cellClass: "grid-cell-centered", type: 'rightAligned'},
+            { headerName: 'No. Comprobante', field: 'Comprobante', xeroField: 'correlative', width: 150, sortable: true, cellClass: "grid-cell-cenLeft", type: 'rightAligned' },
             { headerName: '', field: 'file', width: 60, cellRenderer: this.CellRendererP }
         ]
         return (columnDefs)
@@ -646,11 +650,9 @@ const util = {
     CellRendererP: function (params) {
         withHoldingId = params.data.withHoldingId;
         fileName = "Retención de IVA - " + params.data.invoice_number;
-        var flag = '<img border="0" width="18" height="21" src="' + { Download } + '"></img>';
         var eDiv = document.createElement('div');
         eDiv.className = "file-container";
         eDiv.setAttribute("id", "down_" + withHoldingId);
-
         //Función utilooizada ára llamar el archivo en base64
         //Convertirlo a pdf y descargarlo
         eDiv.onclick = async function () {
@@ -663,7 +665,16 @@ const util = {
             element.click();
             document.body.removeChild(element);
         };
-        eDiv.innerHTML = '<span style="cursor: pointer; " >' + flag + '</span>';
+        var img = document.createElement('img');
+        img.setAttribute("border", "0");
+        img.setAttribute("width", "18");
+        img.setAttribute("height", "21");
+        img.setAttribute("src", Download);
+        img.setAttribute("style", "cursor: pointer");
+
+        var span = document.createElement('span');
+        span.appendChild(img);
+        eDiv.appendChild(span);
         return eDiv;
     },
     //Action log in ag-grid
