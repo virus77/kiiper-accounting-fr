@@ -380,7 +380,7 @@ export default function Dashboard(props) {
                       {/* Recent purchases */}
                       <Title>Gestión de declaraciones</Title>
                       <Grid item xs={12}>
-                        <Declaraciones token={props.token} orgIdSelected={SpecialContrib} />
+                        <Declaraciones token={props.token} orgIdSelected={orgIdSelected} specialContrib={SpecialContrib} />
                       </Grid>
                     </Grid> :
                     event === "xeroOrgName" || event === 3.1 ?
