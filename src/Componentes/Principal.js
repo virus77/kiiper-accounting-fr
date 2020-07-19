@@ -129,6 +129,7 @@ function fillDropDownList(props) {
       type: res.xeroOrgName ? "xeroOrgName" : "xeroGroupName",
       name: res.xeroOrgName ? res.xeroOrgName : res.xeroGroupName,
       id: res.organisationId ? res.organisationId : res.groupId,
+      specialContrib: res.isSpecialContrib
       //Grupo: res.xeroGroupName ? '_____________________________________________' : "",
     }
   });
@@ -155,6 +156,9 @@ export default function Dashboard(props) {
   const [orgIdSelected, setorgIdSelected] = useState("");
 
   // Selected option from organizations List. Initialazed at zero
+  const [SpecialContrib, setorgSpecialContrib] = useState("");
+
+  // Selected option from organizations List. Initialazed at zero
   const [orgNameSelected, setorgNameSelected] = useState("");
 
   // Stores banks show module again flag
@@ -175,6 +179,7 @@ export default function Dashboard(props) {
       // Setting organization selected in React to component
       setorgIdSelected(item.id);
       setorgNameSelected(item.name);
+      setorgSpecialContrib(item.specialContrib);
       setValue(item.name)
 
       //Cambia el color en el ddlPrincipal dependiendo la selección
@@ -221,21 +226,6 @@ export default function Dashboard(props) {
     const banks = [...document.querySelectorAll(".bankSelectionClass")];
     banks.forEach(item => item.classList.remove("bankSelectionClass"));
   }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
   //Asigna el cuadro al texto dependiendo si es org o grup
   let kiiper_PurpleSquare = "http://desacrm.quierocasa.com.mx:7002/Images/kiiper_PurpleSquare.png";
@@ -348,7 +338,7 @@ export default function Dashboard(props) {
                 {/* Recent Sales  */}
                 <Title>Ventas</Title>
                 <Grid item xs={12}>
-                  <Ventas token={props.token} orgIdSelected={orgIdSelected} />
+                  <Ventas token={props.token} orgIdSelected={orgIdSelected} specialContrib={SpecialContrib} />
                 </Grid>
               </Grid> :
               event === "xeroOrgName" || event === 1.2 ?
@@ -356,7 +346,7 @@ export default function Dashboard(props) {
                   {/* Recent purchases */}
                   <Title>Compras</Title>
                   <Grid item xs={12}>
-                    <Compras token={props.token} orgIdSelected={orgIdSelected} />
+                    <Compras token={props.token} orgIdSelected={orgIdSelected} specialContrib={SpecialContrib} />
                   </Grid>
                 </Grid> :
                 event === "xeroOrgName" || event === 2.1 ?
@@ -370,7 +360,7 @@ export default function Dashboard(props) {
                     </div>
                     <Grid item xs={12}>
                       <Paper className={classes.paper}>
-                        < BanksConvert setBreadcrumbPath={setBreadcrumbPath} setShowModuleAgain={setShowModuleAgain} showModuleAgain={showModuleAgain} orgIdSelected={orgIdSelected} />
+                        < BanksConvert setBreadcrumbPath={setBreadcrumbPath} setShowModuleAgain={setShowModuleAgain} showModuleAgain={showModuleAgain} orgIdSelected={orgIdSelected} specialContrib={SpecialContrib} />
                       </Paper>
                     </Grid>
                   </Grid> :
@@ -379,7 +369,7 @@ export default function Dashboard(props) {
                       {/* Recent purchases */}
                       <Title>Gestión de declaraciones</Title>
                       <Grid item xs={12}>
-                        <Declaraciones token={props.token} orgIdSelected={orgIdSelected} />
+                        <Declaraciones token={props.token} orgIdSelected={orgIdSelected} specialContrib={SpecialContrib} />
                       </Grid>
                     </Grid> :
                     event === "xeroOrgName" || event === 3.1 ?
@@ -390,7 +380,7 @@ export default function Dashboard(props) {
                       </div>
                         <Grid item xs={12}>
                           <Paper className={classes.paper}>
-                            < Reports orgIdSelected={orgIdSelected} />
+                            < Reports orgIdSelected={orgIdSelected} specialContrib={SpecialContrib} />
                           </Paper>
                         </Grid>
                       </Grid> :
