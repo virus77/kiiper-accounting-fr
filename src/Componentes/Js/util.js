@@ -674,11 +674,9 @@ const util = {
     CellRendererP: function (params) {
         withHoldingId = params.data.withHoldingId;
         fileName = "Retención de IVA - " + params.data.invoice_number;
-        var flag = '<img border="0" width="18" height="21" src="' + {Download} +'"></img>';
         var eDiv = document.createElement('div');
         eDiv.className = "file-container";
         eDiv.setAttribute("id", "down_" + withHoldingId);
-
         //Función utilooizada ára llamar el archivo en base64
         //Convertirlo a pdf y descargarlo
         eDiv.onclick = async function () {
@@ -691,7 +689,16 @@ const util = {
             element.click();
             document.body.removeChild(element);
         };
-        eDiv.innerHTML = '<span style="cursor: pointer; " >' + flag + '</span>';
+        var img = document.createElement('img');
+        img.setAttribute("border", "0");
+        img.setAttribute("width", "18");
+        img.setAttribute("height", "21");
+        img.setAttribute("src", Download);
+        img.setAttribute("style", "cursor: pointer");
+
+        var span = document.createElement('span');
+        span.appendChild(img);
+        eDiv.appendChild(span);
         return eDiv;
     },
     //Action log in ag-grid

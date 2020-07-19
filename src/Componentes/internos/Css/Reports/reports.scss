@@ -3,49 +3,86 @@
 	font-weight: 100;
 }
 
+.accordionContent {
+	display: none;
+	min-height: 350px;
+}
+
+.accordionNode {
+	margin-bottom: 5px;
+	background-color: #f7f7fc;
+	border-radius: 10px;
+	position: relative;
+}
+
+.acoordionOptionArrow img {
+	height: 100%;
+}
+
 .report-title {
-	margin: 0 10px 10px 0;
-	text-align: right;
+	margin: 0;
+	text-align: left;
 	font-weight: 400;
 	color: #232c51;
+	padding: 15px;
+	font-size: 1.1em;
+}
+
+.report-title:hover {
+	cursor: pointer;
+	color: #7158e2;
+}
+
+.acoordionOptionArrow {
+	position: absolute;
+	top: 15px;
+	right: 20px;
+	height: 15px;
+}
+
+.arrowUp {
+	transform: rotate(180deg);
+	-webkit-transform: rotate(180deg);
+	top: 22px;
 }
 
 .card-container {
 	flex: 1;
-	margin: 0 10px;
+	margin: 0 10px 30px;
 }
 
-.card-text{
+.card-text {
 	display: flex;
 }
 
-.excelBookGenerator {
+.periodSelectionGenerator {
 	position: absolute;
-	height: 45px;
-	right: 10px;
-	top: 2px;
+	height: 30px;
+	right: 18px;
+	top: 10px;
 }
 
-.excelBookGenerator:hover {
+.periodSelectionGenerator:hover {
 	cursor: pointer;
 }
 
-.excelBookGenerator img{
+.periodSelectionGenerator img {
 	height: 100%;
 }
 
 .card-title {
 	font-weight: 500;
 	font-size: 1em;
-	font-family: "Goldplay",sans-serif;
+	font-family: "Goldplay", sans-serif;
 	color: #232c51;
 }
 
 .card {
-	border: 1px solid #f5f6fa;
+	border: 1px solid #f2f2f7;
+	border-radius: 10px;
 }
 
-.card-body hr{
+.card-body hr {
 	border-top-color: #f5f6fa;
 }
 
@@ -53,16 +90,29 @@
 	padding: 10px 10px 20px;
 }
 
-.form-group{
+.aggridReport {
+	width: 100%;
+	height: calc(100% - 45px);
+}
+
+.fileColumnIcon{
+	height: 50%;
+}
+
+.fileColumnIcon:hover{
+	cursor: pointer;
+}
+
+.form-group {
 	margin: 0;
 }
 
 .fieldLabel {
 	font-weight: 400;
-	color: #4327D0;
+	color: #4327d0;
 	font-size: 0.9em;
 	position: absolute;
-	top:-23px;
+	top: -23px;
 }
 
 .btn-generate {
@@ -88,7 +138,7 @@
 	position: relative;
 }
 
-.action-container{
+.action-container {
 	display: flex;
 	justify-content: flex-end;
 	margin-bottom: 0;
@@ -99,7 +149,7 @@
 	color: #fff;
 	font-weight: 100;
 	padding: 5px 10px;
-	background-color: #EA3F2C;
+	background-color: #ea3f2c;
 	border-radius: 7px;
 	font-size: 0.8em;
 	min-width: 200px;

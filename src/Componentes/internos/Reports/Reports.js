@@ -4,11 +4,7 @@ import React, { Component } from "react";
 import { Button, Card, Form } from "react-bootstrap";
 import DatePicker from "react-datepicker";
 import { registerLocale } from "react-datepicker";
-import Dialog from "@material-ui/core/Dialog";
-import DialogActions from "@material-ui/core/DialogActions";
-import DialogContent from "@material-ui/core/DialogContent";
-import DialogContentText from "@material-ui/core/DialogContentText";
-import DialogTitle from "@material-ui/core/DialogTitle";
+import { AgGridReact } from "ag-grid-react";
 
 // Variation
 import es from "date-fns/locale/es";
@@ -24,12 +20,14 @@ import "react-datepicker/dist/react-datepicker.css";
 import "../Css/books.css";
 
 /// Imágenes
-import ExcelImage from "../Css/kiiper_Excel.svg";
+import periodSelection from "../Css/periodSelection.svg";
+import downArrow from "../../../Imagenes/downArrow.png";
+import downloadFile from '../../../Imagenes/downloadDocument.svg';
 
 registerLocale("es", es);
 var moment = require("moment"); /// require
 
-class Reports extends Component {
+class ReportNode extends Component {
 	constructor(props) {
 		super(props);
 
@@ -70,7 +68,34 @@ class Reports extends Component {
 			setOpen: false,
 			tipo: "",
 			dueDate: new Date(),
-			errorMsg: ""
+			errorMsg: "",
+			arrowUpClass: "",
+			rowData: [
+				{ period: "Semana1", topDate: "10/10/2020", file: 35000 },
+				{ period: "Semana2", topDate: "10/10/2020", file: 32000 },
+				{ period: "Semana3", topDate: "10/10/2020", file: 72000 },
+			],
+			columnDefs: [
+				{
+					headerName: "Período",
+					field: "period",
+					flex: 1,
+					cellClass: "grid-cell-centered"
+				},
+				{
+					headerName: "Fecha límite",
+					field: "topDate",
+					flex: 1,
+					cellClass: "grid-cell-centered"
+				},
+				{
+					headerName: "Archivo",
+					field: "file",
+					flex: 1,
+					cellClass: "grid-cell-centered",
+					cellRenderer: this.fileColumnRenderer
+				},
+			],
 		};
 
 		this.handleClickLibroCompras = this.handleClickLibroCompras.bind(this);
@@ -91,10 +116,14 @@ class Reports extends Component {
 		if (util.compareDates(startDate, endDate) === 1) {
 			this.setState({
 				msgLibroCompras: "Fecha desde, no puede ser mayor a fecha hasta",
-				errorMsg: "error-msg"
+				errorMsg: "error-msg",
 			});
 		} else {
-			this.setState({ startDateLibroCompras: date, msgLibroCompras: "", errorMsg: "" });
+			this.setState({
+				startDateLibroCompras: date,
+				msgLibroCompras: "",
+				errorMsg: "",
+			});
 		}
 	};
 
@@ -106,10 +135,14 @@ class Reports extends Component {
 		if (util.compareDates(endDate, StartDate) === -1) {
 			this.setState({
 				msgLibroCompras: "Fecha hasta, no puede ser menor a fecha desde",
-				errorMsg: "error-msg"
+				errorMsg: "error-msg",
 			});
 		} else {
-			this.setState({ finishDateLibroCompras: date, msgLibroCompras: "", errorMsg: "" });
+			this.setState({
+				finishDateLibroCompras: date,
+				msgLibroCompras: "",
+				errorMsg: "",
+			});
 		}
 	};
 
@@ -137,7 +170,7 @@ class Reports extends Component {
 		if (x.isBefore(y)) {
 			this.setState({
 				msgLibroCompras: "",
-				errorMsg: ""
+				errorMsg: "",
 			});
 
 			let taxbookId = await calls.getBook(
@@ -157,7 +190,7 @@ class Reports extends Component {
 		} else {
 			this.setState({
 				msgLibroCompras: "Las fechas son inválidas",
-				errorMsg: "error-msg"
+				errorMsg: "error-msg",
 			});
 		}
 	};
@@ -294,166 +327,178 @@ class Reports extends Component {
 		this.setState({ dueDate: date });
 	};
 
+	// Ayuda a mostrar el contenido del nodo del acordeón elegido
+	showAccordionContent = (event) => {
+		const accordionContent = event.currentTarget.nextElementSibling;
+		const accordionContentStyle = window.getComputedStyle(accordionContent);
+
+		if (accordionContentStyle.display === "none") {
+			accordionContent.style.display = "flex";
+			this.setState({ arrowUpClass: "arrowUp" });
+		} else {
+			accordionContent.style.display = "none";
+			this.setState({ arrowUpClass: "" });
+		}
+	};
+
+	// Ayuda a determinar la manera default en que se presenta la columna Archivo
+	fileColumnRenderer = () => {
+		let fileIcon = document.createElement("img");
+		fileIcon.src = downloadFile;
+		fileIcon.className = "fileColumnIcon";
+		fileIcon.title = "Descargar reporte";
+		fileIcon.addEventListener("click", ()=>{
+			// Accion al dar click
+		});
+
+		return fileIcon;
+	};
+
 	render() {
+		const {
+			state: { arrowUpClass, columnDefs, rowData, defaultColDef },
+			props: { reportId },
+		} = this;
+
 		return (
-			<div>
-				<div className="report-container">
-					<h3 className="report-title">Libros Fiscales</h3>
-					<div className="flex-container">
-						<Card className="card-container">
-							<Card.Body>
-								<span
-									className="excelBookGenerator"
-									onClick={(event) => this.onDownloadExcel("Compras")}
-								>
-									<img border="0" src={ExcelImage} />
-								</span>
-								<Card.Title>Libro de Compras</Card.Title>
-								<hr className="separator" />
-								<Card.Text>
-									<div className="date-container" style={{marginRight:30}}>
-										<div className="fieldLabel">Período:</div>
-										<Form>
-											<Form.Group>
-												<Form.Control
-													as="select"
-													className="ddlPeriodo"
-													value={this.state.optionSelectedLibroCompras}
-													onChange={this.handleClickLibroCompras}
-												>
-													<option value="0">Seleccionar...</option>
-													<option value="1">Mes actual</option>
-													<option value="2">Mes anterior</option>
-													<option value="3">Personalizado</option>
-												</Form.Control>
-											</Form.Group>
-										</Form>
-									</div>
-									{this.state.showDateLibroCompras ? (
-										<div className="date-container">
-											<div className="inline-date" style={{ marginLeft: 0 }}>
-												<div className="time-interval fieldLabel">Desde: </div>
-												<DatePicker
-													id="dtpkDesdeCompras"
-													className={"calendar"}
-													selected={this.state.startDateLibroCompras}
-													onChange={this.handleChangeStartDateLibroCompras}
-													locale="es"
-													showMonthDropdown
-													showYearDropdown
-												/>
-											</div>
-											<div className="inline-date">
-												<div className="time-interval fieldLabel">Hasta: </div>
-												<DatePicker
-													id="dtpkHastaCompras"
-													className={"calendar"}
-													selected={this.state.finishDateLibroCompras}
-													onChange={this.handleChangeFinishDateLibroCompras}
-													locale="es"
-													showMonthDropdown
-													showYearDropdown
-												/>
-											</div>
-										</div>
-									) : null}
-								</Card.Text>
-								
-								<span className={this.state.errorMsg}>
-										{this.state.msgLibroCompras}
-									</span>
-								<div className="action-container">
-									<div className="inline-date">
-										<Button
-											className="xeroGenerate"
-											onClick={() => {
-												this.onGetPeriodLibroCompras();
-											}}
-										>
-											Generar
-										</Button>
-									</div>
+			<div id={reportId} className="accordionNode">
+				<span className={`acoordionOptionArrow ${arrowUpClass}`}>
+					<img alt="abajo" src={downArrow} />
+				</span>
+				<h3
+					onClick={(event) => this.showAccordionContent(event)}
+					className="report-title"
+				>
+					Libros Fiscales
+				</h3>
+				<div className="flex-container accordionContent">
+					<Card className="card-container">
+						<Card.Body>
+							<span
+								className="periodSelectionGenerator"
+								onClick={(event) => this.onDownloadExcel("Compras")}
+							>
+								<img border="0" src={periodSelection} />
+							</span>
+							<Card.Title>Libro de Compras</Card.Title>
+							<hr className="separator" />
+							<div id="myGridCompras" className="aggridReport ag-theme-alpine">
+								<AgGridReact
+									columnDefs={columnDefs}
+									rowData={rowData}
+								></AgGridReact>
+							</div>
+						</Card.Body>
+					</Card>
+					<Card className="card-container">
+						<Card.Body>
+							<span
+								className="periodSelectionGenerator"
+								onClick={(event) => this.onDownloadExcel("Ventas")}
+							>
+								<img border="0" src={periodSelection} />
+							</span>
+							<Card.Title>Libros de Ventas</Card.Title>
+							<hr className="separator" />
+							<div id="myGridVentas" className="aggridReport ag-theme-alpine">
+								<AgGridReact
+									columnDefs={columnDefs}
+									rowData={rowData}
+								></AgGridReact>
+							</div>
+							{/*<Card.Text>
+								<div className="date-container" style={{ marginRight: 30 }}>
+									<div className="fieldLabel">Período:</div>
+									<Form>
+										<Form.Group>
+											<Form.Control
+												as="select"
+												className="ddlPeriodo"
+												value={this.state.optionSelectedLibroVentas}
+												onChange={this.handleClickLibroVentas}
+											>
+												<option value="0">Seleccionar...</option>
+												<option value="1">Mes actual</option>
+												<option value="2">Mes anterior</option>
+												<option value="3">Personalizado</option>
+											</Form.Control>
+										</Form.Group>
+									</Form>
 								</div>
-							</Card.Body>
-						</Card>
-						<Card className="card-container">
-							<Card.Body>
-								<span
-									className="excelBookGenerator"
-									onClick={(event) => this.onDownloadExcel("Ventas")}
-								>
-									<img border="0" src={ExcelImage} />
-								</span>
-								<Card.Title>Libros de Ventas</Card.Title>
-								<hr className="separator" />
-								<Card.Text>
-									<div className="date-container" style={{marginRight:30}}>
-										<div className="fieldLabel">Período:</div>
-										<Form>
-											<Form.Group>
-												<Form.Control
-													as="select"
-													className="ddlPeriodo"
-													value={this.state.optionSelectedLibroVentas}
-													onChange={this.handleClickLibroVentas}
-												>
-													<option value="0">Seleccionar...</option>
-													<option value="1">Mes actual</option>
-													<option value="2">Mes anterior</option>
-													<option value="3">Personalizado</option>
-												</Form.Control>
-											</Form.Group>
-										</Form>
-									</div>
-									{this.state.showDateLibroVentas ? (
-										<div className="date-container">
-											<div className="inline-date" style={{ marginLeft: 0 }}>
-												<div className="time-interval fieldLabel">Desde:</div>
-												<DatePicker
-													id="dtpkDesdeVentas"
-													className={"calendar"}
-													selected={this.state.startDateLibroVentas}
-													onChange={this.handleChangeStartDateLibroVentas}
-													locale="es"
-													showMonthDropdown
-													showYearDropdown
-												/>
-											</div>
-											<div className="inline-date">
-												<div className="time-interval fieldLabel">Hasta:</div>
-												<DatePicker
-													id="dtpkHastaVentas"
-													className={"calendar"}
-													selected={this.state.finishDateLibroVentas}
-													onChange={this.handleChangeFinishDateLibroVentas}
-													locale="es"
-													showMonthDropdown
-													showYearDropdown
-												/>
-											</div>
+								{this.state.showDateLibroVentas ? (
+									<div className="date-container">
+										<div className="inline-date" style={{ marginLeft: 0 }}>
+											<div className="time-interval fieldLabel">Desde:</div>
+											<DatePicker
+												id="dtpkDesdeVentas"
+												className={"calendar"}
+												selected={this.state.startDateLibroVentas}
+												onChange={this.handleChangeStartDateLibroVentas}
+												locale="es"
+												showMonthDropdown
+												showYearDropdown
+											/>
 										</div>
-									) : null}
-								</Card.Text>
-								
-								<div className="action-container">
-									<div className="inline-date">
-										<Button
-											className="xeroGenerate"
-											onClick={() => {
-												this.onGetPeriodLibroVentas();
-											}}
-										>
-											Generar
-										</Button>
+										<div className="inline-date">
+											<div className="time-interval fieldLabel">Hasta:</div>
+											<DatePicker
+												id="dtpkHastaVentas"
+												className={"calendar"}
+												selected={this.state.finishDateLibroVentas}
+												onChange={this.handleChangeFinishDateLibroVentas}
+												locale="es"
+												showMonthDropdown
+												showYearDropdown
+											/>
+										</div>
 									</div>
+								) : null}
+							</Card.Text>
+
+							<div className="action-container">
+								<div className="inline-date">
+									<Button
+										className="xeroGenerate"
+										onClick={() => {
+											this.onGetPeriodLibroVentas();
+										}}
+									>
+										Generar
+									</Button>
 								</div>
-							</Card.Body>
-						</Card>
-					</div>
+							</div>*/}
+						</Card.Body>
+					</Card>
 				</div>
 			</div>
 		);
 	}
 }
 
-export default Reports;
+class Reports extends Component {
+	constructor(props) {
+		super(props);
+
+		this.state = {
+			reports: ["fiscalBook", "legalBook", "declarationBook"],
+		};
+	}
+
+	render() {
+		const {
+			state: { reports },
+		} = this;
+
+		return (
+			<div>
+				<div className="report-container">
+					{reports.map((reportId, index) => (
+						<ReportNode key={`report${index}`} reportId={reportId} />
+					))}
+				</div>
+			</div>
+		);
+	}
+}
+
+export { Reports, ReportNode };

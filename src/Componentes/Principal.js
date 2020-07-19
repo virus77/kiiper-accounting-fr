@@ -37,7 +37,7 @@ import Ventas from './internos/Negocio/Ventas';
 import Title from './internos/Title';
 import IframeComponent from './internos/iFrame';
 import BanksConvert from '../Componentes/internos/Banks/BanksConvert';
-import Reports from '../Componentes/internos/Reports/Reports';
+import {Reports} from '../Componentes/internos/Reports/Reports';
 import Declaraciones from '../Componentes/internos/declaraciones/Declaraciones';
 
 //#region estilo
