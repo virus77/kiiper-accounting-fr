@@ -22,7 +22,7 @@ import "../Css/books.css";
 /// Imágenes
 import periodSelection from "../Css/periodSelection.svg";
 import downArrow from "../../../Imagenes/downArrow.png";
-import downloadFile from '../../../Imagenes/downloadDocument.svg';
+import downloadFile from "../../../Imagenes/downloadDocument.svg";
 
 registerLocale("es", es);
 var moment = require("moment"); /// require
@@ -80,20 +80,20 @@ class ReportNode extends Component {
 					headerName: "Período",
 					field: "period",
 					flex: 1,
-					cellClass: "grid-cell-centered"
+					cellClass: "grid-cell-centered",
 				},
 				{
 					headerName: "Fecha límite",
 					field: "topDate",
 					flex: 1,
-					cellClass: "grid-cell-centered"
+					cellClass: "grid-cell-centered",
 				},
 				{
 					headerName: "Archivo",
 					field: "file",
 					flex: 1,
 					cellClass: "grid-cell-centered",
-					cellRenderer: this.fileColumnRenderer
+					cellRenderer: this.fileColumnRenderer,
 				},
 			],
 		};
@@ -347,7 +347,7 @@ class ReportNode extends Component {
 		fileIcon.src = downloadFile;
 		fileIcon.className = "fileColumnIcon";
 		fileIcon.title = "Descargar reporte";
-		fileIcon.addEventListener("click", ()=>{
+		fileIcon.addEventListener("click", () => {
 			// Accion al dar click
 		});
 
@@ -357,7 +357,7 @@ class ReportNode extends Component {
 	render() {
 		const {
 			state: { arrowUpClass, columnDefs, rowData, defaultColDef },
-			props: { reportId },
+			props: { reportId, bookName },
 		} = this;
 
 		return (
@@ -369,7 +369,7 @@ class ReportNode extends Component {
 					onClick={(event) => this.showAccordionContent(event)}
 					className="report-title"
 				>
-					Libros Fiscales
+					{bookName}
 				</h3>
 				<div className="flex-container accordionContent">
 					<Card className="card-container">
@@ -380,7 +380,7 @@ class ReportNode extends Component {
 							>
 								<img border="0" src={periodSelection} />
 							</span>
-							<Card.Title>Libro de Compras</Card.Title>
+							<Card.Title>Libros de Compras</Card.Title>
 							<hr className="separator" />
 							<div id="myGridCompras" className="aggridReport ag-theme-alpine">
 								<AgGridReact
@@ -480,7 +480,11 @@ class Reports extends Component {
 		super(props);
 
 		this.state = {
-			reports: ["fiscalBook", "legalBook", "declarationBook"],
+			reports: [
+				{ id: "fiscalBook", book: "Libros fiscales" },
+				{ id: "legalBook", book: "Libros legales" },
+				{ id: "declarationBook", book: "Declaraciones" },
+			],
 		};
 	}
 
@@ -492,8 +496,12 @@ class Reports extends Component {
 		return (
 			<div>
 				<div className="report-container">
-					{reports.map((reportId, index) => (
-						<ReportNode key={`report${index}`} reportId={reportId} />
+					{reports.map((report, index) => (
+						<ReportNode
+							key={`report${index}`}
+							reportId={report.id}
+							bookName={report.book}
+						/>
 					))}
 				</div>
 			</div>
