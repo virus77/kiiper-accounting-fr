@@ -23,6 +23,8 @@
 	flex-direction: column;
 	overflow-y: auto;
 	flex: 1;
+	overflow: auto;
+	max-height: calc(100vh - 220px);
 }
 
 .color-blue-background {
@@ -68,9 +70,8 @@
 
 .accordionBankItem {
 	background: #f5f6fa;
-	border: 1px solid #ebeefa;
 	border-radius: 10px;
-	margin-bottom: 3px;
+	margin-bottom: 5px;
 	font-weight: 600;
 	color: rgba(35, 44, 81, 0.7);
 	display: flex;

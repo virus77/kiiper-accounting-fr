@@ -256,10 +256,17 @@ class Compras extends Component {
             <div style={{ height: "100%" }}>
                 {/*Pintado del dropdownlist de iva/isrl*/}
                 <div>
-                    <NavDropdown id="ddlVentas" title={this.state.event === 4.2 ? '≡  Comprobante de retención de IVA  ' : this.state.event === 4.1 ? '≡  Comprobante de retención de ISLR  ' : '≡  Comprobante de retención de IVA  '} >
-                        <NavDropdown.Item eventKey={4.1} onClick={(event) => this.handleListItemClick(event, 4.1)} href="#Reportes/ISLR"><span className="ddlComVenLabel"> Comprobante de retención de ISLR </span></NavDropdown.Item>
-                        <NavDropdown.Item eventKey={4.2} onClick={(event) => this.handleListItemClick(event, 4.2)} href="#Reportes/IVA"><span className="ddlComVenLabel"> Comprobante de retención de IVA </span></NavDropdown.Item>
-                    </NavDropdown>
+                    {/*Si es contribuyente especial pinta IVA e ISLR y si no solo pinta ISLR*/}
+                    {this.props.specialContrib === true ?
+                        <NavDropdown id="ddlVentas" title={this.state.event === 4.2 ? '≡  Comprobante de retención de IVA  ' : this.state.event === 4.1 ? '≡  Comprobante de retención de ISLR  ' : '≡  Comprobante de retención de IVA  '} >
+                            <NavDropdown.Item eventKey={4.1} onClick={(event) => this.handleListItemClick(event, 4.1)} href="#Reportes/ISLR"><span className="ddlComVenLabel"> Comprobante de retención de ISLR </span></NavDropdown.Item>
+                            <NavDropdown.Item eventKey={4.2} onClick={(event) => this.handleListItemClick(event, 4.2)} href="#Reportes/IVA"><span className="ddlComVenLabel"> Comprobante de retención de IVA </span></NavDropdown.Item>
+                        </NavDropdown>
+                        :
+                        <NavDropdown id="ddlVentas" title={'≡  Comprobante de retención de ISLR  '} >
+                            <NavDropdown.Item eventKey={4.1} onClick={(event) => this.handleListItemClick(event, 4.1)} href="#Reportes/ISLR"><span className="ddlComVenLabel"> Comprobante de retención de ISLR </span></NavDropdown.Item>
+                        </NavDropdown>
+                    }
                 </div>
                 {/*Pintado de grid dependiendo del menu superior del grid*/}
                 <Menu style={{ display: "flex" }}>
@@ -293,11 +300,11 @@ class Compras extends Component {
                             </div>
                             : activeItem === 'Anulados' ?
                                 <div className="idDibvDisabledsmall">
-                                    <span>Reemitir</span>
+                                    <span>Remitir</span>
                                 </div>
                                 : activeItem === 'AnuladosSel' ?
                                     <div className="idDivEnabledSmall" onClick={() => this.onMoveData("Anulados", true)} >
-                                        <span>Reemitir</span>
+                                        <span>Remitir</span>
                                     </div>
                                     : activeItem === 'AprobadosSel' ?
                                         <div className="idDivEnabledSmall" onClick={() => this.onMoveData("Aprobados", true)} >

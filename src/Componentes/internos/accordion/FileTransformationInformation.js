@@ -5,6 +5,8 @@ import util from "../../Js/util";
 import { AgGridReact } from "ag-grid-react";
 import { CSVLink } from "react-csv";
 
+import Busqueda from '../../../Imagenes/searchBankRecords.svg';
+
 class FileTransformationInformation extends Component {
 	constructor(props) {
 		super(props);
@@ -159,7 +161,7 @@ class FileTransformationInformation extends Component {
 							<img
 								className="searchBankRecords"
 								alt="search"
-								src="./src/Imagenes/searchBankRecords.svg"
+								src={Busqueda}
 								onClick={() =>
 									this.props.showConversionViewPanel(
 										this.props.bankData[0].name
@@ -225,7 +227,7 @@ class FileTransformationInformation extends Component {
 							<img
 								className="searchBankRecords"
 								alt="search"
-								src="./src/Imagenes/searchBankRecords.svg"
+								src={Busqueda}
 								onClick={() =>
 									this.props.showConversionViewPanel(
 										this.props.bankData[0].name

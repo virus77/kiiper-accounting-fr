@@ -37,8 +37,8 @@ import Ventas from './internos/Negocio/Ventas';
 import Title from './internos/Title';
 import IframeComponent from './internos/iFrame';
 import BanksConvert from '../Componentes/internos/Banks/BanksConvert';
-import Reports from '../Componentes/internos/Reports/Reports';
 import DashboardPanel from './internos/Dashboard/dashboard'
+import {Reports} from '../Componentes/internos/Reports/Reports';
 import Declaraciones from '../Componentes/internos/declaraciones/Declaraciones';
 
 //#region estilo
@@ -130,6 +130,7 @@ function fillDropDownList(props) {
       type: res.xeroOrgName ? "xeroOrgName" : "xeroGroupName",
       name: res.xeroOrgName ? res.xeroOrgName : res.xeroGroupName,
       id: res.organisationId ? res.organisationId : res.groupId,
+      specialContrib: res.isSpecialContrib
       //Grupo: res.xeroGroupName ? '_____________________________________________' : "",
     }
   });
@@ -156,6 +157,9 @@ export default function Dashboard(props) {
   const [orgIdSelected, setorgIdSelected] = useState("");
 
   // Selected option from organizations List. Initialazed at zero
+  const [SpecialContrib, setorgSpecialContrib] = useState("");
+
+  // Selected option from organizations List. Initialazed at zero
   const [orgNameSelected, setorgNameSelected] = useState("");
 
   // Stores banks show module again flag
@@ -176,6 +180,7 @@ export default function Dashboard(props) {
       // Setting organization selected in React to component
       setorgIdSelected(item.id);
       setorgNameSelected(item.name);
+      setorgSpecialContrib(item.specialContrib);
       setValue(item.name)
 
       //Cambia el color en el ddlPrincipal dependiendo la selección
@@ -222,21 +227,6 @@ export default function Dashboard(props) {
     const banks = [...document.querySelectorAll(".bankSelectionClass")];
     banks.forEach(item => item.classList.remove("bankSelectionClass"));
   }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
   //Asigna el cuadro al texto dependiendo si es org o grup
   let kiiper_PurpleSquare = "http://desacrm.quierocasa.com.mx:7002/Images/kiiper_PurpleSquare.png";
@@ -333,7 +323,7 @@ export default function Dashboard(props) {
             </Navbar.Collapse> :
             null}
         </Navbar>
-        <Container maxWidth="lg" style={{ height: "calc(100% - 105px)", padding: "20px!important" }} className={classes.container}>
+        <Container maxWidth="lg" style={{ padding: "20px!important" }} className={classes.container}>
           {event === "xeroOrgName" || event === 0.1 ?
             <Grid container spacing={2}>
               {/* Dashboard */}
@@ -350,7 +340,7 @@ export default function Dashboard(props) {
                 {/* Recent Sales  */}
                 <Title>Ventas</Title>
                 <Grid item xs={12}>
-                  <Ventas token={props.token} orgIdSelected={orgIdSelected} />
+                  <Ventas token={props.token} orgIdSelected={orgIdSelected} specialContrib={SpecialContrib} />
                 </Grid>
               </Grid> :
               event === "xeroOrgName" || event === 1.2 ?
@@ -358,32 +348,21 @@ export default function Dashboard(props) {
                   {/* Recent purchases */}
                   <Title>Compras</Title>
                   <Grid item xs={12}>
-                    <Compras token={props.token} orgIdSelected={orgIdSelected} />
+                    <Compras token={props.token} orgIdSelected={orgIdSelected} specialContrib={SpecialContrib} />
                   </Grid>
                 </Grid> :
                 event === "xeroOrgName" || event === 2.1 ?
                   <Grid container spacing={2}>
                     {/* Breadcrumb  */}
-                    <div className="breadcrumbClass" style={{ display: "flex" }}>
+                    <div className="breadcrumbClass">
                       <div id="moduleTitle" style={{ cursor: "pointer" }} onClick={(event) => { setShowModuleAgain(true); setBreadcrumbPath(""); resetBanksModule() }}>
                         <Title>Bancos</Title>
                       </div>
-                      <span
-                        id="breadcrumbPath"
-                        style={{
-                          marginLeft: 10,
-                          fontWeight: 700,
-                          marginBottom: 10,
-                          display: "flex",
-                          alignItems: "flex-end",
-                          fontSize: "1.2em",
-                          color: "#9680ED"
-                        }}
-                      >{breadcrumbPath}</span>
+                      <span id="breadcrumbPath">{breadcrumbPath}</span>
                     </div>
                     <Grid item xs={12}>
                       <Paper className={classes.paper}>
-                        < BanksConvert setBreadcrumbPath={setBreadcrumbPath} setShowModuleAgain={setShowModuleAgain} showModuleAgain={showModuleAgain} orgIdSelected={orgIdSelected} />
+                        < BanksConvert setBreadcrumbPath={setBreadcrumbPath} setShowModuleAgain={setShowModuleAgain} showModuleAgain={showModuleAgain} orgIdSelected={orgIdSelected} specialContrib={SpecialContrib} />
                       </Paper>
                     </Grid>
                   </Grid> :
@@ -392,14 +371,18 @@ export default function Dashboard(props) {
                       {/* Recent purchases */}
                       <Title>Gestión de declaraciones</Title>
                       <Grid item xs={12}>
-                        <Declaraciones token={props.token} orgIdSelected={orgIdSelected} />
+                        <Declaraciones token={props.token} orgIdSelected={orgIdSelected} specialContrib={SpecialContrib} />
                       </Grid>
                     </Grid> :
                     event === "xeroOrgName" || event === 3.1 ?
                       <Grid container spacing={2}>
+                      <div className="breadcrumbClass">
+                        <div id="moduleTitle"><Title>Reportes</Title></div>
+                        <span id="breadcrumbPath">&gt; Impuestos</span>
+                      </div>
                         <Grid item xs={12}>
                           <Paper className={classes.paper}>
-                            < Reports orgIdSelected={orgIdSelected} />
+                            < Reports orgIdSelected={orgIdSelected} specialContrib={SpecialContrib} />
                           </Paper>
                         </Grid>
                       </Grid> :

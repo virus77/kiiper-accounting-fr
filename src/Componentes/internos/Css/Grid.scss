@@ -101,6 +101,24 @@ h5:last-child {
 	justify-content: center;
 }
 
+/** Breadcrumb container */
+.breadcrumbClass{
+	display: flex;
+	align-items: center;
+}
+
+/** Breadcrumb */
+#breadcrumbPath{
+	margin-left: 10px;
+      font-weight: 500;
+      margin-bottom: 10px;
+      display: flex;
+      align-items: flex-end;
+      font-size: 1.2em;
+	color: #9680ED;
+	font-family: "Goldplay",sans-serif;
+}
+
 /* Div botón a la derecha*/
 #idItemRight {
 	flex: 1;
@@ -295,7 +313,6 @@ h5:last-child {
 .jss13 {
 	padding-top: 20px !important;
 	padding-bottom: 20px !important;
-	height: 100%;
 }
 
 /* Datepicker ----------------------------------------- */
@@ -369,6 +386,20 @@ html .ui-button.ui-state-disabled:hover {
 	text-align: center;
 }
 
+.grid-cell-cenLeft {
+	text-align: center;
+	margin-left: 10px;
+}
+
+.grid-cell-Left {
+	margin-left: 2px;
+}
+
+.grid-cell-alignRight {
+	text-align: right;
+}
+
+
 /* estilo de mes y año en calendar  */
 .ui-datepicker select.ui-datepicker-month, .ui-datepicker select.ui-datepicker-year
 {
@@ -376,4 +407,15 @@ html .ui-button.ui-state-disabled:hover {
 	color: #212529;
 	border-radius: 5px;
 	color: #6c757d;
+}
+
+.ag-theme-alpine .ag-header-cell, .ag-theme-alpine .ag-header-group-cell
+{
+	padding-left: 18px;
+	padding-right: 0px;
+}
+
+.ag-theme-alpine .ag-ltr .ag-header-select-all
+{
+	margin-right: 0px!important;
 }

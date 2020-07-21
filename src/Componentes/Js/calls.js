@@ -190,15 +190,6 @@ const calls = {
                     return false;
                 }
             })
-                .then(res => {
-                    if (res.ok) {
-                        console.log("request sucess");
-                        return true;
-                    } else {
-                        console.log("request fail");
-                        return false;
-                    }
-                })
         );
     },
 
@@ -364,6 +355,228 @@ const calls = {
                     return false;
                 })
         )
+    },
+
+    /// Consultar lista de declaraciones
+    /// @param {string} id_organisation - ID de la organización en la base de datos asociado a la petición 
+    // /getGrantedOrganisations
+    /// @param {int} endPoint - Tipo de impuesto, donde 1 corresponde a Retenciones de IVA, y
+    //  2 corresponde a Retenciones de ISLR
+    /// @param {int} id_statement_status - Estatus de la declaración, donde 1 es Por generar, 2 es Por aprobar, 
+    //  3 es Aprobados, 4 es Declarados, 5 es Por pagar y 6 es Pagados
+    getStatements: (id_organisation, id_tax_type, id_statement_status) => {
+        const fetchConfig = {
+            method: 'GET',
+            headers: {
+                'Accept': 'application/json',
+                'Content-Type': 'application/json'
+            }
+        };
+
+        return fetch(`/getStatements?id_organisation=5ea086c97cc16250b45f82e1&id_tax_type=${id_tax_type}&id_statement_status=${id_statement_status}`, fetchConfig)
+            .then(res => res.json())
+            .then(data => {
+                return {
+                    data: data
+                }
+            }).catch(err => {
+                console.log(err)
+            });
+    },
+
+    /// Descargar archivo auxiliar de declaración
+    /// @param {string} id_statement - ID de la declaración asociado a la petición /getStatements
+    getDownloadAuxiliarTaxReport: (id_statement) => {
+        const fetchConfig = {
+            method: 'GET',
+            headers: {
+                'Accept': 'application/json',
+                'Content-Type': 'application/json'
+            }
+        };
+
+        return fetch(`/downloadAuxiliarTaxReport?id_statement=${id_statement}`, fetchConfig)
+            .then(res => res.json())
+            .then(data => {
+                return {
+                    data: data
+                }
+            }).catch(err => {
+                console.log(err)
+            });
+    },
+
+    /// Recalcular una declaración en status Por generar
+    /// @param {string} id_statement - ID de la declaración asociado a la petición /getStatements
+    updateStatement: async (id_statement) => {
+
+        var param = {
+            id_statement: id_statement,
+        };
+
+        return (
+            await fetch('/updateStatement', {
+                method: 'POST',
+                body: JSON.stringify(param),
+                headers: {
+                    "Content-type": "application/json; charset=UTF-8",
+                    "Access-Control-Allow-Origin": "*",
+                },
+            }).then(res => res.text()
+            ).then(data => {
+                return { data: data }
+            })
+        );
+    },
+
+    /// Rechazar una declaración (enviar una declaración desde el estatus Por aprobar a Por generar)
+    /// @param {string} id_statements - el cual es un arreglo que contiene 
+    /// “id_statement” (ID de la declaración asociado a la petición /getStatements)
+    denyStatement: async (id_statements) => {
+
+        var param = {
+            arrayStatement: id_statements,
+        };
+
+        return (
+            await fetch('/denyStatement', {
+                method: 'POST',
+                body: JSON.stringify(param),
+                headers: {
+                    "Content-type": "application/json; charset=UTF-8",
+                    "Access-Control-Allow-Origin": "*",
+                },
+            }).then(res => res.text()
+            ).then(data => {
+                return { data: data }
+            })
+        );
+    },
+
+    /// Registrar una declaración (enviar una declaración desde el estatus Declarados a Por pagar o Pagados): 
+    /// @param {formData} con 
+    /// “id_statement” (ID de la declaración asociado a la petición /getStatements)
+    /// “commitmentFile” (archivo PDF de compromiso de declaración en formato base64)
+    /// “warrantFile” (archivo PDF de certificado de declaración en formato base64). 
+    /// Cabe destacar que sólo se puede cargar uno de los archivos previamente mencionados
+    registerStatement: async (data) => {
+
+        var param = {
+            arrayStatement: data,
+        };
+
+        return (
+            await fetch('/registerStatement', {
+                method: 'POST',
+                body: param,
+            }).then(res => res.text()
+            ).then(data => {
+                return { data: data }
+            })
+        );
+    },
+
+    /// Pagar una declaración (enviar una declaración desde el estatus Por pagar a Pagados)
+    /// @param {formData} con 
+    /// “id_statement” (ID de la declaración asociado a la petición /getStatements)
+    /// “paymentFile” (archivo PDF de pago  de declaración en formato base64), 
+    /// “bankReference” (número de referencia bancaria)
+    /// “bankAccountCode” (código de cuenta bancaria asociado a la petición /getBankAccounts). 
+    payStatement: async (data) => {
+
+        var param = {
+            arrayStatement: data,
+        };
+
+        return (
+            await fetch('/payStatement', {
+                method: 'POST',
+                body: param,
+            }).then(res => res.text()
+            ).then(data => {
+                return { data: data }
+            })
+        );
+    },
+
+    /// Generar una declaración (enviar una declaración desde el estatus Por generar a Por aprobar)
+    /// @param {array} arrayStatement el cual es un arreglo que contiene 
+    /// “id_statement” (ID de la declaración asociado a la petición /getStatements)
+    generateStatement: async (data) => {
+
+        var param = {
+            arrayStatement: data,
+        };
+
+        return (
+            await fetch('/generateStatement', {
+                method: 'POST',
+                body: param,
+            }).then(res => res.text()
+            ).then(data => {
+                return { data: data }
+            })
+        );
+    },
+
+    /// Aprobar una declaración (enviar una declaración desde el estatus Por aprobar a Aprobados)
+    /// @param {array} arrayStatement el cual es un arreglo que contiene 
+    /// “id_statement” (ID de la declaración asociado a la petición /getStatements)
+    approveStatement: async (data) => {
+
+        var param = {
+            arrayStatement: data,
+        };
+
+        return (
+            await fetch('/approveStatement', {
+                method: 'POST',
+                body: param,
+            }).then(res => res.text()
+            ).then(data => {
+                return { data: data }
+            })
+        );
+    },
+
+    /// Aprobar una declaración por parte del cliente (enviar una declaración desde el estatus 
+    /// Por aprobar a Aprobados dependiendo de acción enviada por correo electrónico)
+    /// “id_statement” (ID de la declaración asociado a la petición /getStatements)
+    approveStatementClient: async (id_statement) => {
+
+        var param = {
+            id_statement: id_statement,
+        };
+
+        return (
+            await fetch('/approveStatementClient', {
+                method: 'POST',
+                body: param,
+            }).then(res => res.text()
+            ).then(data => {
+                return { data: data }
+            })
+        );
+    },
+
+    /// Declarar un registro de declaración (enviar una declaración desde el estatus Aprobados a Declarados
+    /// @param {array} arrayStatement el cual es un arreglo que contiene 
+    /// “id_statement” (ID de la declaración asociado a la petición /getStatements)
+    declareStatement: async (id_statement) => {
+
+        var param = {
+            id_statement: id_statement,
+        };
+
+        return (
+            await fetch('/declareStatement', {
+                method: 'POST',
+                body: param,
+            }).then(res => res.text()
+            ).then(data => {
+                return { data: data }
+            })
+        );
     },
 }
 

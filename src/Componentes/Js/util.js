@@ -10,6 +10,10 @@ import 'jquery-ui/themes/base/datepicker.css';
 import 'jquery-ui/ui/core';
 import 'jquery-ui/ui/widgets/datepicker';
 
+import Download from '../../Imagenes/downloadDocument.svg';
+import Upload from '../../Imagenes/uploadDocument.svg';
+
+
 // Declaring momenty object
 var moment = require('moment'); // require
 
@@ -48,12 +52,37 @@ const util = {
             })
         );
     },
+    getAndBuildGridDataDeclaration: (dropDownListEvent, statusName, orgIdSelected, kindOfPeople = "") => {
+
+        // Retrieving and setting data to perform a request to Xero
+        const statusInfo = util.getStatusInfoConceptDeclaration(statusName);
+        const taxInfo = util.getTaxInfoConceptDeclaration(dropDownListEvent);
+        const isEditableGrid = util.knowIfGridHeadersEditable(statusInfo);
+
+        return (
+
+            // Getting specific organization data
+            calls.getStatements(orgIdSelected, taxInfo.id, statusInfo.id).then(result => {
+
+                // Build grid data structured with editable columns
+                const structure = util.fillWorkspaceGrid(
+                    result.data, taxInfo, isEditableGrid, kindOfPeople, statusName, "declaracion"
+                );
+
+                return {
+                    structure: structure,
+                    taxInfo: taxInfo,
+                    statusInfo: statusInfo
+                }
+            })
+        );
+    },
     /// After getting the data from the organization in the function
     /// getOrgConceptsInfo the data is porcessed to give the right format
     /// @param {array} items - data requested from server
     /// @param {string} taxInfo - tax info with id and name
     /// @param {boolean} isAnEditableGrid - If the grid will have editable columns
-    fillWorkspaceGrid: (items, taxInfo, isAnEditableGrid, kindOfPeople, statusName, section = null) => {
+    fillWorkspaceGrid: (items, taxInfo, isAnEditableGrid, kindOfPeople, statusName, section) => {
 
         let gridItems = [];
         let headersTemplate = [];
@@ -67,9 +96,9 @@ const util = {
             default:
                 // Deciding which kind of headers use depending on parameters
                 headersTemplate =
-                isAnEditableGrid ?
-                    util.returnHeader(taxInfo.name, kindOfPeople) :
-                    util.returnHeaderFlow(taxInfo.name, kindOfPeople, statusName);
+                    isAnEditableGrid ?
+                        util.returnHeader(taxInfo.name, kindOfPeople) :
+                        util.returnHeaderFlow(taxInfo.name, kindOfPeople, statusName);
                 break;
         }
 
@@ -166,6 +195,10 @@ const util = {
                                     itemValue = util.getTaxInfoConcept(itemValue);
                                     break;
 
+                                case "Comprobante":
+
+                                    break;
+
                                 default:
                                     itemValue = util.formatMoney(itemValue.toFixed(2));
                                     break;
@@ -230,22 +263,22 @@ const util = {
                 statusInfo.name = "Archivados";
                 break;
 
-            // No cambiar por 2 chinga
+            // No cambiar
             case "Aprobados":
-                statusInfo.id = 1;
+                statusInfo.id = 2;
                 statusInfo.name = "Aprobados";
                 break;
-            
+
             case "Por aprobar":
                 statusInfo.id = 5;
                 statusInfo.name = "Por aprobar";
                 break;
-            
+
             case "Declarados":
                 statusInfo.id = 6;
                 statusInfo.name = "Declarados";
                 break;
-            
+
             case "Por pagar":
                 statusInfo.id = 7;
                 statusInfo.name = "Por pagar";
@@ -267,6 +300,79 @@ const util = {
 
         return statusInfo;
     },
+    getStatusInfoConceptDeclaration: (statusName) => {
+        let statusInfo = {
+            id: 1,
+            name: "Por generar"
+        };
+
+        switch (statusName) {
+
+            case "Por generar":
+                statusInfo.id = 1;
+                statusInfo.name = "Por generar";
+                break;
+
+            case "Por aprobar":
+                statusInfo.id = 2;
+                statusInfo.name = "Por aprobar";
+                break;
+
+            case "Aprobados":
+                statusInfo.id = 3;
+                statusInfo.name = "Aprobados";
+                break;
+
+            case "Por declarar":
+                statusInfo.id = 4;
+                statusInfo.name = "Por declarar";
+                break;
+
+            case "Por pagar":
+                statusInfo.id = 5;
+                statusInfo.name = "Por pagar";
+                break;
+
+            case "Pagados":
+                statusInfo.id = 6;
+                statusInfo.name = "Pagados";
+                break;
+
+            default:
+                break;
+        }
+
+        return statusInfo;
+    },
+    /// Helps to get the kind of tax of a voucher
+    /// @param {float} taxIndex - The index configured by tax in DropDownList events property
+    getTaxInfoConceptDeclaration: (taxIndex) => {
+
+        // Defining tax info depending on index configured in the DropDownList
+        // taxinfo.id - its the internal id Xero gives the tax, in order to request
+        // taxinfo.name - its used to rendering porpuses in Ventas component
+        let taxInfo = {};
+
+        switch (taxIndex) {
+            case 2:
+            case "ISLR":
+                taxInfo.name = "ISLR";
+                taxInfo.event = 2;
+                taxInfo.id = 2;
+                break;
+
+            case 1:
+            case "IVA":
+            default:
+                taxInfo.name = "IVA";
+                taxInfo.event = 1;
+                taxInfo.id = 1;
+                break;
+        }
+
+        return taxInfo;
+    },
+
     /// Helps to get the kind of tax of a voucher
     /// @param {float} taxIndex - The index configured by tax in DropDownList events property
     getTaxInfoConcept: (taxIndex, kindOfPeople) => {
@@ -279,7 +385,7 @@ const util = {
         switch (taxIndex) {
             case 4.1:
             case "ISLR":
-                kindOfPeople === "Cliente" ? taxInfo.id = 1 : taxInfo.id = 5;
+                kindOfPeople === "Cliente" ? taxInfo.id = 5 : taxInfo.id = 2;
                 taxInfo.name = "ISLR";
                 taxInfo.event = 4.1;
                 break;
@@ -287,7 +393,7 @@ const util = {
             case 4.2:
             case "IVA":
             default:
-                kindOfPeople === "Cliente" ? taxInfo.id = 2 : taxInfo.id = 4;
+                kindOfPeople === "Cliente" ? taxInfo.id = 4 : taxInfo.id = 1;
                 taxInfo.name = "IVA";
                 taxInfo.event = 4.2;
                 break;
@@ -358,7 +464,7 @@ const util = {
             { headerName: 'reissued', field: 'reissued', xeroField: 'reissued', hide: true },
             //#endregion hidden rows
             {
-                headerName: 'No. Factura', field: 'NoFactura', xeroField: 'invoice_number', width: 125,
+                headerName: 'No. Factura', field: 'NoFactura', xeroField: 'invoice_number', width: 125, cellClass: "grid-cell-Left",
                 headerCheckboxSelection: function (params) {
                     return params.columnApi.getRowGroupColumns().length === 0;
                 },
@@ -366,20 +472,20 @@ const util = {
                     return params.columnApi.getRowGroupColumns().length === 0;
                 },
             },
-            { headerName: 'No. Control', field: 'Control', xeroField: 'invoice_control', filter: 'agTextColumnFilter', filter: 'agTextColumnFilter', width: 120, sortable: true },
+            { headerName: 'No. Control', field: 'Control', xeroField: 'invoice_control', filter: 'agTextColumnFilter', width: 100, sortable: true, cellClass: "grid-cell-Left" },
             { headerName: kindOfPeople, field: 'Contacto', xeroField: 'contact_name', headerClass: "centerHeader", filter: 'agTextColumnFilter', width: 248, sortable: true },
             { headerName: 'Fecha factura', field: 'FechaFactura', cellClass: "grid-cell-centered", xeroField: 'invoice_date', filter: 'agTextColumnFilter', filter: 'agTextColumnFilter', width: 130, sortable: true, cellClass: "grid-cell-centered" },
-            { headerName: 'Base imponible', field: 'invoice_subtotal', type: 'rightAligned', xeroField: true, calculated: true, formulaName: 'base_taxable', width: 135, sortable: true },
-            { headerName: 'Total ' + Tipo, field: 'TotalIVA', headerClass: "grid-cell-centered", xeroField: 'invoice_total_tax', type: 'rightAligned', width: 110, sortable: true },
+            { headerName: 'Base imponible', field: 'invoice_subtotal', xeroField: true, calculated: true, formulaName: 'base_taxable', width: 135, sortable: true, type: 'rightAligned' },
+            { headerName: 'Total ' + Tipo, field: 'TotalIVA', xeroField: 'invoice_total_tax', type: 'rightAligned', width: 110, sortable: true },
             {
                 headerName: '% retenido', field: 'Retencion', xeroField: 'retention_percentage', type: 'rightAligned', hide: Tipo === "IVA" ? false : true, calculated: true, width: 104, sortable: true, cellClass: "grid-cell-centered",
                 valueGetter: function (params) {
                     return 75;
                 },
             },
-            { headerName: 'Monto retenido', field: 'MontoRetenido', xeroField: true, calculated: true, formulaName: 'retention_amount', type: 'rightAligned', width: 129, sortable: true },
-            { headerName: 'Fecha de comprobante', field: 'approval_date', width: 170, sortable: true, editable: true, cellEditor: Datepicker },
-            { headerName: 'No. Comprobante', field: 'Comprobante', width: 150, sortable: true, editable: true, cellEditor: NumberValidation },
+            { headerName: 'Monto retenido', field: 'MontoRetenido', xeroField: true, calculated: true, formulaName: 'retention_amount', width: 129, sortable: true, type: 'rightAligned' },
+            { headerName: 'Fecha de comprobante', field: 'approval_date', width: 170, sortable: true, editable: true, cellEditor: Datepicker, cellClass: "grid-cell-centered" },
+            { headerName: 'No. Comprobante', field: 'Comprobante', width: 150, sortable: true, editable: true, cellEditor: NumberValidation, type: 'rightAligned', cellClass: "grid-cell-alignRight" },
             { headerName: '', field: '_id', width: 60, cellRenderer: this.CellRendererUp }
         ]
 
@@ -397,9 +503,10 @@ const util = {
             { headerName: 'ISLR / IVA', field: 'id_tax_type', xeroField: 'id_tax_type', hide: true },
             //id_status: El estatus del comprobante; donde 1 es borrador, 2 es aprobado, 3 es anulado, y 4 es archivado
             { headerName: 'B_A_A_A', field: 'id_status', xeroField: 'id_status', hide: true },
+            { headerName: 'reissued', field: 'reissued', xeroField: 'reissued', hide: true },
             //#endregion hidden rows
             {
-                headerName: 'No. Factura', field: 'NoFactura', xeroField: 'invoice_number', width: 125,
+                headerName: 'No. Factura', field: 'NoFactura', xeroField: 'invoice_number', width: 125, cellClass: "grid-cell-Left",
                 headerCheckboxSelection: function (params) {
                     return params.columnApi.getRowGroupColumns().length === 0;
                 },
@@ -409,9 +516,7 @@ const util = {
                         case statusName !== "Anulados":
                             return params.columnApi.getRowGroupColumns().length === 0;
 
-                        case params.data.reissued === "":
                         case params.data.reissued === true:
-                        case params.data.reissued === undefined:
                             break;
 
                         default:
@@ -419,20 +524,20 @@ const util = {
                     }
                 },
             },
-            { headerName: 'No. Control', field: 'Control', xeroField: 'invoice_control', filter: 'agTextColumnFilter', filter: 'agTextColumnFilter', width: 120, sortable: true },
+            { headerName: 'No. Control', field: 'Control', xeroField: 'invoice_control', filter: 'agTextColumnFilter', width: 100, sortable: true, cellClass: "grid-cell-Left" },
             { headerName: kindOfPeople, field: 'Contacto', xeroField: 'contact_name', headerClass: "centerHeader", filter: 'agTextColumnFilter', width: 248, sortable: true },
-            { headerName: 'Fecha factura', field: 'FechaFactura', xeroField: 'invoice_date', headerClass: "grid-cell-centered", filter: 'agTextColumnFilter', width: 130, sortable: true, cellClass: "grid-cell-centered" },
+            { headerName: 'Fecha factura', field: 'FechaFactura', xeroField: 'invoice_date', filter: 'agTextColumnFilter', width: 130, sortable: true, cellClass: "grid-cell-centered" },
             { headerName: 'Base imponible', field: 'invoice_subtotal', xeroField: 'invoice_subtotal', width: 135, sortable: true, type: 'rightAligned' },
-            { headerName: 'Total ' + Tipo, field: 'TotalIVA', headerClass: "grid-cell-centered", xeroField: 'retained_amount', width: 110, sortable: true, type: 'rightAligned' },
+            { headerName: 'Total ' + Tipo, field: 'TotalIVA', xeroField: 'retained_amount', width: 110, sortable: true, type: 'rightAligned' },
             {
-                headerName: '% retenido', field: 'Retencion', xeroField: 'retention_percentage', type: 'rightAligned', hide: Tipo === "IVA" ? false : true, calculated: true, width: 104, sortable: true, cellClass: "grid-cell-centered",
+                headerName: '% retenido', field: 'Retencion', xeroField: 'retention_percentage', hide: Tipo === "IVA" ? false : true, calculated: true, width: 104, sortable: true, cellClass: "grid-cell-cenLeft", type: 'rightAligned',
                 valueGetter: function () {
                     return 75;
                 },
             },
-            { headerName: 'Monto retenido', field: 'MontoRetenido', headerClass: "grid-cell-centered", type: 'rightAligned', xeroField: true, calculated: true, formulaName: 'retention_amount', width: 129, sortable: true },
+            { headerName: 'Monto retenido', field: 'MontoRetenido', xeroField: true, calculated: true, formulaName: 'retention_amount', width: 129, sortable: true, headerClass: "grid-cell-centered", type: 'rightAligned' },
             { headerName: 'Fecha de comprobante', field: 'date', xeroField: 'approval_date', filter: 'agTextColumnFilter', width: 170, sortable: true, cellClass: "grid-cell-centered" },
-            { headerName: 'No. Comprobante', field: 'Comprobante', xeroField: 'invoice_number', width: 150, sortable: true },
+            { headerName: 'No. Comprobante', field: 'Comprobante', xeroField: 'correlative', width: 150, sortable: true, cellClass: "grid-cell-cenLeft", type: 'rightAligned' },
             { headerName: '', field: 'file', width: 60, cellRenderer: this.CellRendererP }
         ]
         return (columnDefs)
@@ -442,18 +547,13 @@ const util = {
     /// @param {object} kindOfPeople - Indica si es cliente o proveedor 
     returnHeaderDeclaration: function (Tipo, kindOfPeople, statusName) {
 
-        var seeCommitmentColumn = ['Declarados', 'Por pagar', 'Pagados'];
+        var seeCommitmentColumn = ['Por declarar', 'Por pagar', 'Pagados'];
         var seePaymentColumn = ['Por pagar', 'Pagados'];
-        var seeCertificateColumn = ['Declarados', 'Pagados'];
+        var seeCertificateColumn = ['Por declarar', 'Pagados'];
 
         var columnDefs = [
             //#region hidden rows
-            { headerName: 'withHoldingId', field: 'withHoldingId', xeroField: '_id', hide: true },
-            //iid_tax_type: El tipo de impuesto; donde 1 es retenciones de IVA, 2 es retenciones de ISLR, 3 es retenciones 
-            //de IVA a notas de crédito, 4 es retenciones de IVA a facturas de venta, y 5 es retenciones de ISLR a facturas de venta
-            { headerName: 'ISLR / IVA', field: 'id_tax_type', xeroField: 'id_tax_type', hide: true },
-            //id_status: El estatus del comprobante; donde 1 es borrador, 2 es aprobado, 3 es anulado, y 4 es archivado
-            { headerName: 'B_A_A_A', field: 'id_status', xeroField: 'id_status', hide: true },
+            { headerName: 'statementId', field: 'statementId', xeroField: '_id', hide: true },
             //#endregion hidden rows
             {
                 headerName: 'Nombre', field: 'Nombre', xeroField: 'invoice_number', width: 164,
@@ -476,49 +576,29 @@ const util = {
                     }
                 },
             },
-            { headerName: 'Fecha Límite', field: 'FechaLimite', xeroField: 'invoice_control', filter: 'agTextColumnFilter', filter: 'agTextColumnFilter', width: 150, sortable: true },
-            { headerName: 'Base sujeta a retención', field: 'invoice_subtotal', xeroField: 'invoice_subtotal', width: 164, sortable: true, type: 'rightAligned' },
+            { headerName: 'Fecha Límite', field: 'FechaLimite', xeroField: 'due_date', filter: 'agTextColumnFilter', filter: 'agTextColumnFilter', width: 150, sortable: true },
+            { headerName: 'Base sujeta a retención', field: 'invoice_subtotal', xeroField: 'statement_total_amount', width: 164, sortable: true, type: 'rightAligned' },
+            { headerName: 'Total retenido', field: 'Retencion', xeroField: 'statement_total_tax', type: 'rightAligned', calculated: true, width: 120, sortable: true, cellClass: "grid-cell-centered" },
             {
-                headerName: 'Total retenido', field: 'Retencion', xeroField: 'retention_percentage', type: 'rightAligned', calculated: true, width: 120, sortable: true, cellClass: "grid-cell-centered",
-                valueGetter: function () {
-                    return 75;
-                },
+                headerName: 'Aprobado por', field: 'AprobadoPor', xeroField: 'aprobado_por', type: 'rightAligned', hide: statusName === "Aprobados" ? false : true, calculated: true, width: 120, sortable: true, cellClass: "grid-cell-centered",
             },
             {
-                headerName: 'Aprobado por', field: 'AprobadoPor', xeroField: 'aprobado_por', type: 'rightAligned',  hide: statusName === "Aprobados" ? false : true, calculated: true, width: 120, sortable: true, cellClass: "grid-cell-centered",
-                valueGetter: function () {
-                    return 75;
-                },
+                headerName: 'Status', field: 'status', xeroField: 'status', type: 'rightAligned', hide: statusName === "Aprobados" ? false : true, calculated: true, width: 140, sortable: true, cellClass: "grid-cell-centered",
             },
             {
-                headerName: 'Esperando Cliente', field: 'EsperandoCliente', xeroField: 'esperando_cliente', type: 'rightAligned',  hide: statusName === "Aprobados" ? false : true, calculated: true, width: 140, sortable: true, cellClass: "grid-cell-centered",
-                valueGetter: function () {
-                    return 75;
-                },
+                headerName: 'Cuenta Xero', field: 'cuentaXero', xeroField: 'cuentaXero', type: 'rightAligned', hide: statusName != "Por Generar" ? false : true, calculated: true, width: 120, sortable: true, cellClass: "grid-cell-centered",
             },
             {
                 headerName: 'Auxiliar', field: 'Auxiliar', xeroField: 'auxiliar', type: 'rightAligned', calculated: true, width: 110, sortable: true, cellClass: "grid-cell-centered",
-                valueGetter: function () {
-                    return 75;
-                },
             },
             {
-                headerName: 'Compromiso', field: 'compromiso', xeroField: 'compromiso', type: 'rightAligned',  hide: !seeCommitmentColumn.includes(statusName), calculated: true, width: 110, sortable: true, cellClass: "grid-cell-centered",
-                valueGetter: function () {
-                    return 75;
-                },
+                headerName: 'Compromiso', field: 'compromiso', xeroField: 'compromiso', type: 'rightAligned', hide: !seeCommitmentColumn.includes(statusName), calculated: true, width: 110, sortable: true, cellClass: "grid-cell-centered",
             },
             {
                 headerName: 'Pago', field: 'Pago', xeroField: 'pago', type: 'rightAligned', hide: !seePaymentColumn.includes(statusName), calculated: true, width: 110, sortable: true, cellClass: "grid-cell-centered",
-                valueGetter: function () {
-                    return 75;
-                },
             },
             {
                 headerName: 'Certificado', field: 'Certificado', xeroField: 'certificado', type: 'rightAligned', hide: !seeCertificateColumn.includes(statusName), calculated: true, width: 110, sortable: true, cellClass: "grid-cell-centered",
-                valueGetter: function () {
-                    return 75;
-                },
             },
         ]
         return (columnDefs)
@@ -535,7 +615,7 @@ const util = {
         img.setAttribute("border", "0");
         img.setAttribute("width", "18");
         img.setAttribute("height", "21");
-        img.setAttribute("src", "http://desacrm.quierocasa.com.mx:7002/Images/kiiper_Upload.png");
+        img.setAttribute("src", Upload);
         img.setAttribute("style", "cursor: pointer");
         eDivIn.appendChild(img);
 
@@ -570,11 +650,9 @@ const util = {
     CellRendererP: function (params) {
         withHoldingId = params.data.withHoldingId;
         fileName = "Retención de IVA - " + params.data.invoice_number;
-        var flag = '<img border="0" width="18" height="21" src="http://desacrm.quierocasa.com.mx:7002/Images/kiiper_Download.png"></img>';
         var eDiv = document.createElement('div');
         eDiv.className = "file-container";
         eDiv.setAttribute("id", "down_" + withHoldingId);
-
         //Función utilooizada ára llamar el archivo en base64
         //Convertirlo a pdf y descargarlo
         eDiv.onclick = async function () {
@@ -587,7 +665,16 @@ const util = {
             element.click();
             document.body.removeChild(element);
         };
-        eDiv.innerHTML = '<span style="cursor: pointer; " >' + flag + '</span>';
+        var img = document.createElement('img');
+        img.setAttribute("border", "0");
+        img.setAttribute("width", "18");
+        img.setAttribute("height", "21");
+        img.setAttribute("src", Download);
+        img.setAttribute("style", "cursor: pointer");
+
+        var span = document.createElement('span');
+        span.appendChild(img);
+        eDiv.appendChild(span);
         return eDiv;
     },
     //Action log in ag-grid
@@ -662,6 +749,8 @@ const util = {
             { firstDay: moment(firstDay).format("DD/MM/YYYY"), lastDay: moment(lastDay).format("DD/MM/YYYY") }
         )
     },
+    //filtra por tipo de banco para obtener el estado de cuenta del mismo
+    /// @param {object} _bank - Nombre del banco
     bankType: function (_bank) {
         var bankName = _bank.toLowerCase();
 
@@ -788,7 +877,7 @@ Datepicker.prototype.init = function (params) {
         dayNamesMin: ["Do", "Lu", "Ma", "Mi", "Ju", "Vi", "Sa"],
         dayNamesShort: ["Dom", "Lun", "Mar", "Mie", "Jue", "Vie", "Sab"],
         monthNames: ["Enero", "Febrero", "Marzo", "Abril", "Mayo", "Junio", "Julio", "Agosto", "Septiembre", "Octubre", "Noviembre", "Diciembre"],
-        monthNamesShort: ["Ene", "Feb", "Mar", "Abr", "May", "Jun", "Jul", "Ago", "Sep", "Oct", "Nov", "Dec"]
+        monthNamesShort: ["Ene", "Feb", "Mar", "Abr", "May", "Jun", "Jul", "Ago", "Sep", "Oct", "Nov", "Dic"]
     });
 };
 
