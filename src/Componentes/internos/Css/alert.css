@@ -1,3 +1,16 @@
+html,
+body {
+  font-family: "Muli" !important;
+}
+
+button:focus{
+    outline: none;
+}
+
+button {
+    outline: none;
+}
+
 .alert-success {
     background-color: #232c51 !important;
     border-radius: 10px !important;
