@@ -483,9 +483,9 @@ const util = {
                     return 75;
                 },
             },
-            { headerName: 'Monto retenido', field: 'MontoRetenido', xeroField: true, calculated: true, formulaName: 'retention_amount', type: 'rightAligned', width: 129, sortable: true },
-            { headerName: 'Fecha de comprobante', field: 'approval_date', width: 170, sortable: true, editable: true, cellEditor: Datepicker },
-            { headerName: 'No. Comprobante', field: 'Comprobante', width: 150, sortable: true, editable: true, cellEditor: NumberValidation },
+            { headerName: 'Monto retenido', field: 'MontoRetenido', xeroField: true, calculated: true, formulaName: 'retention_amount', width: 129, sortable: true, type: 'rightAligned' },
+            { headerName: 'Fecha de comprobante', field: 'approval_date', width: 170, sortable: true, editable: true, cellEditor: Datepicker, cellClass: "grid-cell-centered" },
+            { headerName: 'No. Comprobante', field: 'Comprobante', width: 150, sortable: true, editable: true, cellEditor: NumberValidation, type: 'rightAligned', cellClass: "grid-cell-alignRight" },
             { headerName: '', field: '_id', width: 60, cellRenderer: this.CellRendererUp }
         ]
 
@@ -749,6 +749,8 @@ const util = {
             { firstDay: moment(firstDay).format("DD/MM/YYYY"), lastDay: moment(lastDay).format("DD/MM/YYYY") }
         )
     },
+    //filtra por tipo de banco para obtener el estado de cuenta del mismo
+    /// @param {object} _bank - Nombre del banco
     bankType: function (_bank) {
         var bankName = _bank.toLowerCase();
 
