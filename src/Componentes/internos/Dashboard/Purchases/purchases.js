@@ -2,10 +2,11 @@ import React from 'react';
 import styles from './purchases.module.css';
 import { Doughnut } from 'react-chartjs-2';
 import {PieChart, Tooltip, Cell, Pie} from 'recharts';
-import { AgGridReact } from 'ag-grid-react';
+import { AgGridReact, SortableHeaderComponent } from 'ag-grid-react';
 
 import 'ag-grid-community/dist/styles/ag-grid.css';
 import 'ag-grid-community/dist/styles/ag-theme-alpine.css';
+import PurchasesDataD from '../dataDumy/purchases.json'
 
 
 // const data = {
@@ -55,46 +56,111 @@ const data = {
     }
 };
 
-const columnDefs = {
-    columnDefs: [
-        {headerName: "Behind", field: "behind", sortable: false, filter: true},
-        {headerName: "Amount", field: "amount", sortable: false, filter: true},
-        {headerName: "%", field: "percentage", sortable: false, filter: true},
-    ]
+const arrayData = []
+
+const getData = PurchasesDataD.listPurchases.map((item)=>{
+  arrayData.push({
+    behind: item.behind,
+    amount: `${item.currencyCode} ${item.amountDue}`,
+  })
+})
+
+const dataJson = {
+  rowData: arrayData
 }
 
-const rowData = {
-    rowData: [
-        { behind: "1 month", amount: "12345", percentage:'3%'},
-        { behind: "1 month", amount: "12345", percentage:'3%'},
-        { behind: "1 month", amount: "12345", percentage:'3%'},
-        { behind: "1 month", amount: "12345", percentage:'3%'},
-        { behind: "1 month", amount: "12345", percentage:'3%'},
-        { behind: "1 month", amount: "12345", percentage:'3%'}
-    ]
-};
+const arrayData2 = [];
+
+const getData2 = PurchasesDataD.listPurchasesParClient.map((item)=>{
+  arrayData2.push({
+    amount: `${item.currencyCode} ${item.amountDue}`,
+    contact: item.contactName,
+  })
+})
+
+const dataJson2 = {
+  rowData: arrayData2
+}
+
+
+const columnDefs = {
+  columnDefs: [
+      {headerName: 'Overdue bills', headerClass: styles.Title,
+        children: [
+          {headerName: "Behind", field: "behind", sortable: true, filter: false, headerClass: styles.SubTitle},
+          {headerName: "Amount", field: "amount", sortable: true, filter: false, headerClass: styles.SubTitle},
+        ]
+      },
+  ]
+}
+
+const columnDefs2 = {
+  columnDefs: [
+      {headerName: 'Main Suppliers', headerClass: styles.Title,
+        children: [
+          {headerName: "Contact", field: "contact", sortable: true, filter: false, headerClass: styles.SubTitle},
+          {headerName: "Amount", field: "amount", sortable: true, filter: false, headerClass: styles.SubTitle},
+        ]
+      },
+  ]
+}
 
 const purchases = (props) =>{
   return (
     <div className={styles.Sales} >
-      <div className={styles.SalesTable}>
-        <div className={styles.Title}>
-            Overdue Bills
-        </div>
-        <div className="ag-theme-alpine" style={ {height: '800px', width: '100%'} }>
+      <div className={styles.Overdue}>
+        <div className={styles.SalesTable}>
+          <div className="ag-theme-alpine" style={ {height: '800px', width: '100%'} }>
             <AgGridReact
                 columnDefs={columnDefs.columnDefs}
-                rowData={rowData.rowData}
-                colWidth={150}
-                >
+                groupHeaderHeight={50}
+                headerHeight={50}
+                rowData={dataJson.rowData}
+                allowDragFromColumnsToolPanel={false}
+                enableMultiRowDragging={false}
+                colWidth={160}
+                // frameworkComponents = {frameworkComponents}
+                defaultColDef={{
+                  sortable: true,
+                  filter: false,
+                  headerComponentFramework: SortableHeaderComponent,
+              }}>
             </AgGridReact>
+          </div>
+        </div>
+        <div className={styles.SalesChart}>
+          <div className={styles.ChartTitle}>
+            Overdue Bills
+          </div>
+          <Doughnut data={data} legend={false} />
         </div>
       </div>
-      <div className={styles.SalesChart}>
-        <div className={styles.Title}>
-          Main suppliers to be paid
+      <div className={styles.Suppliers}>
+        <div className={styles.SalesTable}>
+          <div className="ag-theme-alpine" style={ {height: '800px', width: '100%'} }>
+            <AgGridReact
+              columnDefs={columnDefs2.columnDefs}
+              groupHeaderHeight={50}
+              headerHeight={50}
+              rowData={dataJson2.rowData}
+              allowDragFromColumnsToolPanel={false}
+              enableMultiRowDragging={false}
+              colWidth={160}
+              // frameworkComponents = {frameworkComponents}
+              defaultColDef={{
+                sortable: true,
+                filter: false,
+                headerComponentFramework: SortableHeaderComponent,
+            }}>
+              </AgGridReact>
+          </div>
         </div>
-        <Doughnut data={data} legend={false} />
+        <div className={styles.SalesChart}>
+          <div className={styles.ChartTitle}>
+            Main Suppliers
+          </div>
+          <Doughnut data={data} legend={false} />
+        </div>
       </div>
     </div>
   );

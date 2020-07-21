@@ -1,0 +1,64 @@
+.Title {
+    width: 100%;
+    display: flex;
+    flex:1;
+    height:100%;
+    justify-content: flex-start;
+    align-items: flex-end;
+    font-size: 14px;
+    font-weight: normal;
+    padding-bottom: 3px;
+}
+
+.SubTitle {
+    width: 100%;
+    display: flex;
+    flex:1;
+    height:100%;
+    justify-content: center;
+    align-items: center;
+    font-size: 16px;
+    font-weight: 500;
+}
+
+.Button {
+    padding: 0px 35px;
+    background-color: #AF9CF6;
+    border-radius: 20px 20px;
+    margin-top: 5px;
+    margin-bottom: 5px;
+    justify-content: center;
+    align-items: center;
+    display: flex;
+    flex:1;
+    color:white;
+    cursor: pointer;
+}
+
+.Button:hover {
+    background-color: #5540C2;
+    color:white
+}
+
+.HeaderStyle {
+    width: 100%;
+    display: flex;
+    flex:1;
+    height:100%;
+    justify-content: center;
+    align-items: center;
+    font-size: 14px;
+    font-weight: 500;
+}
+
+.HeaderGroupStyle {
+    width: 100%;
+    display: flex;
+    flex:1;
+    height:100%;
+    justify-content: flex-start;
+    align-items: flex-end;
+    font-size: 14px;
+    font-weight: normal;
+    padding-top: 25px;
+}

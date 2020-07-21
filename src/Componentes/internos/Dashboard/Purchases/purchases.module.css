@@ -4,6 +4,20 @@
     justify-content: center;
 }
 
+.Overdue {
+    display: flex;
+    flex-direction: row;
+    flex:1;
+    margin-right: 5px;
+}
+
+.Suppliers {
+    display: flex;
+    flex-direction: row;
+    flex:1;
+    margin-left: 5px;
+}
+
 .SalesTable {
     display: flex;
     flex:1.5;
@@ -16,11 +30,43 @@
     flex:1;
     flex-direction: column;
     margin-left: 5px;
+    background-color: rgb(245,246,250);
 }
 
 .Title {
-    background-color: #F6F7F9;
-    padding: 25px 15px;
+    width: 100%;
+    display: flex;
+    flex:1;
+    height:100%;
+    justify-content: flex-start;
+    align-items: flex-end;
+    font-size: 14px;
+    font-weight: normal;
+    padding-top: 25px;
+}
+
+.SubTitle {
+    width: 100%;
+    display: flex;
+    flex:1;
+    height:100%;
+    justify-content: center;
+    align-items: center;
+    font-size: 14px;
+    font-weight: 500;
+}
+
+.ChartTitle {
+    width: 100%;
+    height:52px;
+    display: flex;
+    justify-content: flex-start;
+    align-items: flex-end;
+    font-size: 14px;
+    font-weight: normal;
+    padding-bottom: 3px;
+    border-bottom: 1px solid #BABFC7;
+    padding-left: 18px;
     margin-bottom: 25px;
 }
 

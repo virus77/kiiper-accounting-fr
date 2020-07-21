@@ -70,7 +70,7 @@ export default function SimpleTabs() {
       <AppBar position="static">
         <div >
           <Tabs className={styles.TabsContainer} value={value} onChange={handleChange} aria-label="simple tabs example">
-            <Tab  label={<Label label={'Back Accounts'} />}  {...a11yProps(0)} />
+            <Tab  label={<Label label={'Bank Accounts'} />}  {...a11yProps(0)} />
             <Tab  label={<Label label={'Sales'} />} {...a11yProps(1)} />
             <Tab  label={<Label label={'Purchases'} />} {...a11yProps(2)} />
           </Tabs>

@@ -38,8 +38,6 @@ import Title from './internos/Title';
 import IframeComponent from './internos/iFrame';
 import BanksConvert from '../Componentes/internos/Banks/BanksConvert';
 import Reports from '../Componentes/internos/Reports/Reports';
-import FiscalReportSales from '../Componentes/internos/Reportes/LibroVentas'
-import FiscalReportPurchase from '../Componentes/internos/Reportes/LibroCompras';
 import DashboardPanel from './internos/Dashboard/dashboard'
 import Declaraciones from '../Componentes/internos/declaraciones/Declaraciones';
 
