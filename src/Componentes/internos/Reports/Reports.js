@@ -1,7 +1,7 @@
 import React, { Component } from "react";
 
 /// controles
-import { Button, Card, Form } from "react-bootstrap";
+import { Button, Card, Form, Modal } from "react-bootstrap";
 import DatePicker from "react-datepicker";
 import { registerLocale } from "react-datepicker";
 import { AgGridReact } from "ag-grid-react";
@@ -27,7 +27,42 @@ import downloadFile from "../../../Imagenes/downloadDocument.svg";
 registerLocale("es", es);
 var moment = require("moment"); /// require
 
-class ReportNode extends Component {
+class Reports extends Component {
+	constructor(props) {
+		super(props);
+
+		this.state = {
+			reports: [
+				{ id: "fiscalBook", book: "Libros fiscales" },
+				{ id: "legalBook", book: "Libros legales" },
+				{ id: "declarationBook", book: "Declaraciones" },
+			],
+		};
+	}
+
+	render() {
+		const {
+			state: { reports },
+		} = this;
+
+		return (
+			<div>
+				<div className="report-container">
+					{reports.map((report, index) => (
+						<ReportBook
+							key={`report${index}`}
+							reportId={report.id}
+							bookName={report.book}
+							orgIdSelected={this.props.orgIdSelected}
+						/>
+					))}
+				</div>
+			</div>
+		);
+	}
+}
+
+class ReportBook extends Component {
 	constructor(props) {
 		super(props);
 
@@ -70,32 +105,6 @@ class ReportNode extends Component {
 			dueDate: new Date(),
 			errorMsg: "",
 			arrowUpClass: "",
-			rowData: [
-				{ period: "Semana1", topDate: "10/10/2020", file: 35000 },
-				{ period: "Semana2", topDate: "10/10/2020", file: 32000 },
-				{ period: "Semana3", topDate: "10/10/2020", file: 72000 },
-			],
-			columnDefs: [
-				{
-					headerName: "Período",
-					field: "period",
-					flex: 1,
-					cellClass: "grid-cell-centered",
-				},
-				{
-					headerName: "Fecha límite",
-					field: "topDate",
-					flex: 1,
-					cellClass: "grid-cell-centered",
-				},
-				{
-					headerName: "Archivo",
-					field: "file",
-					flex: 1,
-					cellClass: "grid-cell-centered",
-					cellRenderer: this.fileColumnRenderer,
-				},
-			],
 		};
 
 		this.handleClickLibroCompras = this.handleClickLibroCompras.bind(this);
@@ -272,51 +281,6 @@ class ReportNode extends Component {
 		}
 	};
 
-	/// Funcion utilizada para generar el excel obteniendo desde
-	/// un get en base64 el archivo generado
-	/// @param {text} origen - Texto para identificar de donde proviene el llamado
-	onDownloadExcel = async (origen) => {
-		let resp = "";
-		switch (origen) {
-			case "Ventas":
-				//await calls.getDocumentByTaxbookId(this.state.taxbookIdVentas, "/generateSalesBook");
-				resp = await calls.getDocumentByTaxbookId(
-					"5ee552b80446db0b64bf49f9",
-					"/generateSalesBook"
-				);
-				break;
-
-			case "Compras":
-				//await calls.getDocumentByTaxbookId(this.state.taxbookIdCompras, "/generatePurchasesBook");
-				resp = await calls.getDocumentByTaxbookId(
-					"5ee552b80446db0b64bf49f9",
-					"/generatePurchasesBook"
-				);
-				break;
-
-			case "IVA":
-				//await calls.getDocumentByIdStatement(this.state.IdStatementIVA, "/downloadAuxiliarTaxReport");
-				resp = await calls.getDocumentByIdStatement(
-					"5ee552b80446db0b64bf49f9",
-					"/downloadAuxiliarTaxReport"
-				);
-				break;
-
-			case "ISLR":
-				//await calls.getDocumentByIdStatement(this.state.IdStatementISLR, "/downloadAuxiliarTaxReport");
-				resp = await calls.getDocumentByIdStatement(
-					"5ee552b80446db0b64bf49f9",
-					"/downloadAuxiliarTaxReport"
-				);
-				break;
-
-			default:
-				break;
-		}
-
-		if (resp === false) console.log("No se logro descargar el excel");
-	};
-
 	// función asignada para cerrar el modal
 	handleClose = () => {
 		this.setState({ setOpen: false });
@@ -328,11 +292,21 @@ class ReportNode extends Component {
 	};
 
 	// Ayuda a mostrar el contenido del nodo del acordeón elegido
-	showAccordionContent = (event) => {
+	showAccordionContent = async (event) => {
 		const accordionContent = event.currentTarget.nextElementSibling;
 		const accordionContentStyle = window.getComputedStyle(accordionContent);
 
 		if (accordionContentStyle.display === "none") {
+			const startDate = moment("2020-01-01");
+			const endDate = moment("2020-01-01").add(7, "d");
+
+			// Obtención de elementos a mostrar para el libro desde Xero
+			const result = await calls.getFiscalBooks(
+				this.props.orgIdSelected,
+				startDate.format("DD/MM/YYYY"),
+				endDate.format("DD/MM/YYYY")
+			);
+
 			accordionContent.style.display = "flex";
 			this.setState({ arrowUpClass: "arrowUp" });
 		} else {
@@ -341,22 +315,9 @@ class ReportNode extends Component {
 		}
 	};
 
-	// Ayuda a determinar la manera default en que se presenta la columna Archivo
-	fileColumnRenderer = () => {
-		let fileIcon = document.createElement("img");
-		fileIcon.src = downloadFile;
-		fileIcon.className = "fileColumnIcon";
-		fileIcon.title = "Descargar reporte";
-		fileIcon.addEventListener("click", () => {
-			// Accion al dar click
-		});
-
-		return fileIcon;
-	};
-
 	render() {
 		const {
-			state: { arrowUpClass, columnDefs, rowData, defaultColDef },
+			state: { arrowUpClass },
 			props: { reportId, bookName },
 		} = this;
 
@@ -374,99 +335,18 @@ class ReportNode extends Component {
 				<div className="flex-container accordionContent">
 					<Card className="card-container">
 						<Card.Body>
-							<span
-								className="periodSelectionGenerator"
-								onClick={(event) => this.onDownloadExcel("Compras")}
-							>
-								<img border="0" src={periodSelection} />
-							</span>
-							<Card.Title>Libros de Compras</Card.Title>
-							<hr className="separator" />
-							<div id="myGridCompras" className="aggridReport ag-theme-alpine">
-								<AgGridReact
-									columnDefs={columnDefs}
-									rowData={rowData}
-								></AgGridReact>
-							</div>
+							<BookTable
+								orgIdSelected={this.props.orgIdSelected}
+								bookType={"Compras"}
+							/>
 						</Card.Body>
 					</Card>
 					<Card className="card-container">
 						<Card.Body>
-							<span
-								className="periodSelectionGenerator"
-								onClick={(event) => this.onDownloadExcel("Ventas")}
-							>
-								<img border="0" src={periodSelection} />
-							</span>
-							<Card.Title>Libros de Ventas</Card.Title>
-							<hr className="separator" />
-							<div id="myGridVentas" className="aggridReport ag-theme-alpine">
-								<AgGridReact
-									columnDefs={columnDefs}
-									rowData={rowData}
-								></AgGridReact>
-							</div>
-							{/*<Card.Text>
-								<div className="date-container" style={{ marginRight: 30 }}>
-									<div className="fieldLabel">Período:</div>
-									<Form>
-										<Form.Group>
-											<Form.Control
-												as="select"
-												className="ddlPeriodo"
-												value={this.state.optionSelectedLibroVentas}
-												onChange={this.handleClickLibroVentas}
-											>
-												<option value="0">Seleccionar...</option>
-												<option value="1">Mes actual</option>
-												<option value="2">Mes anterior</option>
-												<option value="3">Personalizado</option>
-											</Form.Control>
-										</Form.Group>
-									</Form>
-								</div>
-								{this.state.showDateLibroVentas ? (
-									<div className="date-container">
-										<div className="inline-date" style={{ marginLeft: 0 }}>
-											<div className="time-interval fieldLabel">Desde:</div>
-											<DatePicker
-												id="dtpkDesdeVentas"
-												className={"calendar"}
-												selected={this.state.startDateLibroVentas}
-												onChange={this.handleChangeStartDateLibroVentas}
-												locale="es"
-												showMonthDropdown
-												showYearDropdown
-											/>
-										</div>
-										<div className="inline-date">
-											<div className="time-interval fieldLabel">Hasta:</div>
-											<DatePicker
-												id="dtpkHastaVentas"
-												className={"calendar"}
-												selected={this.state.finishDateLibroVentas}
-												onChange={this.handleChangeFinishDateLibroVentas}
-												locale="es"
-												showMonthDropdown
-												showYearDropdown
-											/>
-										</div>
-									</div>
-								) : null}
-							</Card.Text>
-
-							<div className="action-container">
-								<div className="inline-date">
-									<Button
-										className="xeroGenerate"
-										onClick={() => {
-											this.onGetPeriodLibroVentas();
-										}}
-									>
-										Generar
-									</Button>
-								</div>
-							</div>*/}
+							<BookTable
+								orgIdSelected={this.props.orgIdSelected}
+								bookType={"Ventas"}
+							/>
 						</Card.Body>
 					</Card>
 				</div>
@@ -475,38 +355,203 @@ class ReportNode extends Component {
 	}
 }
 
-class Reports extends Component {
+class BookTable extends Component {
 	constructor(props) {
 		super(props);
 
 		this.state = {
-			reports: [
-				{ id: "fiscalBook", book: "Libros fiscales" },
-				{ id: "legalBook", book: "Libros legales" },
-				{ id: "declarationBook", book: "Declaraciones" },
+			rowData: [
+				{ period: "Semana1", topDate: "10/10/2020", file: 35000 },
+				{ period: "Semana2", topDate: "10/10/2020", file: 32000 },
+				{ period: "Semana3", topDate: "10/10/2020", file: 72000 },
 			],
+			columnDefs: [
+				{
+					headerName: "Período",
+					field: "period",
+					flex: 1,
+					cellClass: "grid-cell-centered",
+				},
+				{
+					headerName: "Fecha límite",
+					field: "topDate",
+					flex: 1,
+					cellClass: "grid-cell-centered",
+				},
+				{
+					headerName: "Archivo",
+					field: "file",
+					flex: 1,
+					cellClass: "grid-cell-centered",
+					cellRenderer: this.fileColumnRenderer,
+				},
+			],
+			modalShow: false,
 		};
 	}
 
+	/// Funcion utilizada para generar el excel obteniendo desde un get en base64 el archivo generado
+	/// @param {string} bookType -  tipo de libro a generar
+	downloadSpecificBookType = async (bookType) => {
+		const bookFile = "";
+
+		// Falta obtener la fecha capturada en el input de fecha para fecha de incio y fin
+		const startDate = moment().format("DD/MM/YYYY");
+		const endDate = moment().format("DD/MM/YYYY");
+
+		// Obtencion de libro fiscal
+		const book = await calls.getBook(
+			this.props.orgIdSelected,
+			null,
+			startDate,
+			endDate,
+			"/getFiscalBooks"
+		);
+
+		// Generacion de archivo de Excel de libro fiscal
+		switch (bookType) {
+			case "Ventas":
+				bookFile = await calls.getDocumentByTaxbookId(
+					"5ee552b80446db0b64bf49f9",
+					"/generateSalesBook"
+				);
+				break;
+
+			case "Compras":
+				bookFile = await calls.getDocumentByTaxbookId(
+					"5ee552b80446db0b64bf49f9",
+					"/generatePurchasesBook"
+				);
+				break;
+
+			/** 
+			case "IVA":
+				bookFile = await calls.getDocumentByIdStatement(
+					"5ee552b80446db0b64bf49f9",
+					"/downloadAuxiliarTaxReport"
+				);
+				break;
+
+			case "ISLR":
+				bookFile  = await calls.getDocumentByIdStatement(
+					"5ee552b80446db0b64bf49f9",
+					"/downloadAuxiliarTaxReport"
+				);
+				break;
+			*/
+
+			default:
+				break;
+		}
+	};
+
+	/// Ayuda a determinar la manera default en que se presenta la columna Archivo
+	fileColumnRenderer = () => {
+		let fileIcon = document.createElement("img");
+		fileIcon.src = downloadFile;
+		fileIcon.className = "fileColumnIcon";
+		fileIcon.title = "Descargar reporte";
+		fileIcon.addEventListener("click", () => {
+			// Accion al dar click
+			const book = calls.getBook(this.props.orgIdSelected);
+		});
+
+		return fileIcon;
+	};
+
+	/// Muestra u oculta el modal the bootstrap
+	/// @param {string} show - mostrar el modal o no
+	manageModalShow = (show) => {
+		this.setState({ modalShow: show });
+	};
+
 	render() {
 		const {
-			state: { reports },
+			state: { columnDefs, rowData, modalShow },
+			props: { bookType },
 		} = this;
 
 		return (
-			<div>
-				<div className="report-container">
-					{reports.map((report, index) => (
-						<ReportNode
-							key={`report${index}`}
-							reportId={report.id}
-							bookName={report.book}
-						/>
-					))}
+			<div className="bookTableWrapper">
+				{/** Botón para generar un periodo específico de libro */}
+				<span
+					className="periodSelectionGenerator"
+					onClick={(event) => this.manageModalShow(true)}
+				>
+					<img border="0" src={periodSelection} />
+				</span>
+
+				{/** Título del libro*/}
+				<Card.Title>{`Libros de ${bookType}`}</Card.Title>
+				<hr className="separator" />
+
+				{/** Tabla de datos de libros generados por periodo */}
+				<div id={`myGrid${bookType}`} className="aggridReport ag-theme-alpine">
+					<AgGridReact columnDefs={columnDefs} rowData={rowData}></AgGridReact>
 				</div>
+
+				{/** Cuadro de diálogo para mostrar la opción de generar un libro por un periodo específico */}
+				<Modal
+					show={modalShow}
+					size="lg"
+					aria-labelledby="contained-modal-title-vcenter"
+					centered
+				>
+					<Modal.Header closeButton>
+						<Modal.Title id="contained-modal-title-vcenter">
+							Modal heading
+						</Modal.Title>
+					</Modal.Header>
+					<Modal.Body>
+						<Card.Text>
+							<div className="date-container">
+								<div className="inline-date" style={{ marginLeft: 0 }}>
+									<div className="time-interval fieldLabel">Desde:</div>
+									<DatePicker
+										id="dtpkDesdeVentas"
+										className={"calendar"}
+										selected={this.state.startDateLibroVentas}
+										onChange={this.handleChangeStartDateLibroVentas}
+										locale="es"
+										showMonthDropdown
+										showYearDropdown
+									/>
+								</div>
+								<div className="inline-date">
+									<div className="time-interval fieldLabel">Hasta:</div>
+									<DatePicker
+										id="dtpkHastaVentas"
+										className={"calendar"}
+										selected={this.state.finishDateLibroVentas}
+										onChange={this.handleChangeFinishDateLibroVentas}
+										locale="es"
+										showMonthDropdown
+										showYearDropdown
+									/>
+								</div>
+							</div>
+						</Card.Text>
+
+						<div className="action-container">
+							<div className="inline-date">
+								<Button
+									className="xeroGenerate"
+									onClick={() => {
+										this.downloadSpecificBookType(bookType);
+									}}
+								>
+									Generar
+								</Button>
+							</div>
+						</div>
+					</Modal.Body>
+					<Modal.Footer>
+						<Button onClick={() => this.manageModalShow(false)}>Close</Button>
+					</Modal.Footer>
+				</Modal>
 			</div>
 		);
 	}
 }
 
-export { Reports, ReportNode };
+export { Reports };

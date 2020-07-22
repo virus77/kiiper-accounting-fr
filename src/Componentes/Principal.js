@@ -382,7 +382,7 @@ export default function Dashboard(props) {
                       </div>
                         <Grid item xs={12}>
                           <Paper className={classes.paper}>
-                            < Reports orgIdSelected={orgIdSelected} specialContrib={SpecialContrib} />
+                            <Reports orgIdSelected={orgIdSelected} specialContrib={SpecialContrib} />
                           </Paper>
                         </Grid>
                       </Grid> :

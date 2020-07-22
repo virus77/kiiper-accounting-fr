@@ -55,6 +55,10 @@
 	display: flex;
 }
 
+.bookTableWrapper {
+	height: 100%;
+}
+
 .periodSelectionGenerator {
 	position: absolute;
 	height: 30px;
@@ -153,4 +157,8 @@
 	border-radius: 7px;
 	font-size: 0.8em;
 	min-width: 200px;
+}
+
+.ag-theme-alpine .ag-header-cell, .ag-theme-alpine .ag-header-group-cell{
+	padding-left: 0;
 }
