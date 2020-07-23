@@ -214,42 +214,25 @@ const calls = {
 	/// @param {text} initialDate - Format date DD/MM/YYYY"
 	/// @param {text} endDate -  Format date DD/MM/YYYY"
 	/// @param {text} endPoint - Ruta de acceso al Endpoint dependiendo si es compras o venntas
-	getBook: async (id_organisation, Periodo, initialDate, endDate, endPoint) => {
-		switch (Periodo) {
-			case "1":
-				let Range = util.getmonthRange();
-				initialDate = Range.firstDay;
-				endDate = Range.lastDay;
-				break;
+	getBook: (id_organisation, Periodo, initialDate, endDate, endPoint) => {
+		
+		// Fetch URL with parameters
+		const fetchURL = endPoint +`?id_organisation=${id_organisation}&initialDate=${initialDate}&endDate=${endDate}`;
 
-			case "2":
-				let PreviousRange = util.getPreviousRange();
-				initialDate = PreviousRange.firstDay;
-				endDate = PreviousRange.lastDay;
-				break;
-
-			default:
-				break;
-		}
-
-		var param = {
-			id_organisation: id_organisation,
-			init_date: initialDate,
-			end_date: endDate,
-		};
-
-		return await fetch(endPoint, {
-			method: "POST",
-			body: JSON.stringify(param),
-			headers: {
-				"Content-type": "application/json; charset=UTF-8",
-				"Access-Control-Allow-Origin": "*",
-			},
-		})
-			.then((res) => res.text())
-			.then((data) => {
-				return { data: data };
-			});
+		return (
+			// Fetching data from the endpoint
+			fetch(fetchURL)
+				.then((res) => res.text())
+				.then((data) => {
+					return {
+						data: data,
+					};
+				})
+				.catch((error) => {
+					console.log(error);
+					return false;
+				})
+		);
 	},
 
 	/// Petición para obtener cuentas bancarias de una empresa en Xero
@@ -283,6 +266,7 @@ const calls = {
 	/// @param {string} startDate - Fecha de inicio de libro fiscal 
 	/// @param {string} endDate - Fecha de fin de libro fiscal
 	getFiscalBooks: (organizationId, startDate, endDate) => {
+
 		// Fetch URL with parameters
 		const fetchURL = `/getTaxbooks?id_organisation=${organizationId}&init_date=${startDate}&end_date=${endDate}`;
 

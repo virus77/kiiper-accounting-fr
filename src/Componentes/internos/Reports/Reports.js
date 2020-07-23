@@ -22,7 +22,6 @@ import "../Css/books.css";
 /// Imágenes
 import periodSelection from "../Css/periodSelection.svg";
 import downArrow from "../../../Imagenes/downArrow.png";
-import downloadFile from "../../../Imagenes/downloadDocument.svg";
 
 registerLocale("es", es);
 var moment = require("moment"); /// require
@@ -66,230 +65,14 @@ class ReportBook extends Component {
 	constructor(props) {
 		super(props);
 
-		var optionList = [
-			{ id: 0, text: "Seleccionar..." },
-			{ id: 1, text: "Mes Actual" },
-			{ id: 2, text: "Mes Anterior" },
-			{ id: 3, text: "Personalizado" },
-		];
-
 		this.state = {
-			optionList,
-			startDateLibroCompras: new Date(),
-			finishDateLibroCompras: new Date(),
-			showDateLibroCompras: false,
-			optionSelectedLibroCompras: 0,
-			msgLibroCompras: "",
-			startDateLibroVentas: new Date(),
-			finishDateLibroVentas: new Date(),
-			showDateLibroVentas: false,
-			optionSelectedLibroVentas: 0,
-			msgLibroVentas: "",
-			startDateRetencionesIVA: new Date(),
-			finishDateRetencionesIVA: new Date(),
-			showDateRetencionesIVA: false,
-			optionSelectedRetencionesIVA: 0,
-			msgRetencionesIVA: "",
-			startDateRetencionesISLR: new Date(),
-			finishDateRetencionesISLR: new Date(),
-			showDateRetencionesISLR: false,
-			optionSelectedRetencionesISLR: 0,
-			msgRetencionesISLR: "",
-			taxbookIdVentas: "",
-			taxbookIdCompras: "",
-			IdStatementIVA: "",
-			IdStatementISLR: "",
+			showDate: false,
 			open: false,
 			setOpen: false,
-			tipo: "",
-			dueDate: new Date(),
-			errorMsg: "",
 			arrowUpClass: "",
 		};
-
-		this.handleClickLibroCompras = this.handleClickLibroCompras.bind(this);
-		this.handleClickLibroVentas = this.handleClickLibroVentas.bind(this);
 	}
 
-	componentDidMount() {}
-
-	/* Funciones Comunes */
-
-	/* Funciones Libro de Compras */
-
-	handleChangeStartDateLibroCompras = (date) => {
-		let startDate = moment(date).format("DD/MM/YYYY");
-		let endDate = moment(
-			document.getElementById("dtpkHastaCompras").value
-		).format("DD/MM/YYYY");
-		if (util.compareDates(startDate, endDate) === 1) {
-			this.setState({
-				msgLibroCompras: "Fecha desde, no puede ser mayor a fecha hasta",
-				errorMsg: "error-msg",
-			});
-		} else {
-			this.setState({
-				startDateLibroCompras: date,
-				msgLibroCompras: "",
-				errorMsg: "",
-			});
-		}
-	};
-
-	handleChangeFinishDateLibroCompras = (date) => {
-		let endDate = moment(date).format("DD/MM/YYYY");
-		let StartDate = moment(
-			document.getElementById("dtpkDesdeCompras").value
-		).format("DD/MM/YYYY");
-		if (util.compareDates(endDate, StartDate) === -1) {
-			this.setState({
-				msgLibroCompras: "Fecha hasta, no puede ser menor a fecha desde",
-				errorMsg: "error-msg",
-			});
-		} else {
-			this.setState({
-				finishDateLibroCompras: date,
-				msgLibroCompras: "",
-				errorMsg: "",
-			});
-		}
-	};
-
-	handleClickLibroCompras = (e) => {
-		console.log("handleClick LibroCompra", e.target.value);
-		if (e.target.value === "3") {
-			this.setState({
-				showDateLibroCompras: true,
-				optionSelectedLibroCompras: e.id,
-			});
-		} else {
-			this.setState({
-				showDateLibroCompras: false,
-				optionSelectedLibroCompras: e.id,
-			});
-		}
-	};
-
-	/// Funcion utilizada para obtener el periodo y enviar los parámetros
-	/// solicitados por medio de post para generar el guardado en Xero
-	onGetPeriodLibroCompras = async () => {
-		let x = moment(this.state.startDateLibroCompras);
-		let y = moment(this.state.finishDateLibroCompras);
-
-		if (x.isBefore(y)) {
-			this.setState({
-				msgLibroCompras: "",
-				errorMsg: "",
-			});
-
-			let taxbookId = await calls.getBook(
-				this.props.orgIdSelected,
-				this.state.optionSelectedLibroCompras,
-				y.format("DD/MM/YYYY"),
-				x.format("DD/MM/YYYY"),
-				"/purchasesBook"
-			);
-
-			if (taxbookId.data === false)
-				console.log("Ocurrió un problema al momento de guardar en Xero");
-			else {
-				this.setState({ taxbookIdCompras: taxbookId.data });
-				alert("El preriodo se guardo correctamente en Xero");
-			}
-		} else {
-			this.setState({
-				msgLibroCompras: "Las fechas son inválidas",
-				errorMsg: "error-msg",
-			});
-		}
-	};
-
-	/* Funciones Libro de Ventas */
-
-	handleChangeStartDateLibroVentas = (date) => {
-		let startDate = moment(date).format("DD/MM/YYYY");
-		let endDate = moment(
-			document.getElementById("dtpkHastaVentas").value
-		).format("DD/MM/YYYY");
-		if (util.compareDates(startDate, endDate) === 1) {
-			this.setState({
-				msgLibroVentas: "Fecha desde, no puede ser mayor a fecha hasta",
-			});
-		} else {
-			this.setState({ startDateLibroVentas: date, msgLibroVentas: "" });
-		}
-	};
-
-	handleChangeFinishDateLibroVentas = (date) => {
-		let endDate = moment(date).format("DD/MM/YYYY");
-		let StartDate = moment(
-			document.getElementById("dtpkDesdeVentas").value
-		).format("DD/MM/YYYY");
-		if (util.compareDates(endDate, StartDate) === -1) {
-			this.setState({
-				msgLibroVentas: "Fecha hasta, no puede ser menor a fecha desde",
-			});
-		} else {
-			this.setState({ finishDateLibroVentas: date, msgLibroVentas: "" });
-		}
-	};
-
-	handleClickLibroVentas = (e) => {
-		console.log("handleClick LibroVentas", e);
-		if (e.target.value === "3") {
-			this.setState({
-				showDateLibroVentas: true,
-				optionSelectedLibroVentas: e.id,
-			});
-		} else {
-			this.setState({
-				showDateLibroVentas: false,
-				optionSelectedLibroVentas: e.id,
-			});
-		}
-	};
-
-	/// Funcion utilizada para obtener el periodo y enviar los parámetros
-	/// solicitados por medio de post para generar el guardado en Xero
-	onGetPeriodLibroVentas = async () => {
-		let x = moment(this.state.startDateLibroVentas);
-		let y = moment(this.state.finishDateLibroVentas);
-
-		if (x.isBefore(y)) {
-			this.setState({
-				msgLibroVentas: "",
-			});
-
-			let taxbookId = await calls.getBook(
-				this.props.orgIdSelected,
-				this.state.optionSelectedLibroVentas,
-				y.format("DD/MM/YYYY"),
-				x.format("DD/MM/YYYY"),
-				"/purchasesBook"
-			);
-
-			if (taxbookId.data === false)
-				console.log("Ocurrió un problema al momento de guardar en Xero");
-			else {
-				this.setState({ taxbookIdVenntas: taxbookId.data });
-				alert("El preriodo se guardo correctamente en Xero");
-			}
-		} else {
-			this.setState({
-				msgLibroVentas: "Las fechas son inválidas",
-			});
-		}
-	};
-
-	// función asignada para cerrar el modal
-	handleClose = () => {
-		this.setState({ setOpen: false });
-	};
-
-	// función asignada para obtener el duedate
-	handleChangeDueDate = (date) => {
-		this.setState({ dueDate: date });
-	};
 
 	// Ayuda a mostrar el contenido del nodo del acordeón elegido
 	showAccordionContent = async (event) => {
@@ -297,15 +80,6 @@ class ReportBook extends Component {
 		const accordionContentStyle = window.getComputedStyle(accordionContent);
 
 		if (accordionContentStyle.display === "none") {
-			const startDate = moment("2020-01-01");
-			const endDate = moment("2020-01-01").add(7, "d");
-
-			// Obtención de elementos a mostrar para el libro desde Xero
-			const result = await calls.getFiscalBooks(
-				this.props.orgIdSelected,
-				startDate.format("DD/MM/YYYY"),
-				endDate.format("DD/MM/YYYY")
-			);
 
 			accordionContent.style.display = "flex";
 			this.setState({ arrowUpClass: "arrowUp" });
@@ -360,110 +134,133 @@ class BookTable extends Component {
 		super(props);
 
 		this.state = {
-			rowData: [
-				{ period: "Semana1", topDate: "10/10/2020", file: 35000 },
-				{ period: "Semana2", topDate: "10/10/2020", file: 32000 },
-				{ period: "Semana3", topDate: "10/10/2020", file: 72000 },
-			],
-			columnDefs: [
-				{
-					headerName: "Período",
-					field: "period",
-					flex: 1,
-					cellClass: "grid-cell-centered",
-				},
-				{
-					headerName: "Fecha límite",
-					field: "topDate",
-					flex: 1,
-					cellClass: "grid-cell-centered",
-				},
-				{
-					headerName: "Archivo",
-					field: "file",
-					flex: 1,
-					cellClass: "grid-cell-centered",
-					cellRenderer: this.fileColumnRenderer,
-				},
-			],
+			rowData: [],
+			columnDefs: [],
 			modalShow: false,
+			errorMsg: false,
+			bookType: "",
+			taxbookId: "",
+			startDate: new Date(),
+			finishDate: new Date(),
 		};
+
+
+		this.handleClick = this.handleClick.bind(this);
+		this.handleClose = this.handleClose.bind(this);
 	}
 
-	/// Funcion utilizada para generar el excel obteniendo desde un get en base64 el archivo generado
-	/// @param {string} bookType -  tipo de libro a generar
-	downloadSpecificBookType = async (bookType) => {
-		const bookFile = "";
+	//#region Métodos de ciclo de vida
+	componentDidMount() {
+		// Getting data from Xero and building data grid
+		this.onFillGrid("");
+	}
 
-		// Falta obtener la fecha capturada en el input de fecha para fecha de incio y fin
-		const startDate = moment().format("DD/MM/YYYY");
-		const endDate = moment().format("DD/MM/YYYY");
-
-		// Obtencion de libro fiscal
-		const book = await calls.getBook(
-			this.props.orgIdSelected,
-			null,
-			startDate,
-			endDate,
-			"/getFiscalBooks"
-		);
-
-		// Generacion de archivo de Excel de libro fiscal
-		switch (bookType) {
-			case "Ventas":
-				bookFile = await calls.getDocumentByTaxbookId(
-					"5ee552b80446db0b64bf49f9",
-					"/generateSalesBook"
-				);
-				break;
-
-			case "Compras":
-				bookFile = await calls.getDocumentByTaxbookId(
-					"5ee552b80446db0b64bf49f9",
-					"/generatePurchasesBook"
-				);
-				break;
-
-			/** 
-			case "IVA":
-				bookFile = await calls.getDocumentByIdStatement(
-					"5ee552b80446db0b64bf49f9",
-					"/downloadAuxiliarTaxReport"
-				);
-				break;
-
-			case "ISLR":
-				bookFile  = await calls.getDocumentByIdStatement(
-					"5ee552b80446db0b64bf49f9",
-					"/downloadAuxiliarTaxReport"
-				);
-				break;
-			*/
-
-			default:
-				break;
+	//#region Métodos de ciclo de vida
+	onFillGrid(Valor) {
+		// Getting data from Xero and building data grid
+		let dtpkHasta = "";
+		let dtpkDesde = "";
+		if (Valor != "") {
+			dtpkDesde = document.getElementById("dtpkDesde" + this.state.bookType).value;
+			dtpkHasta = document.getElementById("dtpkHasta" + this.state.bookType).value;
+			this.onGetPeriodo(dtpkDesde, dtpkHasta);
 		}
-	};
-
-	/// Ayuda a determinar la manera default en que se presenta la columna Archivo
-	fileColumnRenderer = () => {
-		let fileIcon = document.createElement("img");
-		fileIcon.src = downloadFile;
-		fileIcon.className = "fileColumnIcon";
-		fileIcon.title = "Descargar reporte";
-		fileIcon.addEventListener("click", () => {
-			// Accion al dar click
-			const book = calls.getBook(this.props.orgIdSelected);
+		util.getAndBuildGridDataReports(this.props.orgIdSelected, Valor, dtpkDesde, dtpkHasta).then(result => {
+			// Setting component state
+			this.setState({
+				rowData: result.structure.gridItems,
+				columnDefs: result.structure.headersTemplate
+			})
 		});
+	}
 
-		return fileIcon;
+	/// Funcion utilizada para obtener el periodo y enviar los parámetros
+	/// solicitados por medio de post para generar el guardado en Xero
+	onGetPeriodo = (dtpkDesde, dtpkHasta) => {
+		let x = moment(dtpkDesde);
+		let y = moment(dtpkHasta);
+
+		if (x.isBefore(y)) {
+			this.setState({
+				msgLibro: "",
+			});
+
+			let taxbookId = calls.getBook(
+				this.props.orgIdSelected,
+				1,
+				x.format("DD/MM/YYYY"),
+				y.format("DD/MM/YYYY"),
+				this.state.bookType === "Ventas" ? "/salesBook" : "/purchasesBook"
+			);
+
+			if (taxbookId.data === false)
+				console.log("Ocurrió un problema al momento de generar el periodo");
+			else {
+				this.setState({ taxbookId: taxbookId.data });
+				console.log("El periodo se generó correctamente");
+			}
+		} else {
+			this.setState({
+				msgLibro: "Las fechas son inválidas",
+			});
+		}
 	};
 
 	/// Muestra u oculta el modal the bootstrap
 	/// @param {string} show - mostrar el modal o no
-	manageModalShow = (show) => {
-		this.setState({ modalShow: show });
+	manageModalShow = (show, bookType) => {
+		this.setState({ modalShow: show, bookType: bookType });
 	};
+
+	/* Funciones Libro */
+	handleChangeStartDate = date => {
+		let startDate = moment(date).format("DD/MM/YYYY");
+		let endDate = moment(
+			document.getElementById("dtpkHasta" + this.state.bookType).value
+		).format("DD/MM/YYYY");
+
+		if (util.compareDates(startDate, endDate) === 1) {
+			this.setState({
+				errorMsg: "Fecha desde, no puede ser mayor a fecha hasta",
+			});
+		} else {
+			this.setState({ startDate: date, errorMsg: "" });
+		}
+	};
+
+	handleChangeFinishDate = date => {
+		let endDate = moment(date).format("DD/MM/YYYY");
+		let StartDate = moment(
+			document.getElementById("dtpkDesde" + this.state.bookType).value
+
+		).format("DD/MM/YYYY");
+		if (util.compareDates(endDate, StartDate) === -1) {
+			this.setState({
+				errorMsg: "Fecha hasta, no puede ser menor a fecha desde",
+			});
+		} else {
+			this.setState({ finishDate: date, errorMsg: "" });
+		}
+	};
+
+	handleClick = (e) => {
+		console.log("handleClick", e);
+		if (e.target.value === "3") {
+			this.setState({
+				showDate: true,
+				optionSelected: e.id,
+			});
+		} else {
+			this.setState({
+				showDate: false,
+				optionSelected: e.id,
+			});
+		}
+	};
+
+	handleClose() {
+		this.setState({ modalShow: false});
+	}
 
 	render() {
 		const {
@@ -471,12 +268,14 @@ class BookTable extends Component {
 			props: { bookType },
 		} = this;
 
+		const closeBtn = <button className="close" onClick={(event) => this.manageModalShow(false, bookType)}>X</button>
+
 		return (
 			<div className="bookTableWrapper">
 				{/** Botón para generar un periodo específico de libro */}
 				<span
 					className="periodSelectionGenerator"
-					onClick={(event) => this.manageModalShow(true)}
+					onClick={(event) => this.manageModalShow(true, bookType)}
 				>
 					<img border="0" src={periodSelection} />
 				</span>
@@ -493,13 +292,13 @@ class BookTable extends Component {
 				{/** Cuadro de diálogo para mostrar la opción de generar un libro por un periodo específico */}
 				<Modal
 					show={modalShow}
-					size="lg"
+					onHide={this.handleClose}
+					size="md"
 					aria-labelledby="contained-modal-title-vcenter"
-					centered
-				>
+					centered>
 					<Modal.Header closeButton>
 						<Modal.Title id="contained-modal-title-vcenter">
-							Modal heading
+							Seleccionar periodo
 						</Modal.Title>
 					</Modal.Header>
 					<Modal.Body>
@@ -508,10 +307,10 @@ class BookTable extends Component {
 								<div className="inline-date" style={{ marginLeft: 0 }}>
 									<div className="time-interval fieldLabel">Desde:</div>
 									<DatePicker
-										id="dtpkDesdeVentas"
+										id={`dtpkDesde${bookType}`}
 										className={"calendar"}
-										selected={this.state.startDateLibroVentas}
-										onChange={this.handleChangeStartDateLibroVentas}
+										selected={this.state.startDate}
+										onChange={this.handleChangeStartDate}
 										locale="es"
 										showMonthDropdown
 										showYearDropdown
@@ -520,33 +319,32 @@ class BookTable extends Component {
 								<div className="inline-date">
 									<div className="time-interval fieldLabel">Hasta:</div>
 									<DatePicker
-										id="dtpkHastaVentas"
+										id={`dtpkHasta${bookType}`}
 										className={"calendar"}
-										selected={this.state.finishDateLibroVentas}
-										onChange={this.handleChangeFinishDateLibroVentas}
+										selected={this.state.finishDate}
+										onChange={this.handleChangeFinishDate}
 										locale="es"
 										showMonthDropdown
 										showYearDropdown
 									/>
 								</div>
 							</div>
+							<span className="error-msg">{this.state.errorMsg}</span>
 						</Card.Text>
-
 						<div className="action-container">
-							<div className="inline-date">
-								<Button
-									className="xeroGenerate"
-									onClick={() => {
-										this.downloadSpecificBookType(bookType);
-									}}
-								>
-									Generar
-								</Button>
-							</div>
 						</div>
 					</Modal.Body>
 					<Modal.Footer>
-						<Button onClick={() => this.manageModalShow(false)}>Close</Button>
+						<div className="inline-date">
+							<Button
+								className="xeroGenerate"
+								onClick={() => {
+									this.onFillGrid("Grid", ""); this.manageModalShow(false, bookType);
+								}}
+							>
+								Generar
+								</Button>
+						</div>
 					</Modal.Footer>
 				</Modal>
 			</div>

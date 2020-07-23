@@ -13,7 +13,6 @@ import 'jquery-ui/ui/widgets/datepicker';
 import Download from '../../Imagenes/downloadDocument.svg';
 import Upload from '../../Imagenes/uploadDocument.svg';
 
-
 // Declaring momenty object
 var moment = require('moment'); // require
 
@@ -77,12 +76,39 @@ const util = {
             })
         );
     },
+    getAndBuildGridDataReports: async (orgIdSelected, call, startDate, endDate) => {
+
+        if (call === "") {
+            var d = new Date();
+            endDate = moment(d).format("DD/MM/YYYY")
+            startDate = "01/01/" + endDate.substring(6, 10);
+        }
+        else {
+            startDate = moment(startDate).format("DD/MM/YYYY");
+            endDate = moment(endDate).format("DD/MM/YYYY");
+        }
+        return (
+
+            // Getting specific organization data
+            await calls.getFiscalBooks(
+                orgIdSelected,
+                startDate,
+                endDate
+            ).then(result => {
+
+                // Build grid data structured with editable columns
+                const structure = util.fillWorkspaceGrid(result.data, "", "", "", "", "FiscalBooks", orgIdSelected);
+
+                return { structure: structure }
+            })
+        );
+    },
     /// After getting the data from the organization in the function
     /// getOrgConceptsInfo the data is porcessed to give the right format
     /// @param {array} items - data requested from server
     /// @param {string} taxInfo - tax info with id and name
     /// @param {boolean} isAnEditableGrid - If the grid will have editable columns
-    fillWorkspaceGrid: (items, taxInfo, isAnEditableGrid, kindOfPeople, statusName, section) => {
+    fillWorkspaceGrid: (items, taxInfo, isAnEditableGrid, kindOfPeople, statusName, section, orgIdSelected) => {
 
         let gridItems = [];
         let headersTemplate = [];
@@ -90,7 +116,11 @@ const util = {
         switch (section) {
 
             case "declaracion":
-                headersTemplate = util.returnHeaderDeclaration(taxInfo.name, kindOfPeople, statusName)
+                headersTemplate = util.returnHeaderDeclaration(taxInfo.name, kindOfPeople, statusName);
+                break;
+
+            case "FiscalBooks":
+                headersTemplate = util.returnHeaderFiscalBooks(orgIdSelected);
                 break;
 
             default:
@@ -372,7 +402,6 @@ const util = {
 
         return taxInfo;
     },
-
     /// Helps to get the kind of tax of a voucher
     /// @param {float} taxIndex - The index configured by tax in DropDownList events property
     getTaxInfoConcept: (taxIndex, kindOfPeople) => {
@@ -603,6 +632,16 @@ const util = {
         ]
         return (columnDefs)
     },
+    /// Crea el header del componente de FiscalBooks
+    returnHeaderFiscalBooks: function (orgIdSelected) {
+        var columnDefs = [
+            { headerName: '_id', field: '_id', xeroField: '_id', hide: true },
+            { headerName: "Fecha inicio", field: "init_date", xeroField: "init_date", flex: 1, cellClass: "grid-cell-centered", },
+            { headerName: "Fecha fin", field: "end_date", xeroField: "end_date", flex: 1, cellClass: "grid-cell-centered", },
+            { headerName: "Archivo", field: "file", flex: 1, cellClass: "grid-cell-centered", cellRenderer: this.fileColumnRenderer },
+        ]
+        return (columnDefs)
+    },
     //Coloca icono de carga en el grid
     CellRendererUp: function (params) {
         var eDiv = document.createElement('div');
@@ -676,6 +715,19 @@ const util = {
         span.appendChild(img);
         eDiv.appendChild(span);
         return eDiv;
+    },
+    /// Ayuda a determinar la manera default en que se presenta la columna Archivo
+    fileColumnRenderer: function (params) {
+        let fileIcon = document.createElement("img");
+        fileIcon.src = Download;
+        fileIcon.className = "fileColumnIcon";
+        fileIcon.title = "Descargar reporte";
+        fileIcon.addEventListener("click", () => {
+            // Accion al dar click
+            calls.getDocumentByTaxbookId(params.data._id);
+        });
+
+        return fileIcon;
     },
     //Action log in ag-grid
     printResult: function (res) {
