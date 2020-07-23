@@ -99,11 +99,11 @@
 	height: calc(100% - 45px);
 }
 
-.fileColumnIcon{
+.fileColumnIcon {
 	height: 50%;
 }
 
-.fileColumnIcon:hover{
+.fileColumnIcon:hover {
 	cursor: pointer;
 }
 
@@ -159,6 +159,7 @@
 	min-width: 200px;
 }
 
-.ag-theme-alpine .ag-header-cell, .ag-theme-alpine .ag-header-group-cell{
+.bookTableWrapper .ag-theme-alpine .ag-header-cell,
+.bookTableWrapper .ag-theme-alpine .ag-header-group-cell {
 	padding-left: 0;
 }

@@ -1,0 +1,27 @@
+#dashboardByModule{
+    border:1px solid #e7e7eb;
+    border-radius: 10px;
+}
+
+#dashboardByModule .ui.menu{
+    margin-top:0!important;
+    border-style: none!important;
+    width: calc(100% - 1px);
+    border-bottom: 1px solid #e7e7eb!important;
+}
+
+.TabStyle {
+    font-size: 14px;
+    color:#232c51;
+    font-weight: bold;
+    outline: none;
+    text-transform: capitalize;
+}
+
+.TabStyle:focus {
+    outline: none;
+}
+
+.TabsContainer {
+    background-color: #F3F3F3;
+} 

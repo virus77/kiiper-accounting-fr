@@ -6,6 +6,16 @@ h4 {
 	font-family: "Goldplay", sans-serif !important;
 }
 
+#root {
+	background-color: #f5f6fa;
+}
+
+@media (min-width: 600px) {
+	.makeStyles-appBarSpacer-11 {
+		min-height: 45px !important;
+	}
+}
+
 .row {
 	margin: 0 !important;
 }
@@ -221,23 +231,13 @@ input[type="password"]::-ms-reveal:hover {
 	padding: 0 !important;
 }
 
-/* Back button */
-.jss3 > .MuiIconButton-root {
-	border: 0.5px solid #e6defd;
-	padding: 9px;
-}
-
-.jss3 .MuiIconButton-label svg {
-	color: #7158e2;
-}
-
 /* Organization selection */
 .navbar-brand {
 	padding: 0 25px 0 0 !important;
 }
 
 .rw-dropdown-list-input {
-	font-size: 0.8em!important;
+	font-size: 0.8em !important;
 }
 
 .rw-state-focus > .rw-widget-container,
@@ -249,7 +249,7 @@ input[type="password"]::-ms-reveal:hover {
 
 /* Nav bar */
 .navbar {
-	padding: 0 12px;
+	padding: 0!important;
 	height: 60px;
 	background: #fff;
 }
@@ -279,9 +279,9 @@ input[type="password"]::-ms-reveal:hover {
 /* Option selection menu displayed */
 .dropdown-menu {
 	border: 1px solid #eee !important;
-	box-shadow: 0 5px 5px #eeeeee;
+	box-shadow: 0px 8px 16px rgba(35, 44, 81, 0.08) !important;
 	flex-direction: column;
-	border-radius: 7px;
+	border-radius: 8px !important;
 	width: 100%;
 }
 
@@ -322,20 +322,11 @@ input[type="password"]::-ms-reveal:hover {
 .MuiPaper-elevation1 {
 	box-shadow: none !important;
 	height: 100%;
+	min-height: 435px;
 }
 
 .MuiPaper-rounded {
 	border-radius: 10px !important;
-}
-
-/* Xero iframe */
-iframe {
-	border: 1px solid #e6defd;
-	border-radius: 10px;
-}
-
-iframe body {
-	background: transparent !important;
 }
 
 /* Grid in sells and purchases */
@@ -354,10 +345,11 @@ iframe body {
 
 /* UI Menu Tabs label */
 .ui.menu .item {
-	padding: 20px 15px !important;
-	color: rgba(35, 44, 81, 0.5) !important;
+	padding: 20px 14px !important;
+	color: rgba(35, 44, 81, 0.6) !important;
 	font-weight: 700 !important;
 	font-family: "Muli";
+	margin: 0 35px 0 0;
 }
 
 /* UI Menu Tab selected */
@@ -368,7 +360,12 @@ iframe body {
 }
 
 .ui.menu .item:before {
-	background: transparent;
+	background: transparent !important;
+}
+
+/** Title module */
+h3.MuiTypography-root {
+	padding: 0 !important;
 }
 
 /* Empty and invisible div inside body that sizes Ribbon */
