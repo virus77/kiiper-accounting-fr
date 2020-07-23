@@ -258,8 +258,8 @@ class BookTable extends Component {
 		}
 	};
 
-	handleClose() {
-		this.setState({ modalShow: false});
+	handleClose = () => {
+		this.setState({ modalShow: false });
 	}
 
 	render() {
