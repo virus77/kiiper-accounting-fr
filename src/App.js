@@ -83,7 +83,7 @@ class App extends Component {
       this.state.show ?
         document.body.className = "bodycolor" :
         document.body.className = "bodycolorForm" :
-      document.body.style.background = "#f3f3f3";
+      document.body.style.background = "#f5f6fa";
 
     return (
       <div>
