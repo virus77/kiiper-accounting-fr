@@ -10,8 +10,10 @@ import 'jquery-ui/themes/base/datepicker.css';
 import 'jquery-ui/ui/core';
 import 'jquery-ui/ui/widgets/datepicker';
 
+//Imágenes
 import Download from '../../Imagenes/downloadDocument.svg';
 import Upload from '../../Imagenes/uploadDocument.svg';
+import updateElement from "../../Imagenes/updateElement.svg";
 
 // Declaring momenty object
 var moment = require('moment'); // require
@@ -635,10 +637,19 @@ const util = {
     /// Crea el header del componente de FiscalBooks
     returnHeaderFiscalBooks: function (orgIdSelected) {
         var columnDefs = [
-            { headerName: '_id', field: '_id', xeroField: '_id', hide: true },
-            { headerName: "Fecha inicio", field: "init_date", xeroField: "init_date", flex: 1, cellClass: "grid-cell-centered", },
-            { headerName: "Fecha fin", field: "end_date", xeroField: "end_date", flex: 1, cellClass: "grid-cell-centered", },
-            { headerName: "Archivo", field: "file", flex: 1, cellClass: "grid-cell-centered", cellRenderer: this.fileColumnRenderer },
+            { headerName: 'withHoldingId', field: 'withHoldingId', xeroField: '_id', hide: true },
+            { headerName: '_id', field: '_id', xeroField: '_id', hide: true, cellClass: "grid-cell-cenLeft" },
+            {
+                headerName: 'Tipo', field: 'Tipo', xeroField: 'Tipo', hide: true,
+                valueGetter: function () {
+                    return 2;
+                },
+            },
+            { headerName: 'Tipo', field: 'Tipo', xeroField: 'Tipo', hide: true, cellClass: "grid-cell-cenLeft" },
+            { headerName: "Fecha inicio", field: "init_date", xeroField: "init_date", flex: 1, cellClass: "grid-cell-cenLeft" },
+            { headerName: "Fecha fin", field: "end_date", xeroField: "end_date", flex: 1, cellClass: "grid-cell-cenLeft" },
+            { headerName: "Archivo", field: "file", flex: 1, cellRenderer: this.fileColumnRenderer, cellClass: "grid-cell-cenLeft" },
+            { headerName: "Actualizar", field: "updateFile", flex: 1, cellRenderer: this.updateFileColumnRenderer, cellClass: "grid-cell-cenLeft" },
         ]
         return (columnDefs)
     },
@@ -729,6 +740,39 @@ const util = {
 
         return fileIcon;
     },
+    /// Ayuda a determinar la manera default en que se presenta la columna Archivo
+    updateFileColumnRenderer: function (params) {
+        let fileIcon = document.createElement("img");
+        fileIcon.src = updateElement;
+        fileIcon.className = "fileColumnIcon";
+        fileIcon.title = "Descargar reporte";
+        fileIcon.addEventListener("click", () => {
+            // Accion al dar click
+            switch (params.data.Tipo) {
+                case 1:
+                    calls.getBook(
+                        params.data.withHoldingId, 
+                        1,
+                        params.data.init_date.format("DD/MM/YYYY"), 
+                        params.data.end_date.format("DD/MM/YYYY"), 
+                        "/salesBook");
+                    break;
+
+                case 2:
+                    calls.getBook(
+                        params.data.withHoldingId, 
+                        1,
+                        params.data.init_date.format("DD/MM/YYYY"), 
+                        params.data.end_date.format("DD/MM/YYYY"), 
+                        "/purchasesBook");
+                    break;
+                default:
+                    break;
+            }
+        });
+
+        return fileIcon;
+    },    
     //Action log in ag-grid
     printResult: function (res) {
         console.log('---------------------------------------');

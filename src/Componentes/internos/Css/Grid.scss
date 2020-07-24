@@ -471,14 +471,17 @@ html .ui-button.ui-state-disabled:hover {
 .grid-cell-cenLeft {
 	text-align: center;
 	margin-left: 10px;
+	justify-content: center;
 }
 
 .grid-cell-Left {
 	margin-left: 2px;
+	justify-content: center;
 }
 
 .grid-cell-alignRight {
 	text-align: right;
+	justify-content: center;
 }
 
 /* estilo de mes y año en calendar  */

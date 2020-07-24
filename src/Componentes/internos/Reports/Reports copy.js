@@ -201,7 +201,7 @@ class Reports extends Component {
             });
 
             let taxbookId = await calls.getBook(this.props.orgIdSelected, this.state.optionSelectedLibroVentas,
-                y.format("DD/MM/YYYY"), x.format("DD/MM/YYYY"), "/purchasesBook");
+                y.format("DD/MM/YYYY"), x.format("DD/MM/YYYY"), "/salesBook");
 
             if (taxbookId.data === false)
                 console.log("Ocurrió un problema al momento de guardar en Xero");

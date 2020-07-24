@@ -144,7 +144,6 @@ class BookTable extends Component {
 			finishDate: new Date(),
 		};
 
-
 		this.handleClick = this.handleClick.bind(this);
 		this.handleClose = this.handleClose.bind(this);
 	}
@@ -152,20 +151,13 @@ class BookTable extends Component {
 	//#region Métodos de ciclo de vida
 	componentDidMount() {
 		// Getting data from Xero and building data grid
-		this.onFillGrid("");
+		this.onFillGrid("", "", "");
 	}
 
 	//#region Métodos de ciclo de vida
-	onFillGrid(Valor) {
+	onFillGrid(Valor, x, y) {
 		// Getting data from Xero and building data grid
-		let dtpkHasta = "";
-		let dtpkDesde = "";
-		if (Valor != "") {
-			dtpkDesde = document.getElementById("dtpkDesde" + this.state.bookType).value;
-			dtpkHasta = document.getElementById("dtpkHasta" + this.state.bookType).value;
-			this.onGetPeriodo(dtpkDesde, dtpkHasta);
-		}
-		util.getAndBuildGridDataReports(this.props.orgIdSelected, Valor, dtpkDesde, dtpkHasta).then(result => {
+		util.getAndBuildGridDataReports(this.props.orgIdSelected, Valor, x, y).then(result => {
 			// Setting component state
 			this.setState({
 				rowData: result.structure.gridItems,
@@ -176,14 +168,13 @@ class BookTable extends Component {
 
 	/// Funcion utilizada para obtener el periodo y enviar los parámetros
 	/// solicitados por medio de post para generar el guardado en Xero
-	onGetPeriodo = (dtpkDesde, dtpkHasta) => {
-		let x = moment(dtpkDesde);
-		let y = moment(dtpkHasta);
+	onGetPeriodo = () => {
+
+		let x = moment(document.getElementById("dtpkDesde" + this.state.bookType).value);
+		let y = moment(document.getElementById("dtpkHasta" + this.state.bookType).value);
 
 		if (x.isBefore(y)) {
-			this.setState({
-				msgLibro: "",
-			});
+			this.setState({ errorMsg: "" });
 
 			let taxbookId = calls.getBook(
 				this.props.orgIdSelected,
@@ -197,11 +188,13 @@ class BookTable extends Component {
 				console.log("Ocurrió un problema al momento de generar el periodo");
 			else {
 				this.setState({ taxbookId: taxbookId.data });
+				this.onDownloadFile();
+				this.onFillGrid("Grid", x, y);
 				console.log("El periodo se generó correctamente");
 			}
 		} else {
 			this.setState({
-				msgLibro: "Las fechas son inválidas",
+				errorMsg: "Las fechas son inválidas",
 			});
 		}
 	};
@@ -260,6 +253,28 @@ class BookTable extends Component {
 
 	handleClose = () => {
 		this.setState({ modalShow: false });
+	}
+
+	/// Funcion utilizada para generar el archivo obteniendo desde 
+	/// un get en base64 el archivo generado
+	/// @param {text} origen - Texto para identificar de donde proviene el llamado
+	onDownloadFile = () => {
+		let resp = "";
+		switch (this.state.bookType) {
+			case "Ventas":
+				calls.getDocumentByTaxbookId(this.state.taxbookId, "/generateSalesBook");
+				break;
+
+			case "Compras":
+				calls.getDocumentByTaxbookId(this.state.taxbookId, "/generatePurchasesBook");
+				break;
+
+			default:
+				break;
+		}
+
+		if (resp === false)
+			console.log("No se logro descargar el archivo");
 	}
 
 	render() {
@@ -329,9 +344,9 @@ class BookTable extends Component {
 									/>
 								</div>
 							</div>
-							<span className="error-msg">{this.state.errorMsg}</span>
 						</Card.Text>
-						<div className="action-container">
+						<div style={{ textAlign: "center", color: "red" }}>
+							<span>{this.state.errorMsg}</span>
 						</div>
 					</Modal.Body>
 					<Modal.Footer>
@@ -339,7 +354,7 @@ class BookTable extends Component {
 							<Button
 								className="xeroGenerate"
 								onClick={() => {
-									this.onFillGrid("Grid", ""); this.manageModalShow(false, bookType);
+									this.onGetPeriodo(); this.manageModalShow(false, bookType);
 								}}
 							>
 								Generar
