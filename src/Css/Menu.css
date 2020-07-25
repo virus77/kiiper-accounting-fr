@@ -8,7 +8,7 @@
 .rw-widget > .rw-widget-container {
 	border-radius: 10px !important;
 	height: auto !important;
-	padding: 6px;
+	padding: 4px;
 	background-color: #232c51 !important;
 	color: white !important;
 	border-color: #232c51 !important;
@@ -110,20 +110,20 @@
 }
 
 /* Back button */
+.makeStyles-toolbarIcon-3 > button,
 .jss3 > .MuiIconButton-root {
-	padding: 8px;
-}
-
-.makeStyles-toolbarIcon-3 > button {
 	border: 1px solid #e6defd;
 	padding: 8px;
+	margin:0 10px;
 }
 
-.makeStyles-toolbarIcon-3 > button:hover {
+.makeStyles-toolbarIcon-3 > button:hover,
+.jss3 > .MuiIconButton-root:hover {
 	background-color: #E6DEFD;
 }
 
-.makeStyles-toolbarIcon-3 > button path {
+.makeStyles-toolbarIcon-3 > button path,
+.jss3 > .MuiIconButton-root path {
 	color: #7158e2;
 }
 

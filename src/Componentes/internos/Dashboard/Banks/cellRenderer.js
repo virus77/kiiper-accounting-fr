@@ -27,7 +27,7 @@ export default class ChildMessageRenderer extends Component {
     console.log(this.props.data)
 
     return (
-        <CustomButton title="Verify" data={this.props.data}/>
+        <CustomButton title="Verificar" data={this.props.data}/>
     );
   }
 }

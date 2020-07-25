@@ -1,169 +1,210 @@
-import React from 'react';
-import styles from './purchases.module.css';
-import { Doughnut } from 'react-chartjs-2';
-import {PieChart, Tooltip, Cell, Pie} from 'recharts';
-import { AgGridReact, SortableHeaderComponent } from 'ag-grid-react';
+import React, { Component } from "react";
+import styles from "./purchases.module.css";
+import { Doughnut } from "react-chartjs-2";
+import { AgGridReact } from "ag-grid-react";
+import ChartDataLabels from "chartjs-plugin-datalabels";
 
-import 'ag-grid-community/dist/styles/ag-grid.css';
-import 'ag-grid-community/dist/styles/ag-theme-alpine.css';
-import PurchasesDataD from '../dataDumy/purchases.json'
+import "ag-grid-community/dist/styles/ag-grid.css";
+import "ag-grid-community/dist/styles/ag-theme-alpine.css";
+import PurchasesDataD from "../dataDumy/purchases.json";
 
+class Purchases extends Component {
+	// Constructor declaration
+	constructor(props) {
+		super(props);
 
-// const data = {
-//     labels: ['Red', 'Blue', 'Yellow', 'Green', 'Purple', 'Orange'],
-//     datasets: [{
-//         label: '# of Votes',
-//         data: [12, 19, 3, 5, 2, 3],
-//         backgroundColor: [
-//             'rgba(255, 99, 132, 0.2)',
-//             'rgba(54, 162, 235, 0.2)',
-//             'rgba(255, 206, 86, 0.2)',
-//             'rgba(75, 192, 192, 0.2)',
-//             'rgba(153, 102, 255, 0.2)',
-//             'rgba(255, 159, 64, 0.2)'
-//         ],
-//         borderColor: [
-//             'rgba(255, 99, 132, 1)',
-//             'rgba(54, 162, 235, 1)',
-//             'rgba(255, 206, 86, 1)',
-//             'rgba(75, 192, 192, 1)',
-//             'rgba(153, 102, 255, 1)',
-//             'rgba(255, 159, 64, 1)'
-//         ],
-//         borderWidth: 1
-//     }]
-// }
+		// Component state
+		this.state = {
+			overdueBill: {
+				columnDefs: [
+					{
+						headerName: "Cuentas atrasadas",
+						headerClass: "dashboardGridColumnGroup",
+						children: [
+							{
+								headerName: "Atraso",
+								field: "behind",
+								headerClass: "dashboardGridColumn",
+								cellClass: "dashboardGridCellBusiness",
+							},
+							{
+								headerName: "Cantidad",
+								field: "amount",
+								headerClass: "dashboardGridColumn",
+								cellClass: "dashboardGridCellBusiness",
+							},
+						],
+					},
+				],
+				rowData: [],
+				defaultColDef: {
+					flex: 1,
+					resizable: false,
+					filterable: false,
+					sortable: true,
+				},
+			},
+			mainProviders: {
+				columnDefs: [
+					{
+						headerName: "Principales proveedores",
+						headerClass: "dashboardGridColumnGroup",
+						children: [
+							{
+								headerName: "Cliente",
+								field: "contact",
+								headerClass: "dashboardGridColumn",
+								cellClass: "dashboardGridCellBusiness",
+							},
+							{
+								headerName: "Cantidad",
+								field: "amount",
+								headerClass: "dashboardGridColumn",
+								cellClass: "dashboardGridCellBusiness",
+							},
+						],
+					},
+				],
+				rowData: [],
+				defaultColDef: {
+					flex: 1,
+					resizable: false,
+					filterable: false,
+					sortable: true,
+				},
+			},
+			charts: {
+				plugins: [ChartDataLabels],
+				data: {
+					datasets: [
+						{
+							data: [1440000, 2000000, 3000000],
+							backgroundColor: ["#5EFEFF", "#9680ED", "#232C51"],
+						},
+					],
+					labels: ["Dayne Guarimara", "Eduardo Alvarez", "Alcaldia Municipio"],
+				},
+				options: {
+					maintainAspectRatio: false,
+					plugins: {
+						datalabels: {
+							color: "#8596CA",
+							font: {
+								family: "'Goldplay',sans-serif",
+								weight: "700",
+							},
+						},
+					},
+					legend: {
+						display: true,
+						labels: {
+							fontColor: "#232C51",
+							fontFamily: "'Muli',sans-serif",
+							boxWidth: 10,
+							fontSize: 10,
+						},
+						position: "bottom",
+						align: "start",
+					},
+				},
+			},
+		};
+	}
 
-const data = {
-    datasets: [{
-        data: [1440000, 2000000, 3000000],
-        backgroundColor: [
-            '#5EFEFF',
-            '#9680ED',
-            '#232C51',
-        ]
-    }],
+	// ----------------------------------------------------
+	/* Component events */
 
-    // These labels appear in the legend and in the tooltips when hovering different arcs
-    labels: [
-        'Dayne Guarimara',
-        'Eduardo Alvarez',
-        'Alcaldia Municipio Girardot'
-    ],
-    
-    options: {
+	// Component Did Mount event
+	componentDidMount() {
+		// Setting overdue bill data
+		const overdueBillData = PurchasesDataD.listPurchases.map((item) => {
+			return {
+				behind: item.behind,
+				amount: `${item.currencyCode} ${item.amountDue}`,
+			};
+		});
 
-    }
-};
+		this.setState((prevState) => ({
+			overdueBill: {
+				...prevState.overdueBill,
+				rowData: overdueBillData,
+			},
+		}));
 
-const arrayData = []
+		// ----------------------------------------------------
 
-const getData = PurchasesDataD.listPurchases.map((item)=>{
-  arrayData.push({
-    behind: item.behind,
-    amount: `${item.currencyCode} ${item.amountDue}`,
-  })
-})
+		// Setting main providers data
+		const mainProvidersData = PurchasesDataD.listPurchasesParClient.map((item) => {
+			return {
+				amount: `${item.currencyCode} ${item.amountDue}`,
+				contact: item.contactName,
+			};
+		});
 
-const dataJson = {
-  rowData: arrayData
+		this.setState((prevState) => ({
+			mainProviders: {
+				...prevState.mainProviders,
+				rowData: mainProvidersData,
+			},
+		}));
+	}
+
+	// ----------------------------------------------------
+
+	// Component rendering
+	render() {
+		return (
+			<div className={styles.Sales}>
+				<div className={styles.Bills}>
+					<div className={styles.SalesTable}>
+						<div className="ag-theme-alpine dashboardBusiness">
+							<AgGridReact
+								columnDefs={this.state.overdueBill.columnDefs}
+								groupHeaderHeight={50}
+								headerHeight={50}
+								rowData={this.state.overdueBill.rowData}
+								defaultColDef={this.state.overdueBill.defaultColDef}
+							></AgGridReact>
+						</div>
+					</div>
+					<div className={styles.SalesChart}>
+						<div className={styles.ChartTitle}>Cuentas atrasadas</div>
+						<div className={styles.ChartContainer}>
+							<Doughnut
+								data={this.state.charts.data}
+								options={this.state.charts.options}
+							/>
+						</div>
+					</div>
+				</div>
+				<div className={styles.Providers}>
+					<div className={styles.SalesTable}>
+						<div className="ag-theme-alpine dashboardBusiness">
+							<AgGridReact
+								columnDefs={this.state.mainProviders.columnDefs}
+								groupHeaderHeight={50}
+								headerHeight={50}
+								rowData={this.state.mainProviders.rowData}
+								defaultColDef={this.state.mainProviders.defaultColDef}
+							></AgGridReact>
+						</div>
+					</div>
+					<div className={styles.SalesChart}>
+						<div className={styles.ChartTitle}>
+							Principales proveedores a pagar
+						</div>
+						<div className={styles.ChartContainer}>
+							<Doughnut
+								data={this.state.charts.data}
+								options={this.state.charts.options}
+								width={200}
+							/>
+						</div>
+					</div>
+				</div>
+			</div>
+		);
+	}
 }
 
-const arrayData2 = [];
-
-const getData2 = PurchasesDataD.listPurchasesParClient.map((item)=>{
-  arrayData2.push({
-    amount: `${item.currencyCode} ${item.amountDue}`,
-    contact: item.contactName,
-  })
-})
-
-const dataJson2 = {
-  rowData: arrayData2
-}
-
-
-const columnDefs = {
-  columnDefs: [
-      {headerName: 'Overdue bills', headerClass: styles.Title,
-        children: [
-          {headerName: "Behind", field: "behind", sortable: true, filter: false, headerClass: styles.SubTitle},
-          {headerName: "Amount", field: "amount", sortable: true, filter: false, headerClass: styles.SubTitle},
-        ]
-      },
-  ]
-}
-
-const columnDefs2 = {
-  columnDefs: [
-      {headerName: 'Main Suppliers', headerClass: styles.Title,
-        children: [
-          {headerName: "Contact", field: "contact", sortable: true, filter: false, headerClass: styles.SubTitle},
-          {headerName: "Amount", field: "amount", sortable: true, filter: false, headerClass: styles.SubTitle},
-        ]
-      },
-  ]
-}
-
-const purchases = (props) =>{
-  return (
-    <div className={styles.Sales} >
-      <div className={styles.Overdue}>
-        <div className={styles.SalesTable}>
-          <div className="ag-theme-alpine" style={ {height: '800px', width: '100%'} }>
-            <AgGridReact
-                columnDefs={columnDefs.columnDefs}
-                groupHeaderHeight={50}
-                headerHeight={50}
-                rowData={dataJson.rowData}
-                allowDragFromColumnsToolPanel={false}
-                enableMultiRowDragging={false}
-                colWidth={160}
-                // frameworkComponents = {frameworkComponents}
-                defaultColDef={{
-                  sortable: true,
-                  filter: false,
-                  headerComponentFramework: SortableHeaderComponent,
-              }}>
-            </AgGridReact>
-          </div>
-        </div>
-        <div className={styles.SalesChart}>
-          <div className={styles.ChartTitle}>
-            Overdue Bills
-          </div>
-          <Doughnut data={data} legend={false} />
-        </div>
-      </div>
-      <div className={styles.Suppliers}>
-        <div className={styles.SalesTable}>
-          <div className="ag-theme-alpine" style={ {height: '800px', width: '100%'} }>
-            <AgGridReact
-              columnDefs={columnDefs2.columnDefs}
-              groupHeaderHeight={50}
-              headerHeight={50}
-              rowData={dataJson2.rowData}
-              allowDragFromColumnsToolPanel={false}
-              enableMultiRowDragging={false}
-              colWidth={160}
-              // frameworkComponents = {frameworkComponents}
-              defaultColDef={{
-                sortable: true,
-                filter: false,
-                headerComponentFramework: SortableHeaderComponent,
-            }}>
-              </AgGridReact>
-          </div>
-        </div>
-        <div className={styles.SalesChart}>
-          <div className={styles.ChartTitle}>
-            Main Suppliers
-          </div>
-          <Doughnut data={data} legend={false} />
-        </div>
-      </div>
-    </div>
-  );
-};
-
-export default purchases;
+export default Purchases;

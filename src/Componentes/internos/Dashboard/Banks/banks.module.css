@@ -22,9 +22,8 @@
 }
 
 .Button {
-    padding: 0px 35px;
-    background-color: #AF9CF6;
-    border-radius: 20px 20px;
+    background-color: #7158E2;
+    border-radius: 20px;
     margin-top: 5px;
     margin-bottom: 5px;
     justify-content: center;
@@ -33,11 +32,11 @@
     flex:1;
     color:white;
     cursor: pointer;
+    padding: 0 15px;
 }
 
 .Button:hover {
     background-color: #5540C2;
-    color:white
 }
 
 .HeaderStyle {

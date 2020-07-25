@@ -54,24 +54,24 @@ const useStyles = makeStyles((theme) => ({
 
 const Label = (props) => <div className={styles.TabStyle}>{props.label}</div>;
 
-export default function SimpleTabs() {
+export default function SimpleTabs(props) {
 	const classes = useStyles();
 	const [value, setValue] = useState(0);
-	const [tabItem, selectTabItem] = useState(false);
+	const [tabItem, selectTabItem] = useState("CuentasBancarias");
 
-	const handleChange = (event,name,index) => {
+	const handleChange = (name,index) => {
 		selectTabItem(name)
 		setValue(index);
 	};
 
 	return (
-		<div id="dashboardByModule" className={classes.root}>
+		<div id="dashboardWorkspace" className={classes.root}>
 			{/*Pintado de grid dependiendo del menu superior del grid*/}
 			<Menu style={{ display: "flex" }}>
 				<Menu.Item
 					name="CuentasBancarias"
 					active={tabItem === "CuentasBancarias" ? true : false}
-					onClick={(event) => handleChange(event,"CuentasBancarias",0)}
+					onClick={(event) => handleChange("CuentasBancarias",0)}
 				>
 					{tabItem === "CuentasBancarias" ? (
 						<span style={{ color: "#7158e2" }}>Cuentas bancarias</span>
@@ -84,7 +84,7 @@ export default function SimpleTabs() {
 				<Menu.Item
 					name="Ventas"
 					active={tabItem === "Ventas" ? true : false}
-					onClick={(event) => handleChange(event,"Ventas",1)}
+					onClick={(event) => handleChange("Ventas",1)}
 				>
 					{tabItem === "Ventas" ? (
 						<span style={{ color: "#7158e2" }}>Ventas</span>
@@ -97,7 +97,7 @@ export default function SimpleTabs() {
 				<Menu.Item
 					name="Compras"
 					active={tabItem === "Compras" ? true : false}
-					onClick={(event) => handleChange(event,"Compras",2)}
+					onClick={(event) => handleChange("Compras",2)}
 				>
 					{tabItem === "Compras" ? (
 						<span style={{ color: "#7158e2" }}>Compras</span>
@@ -109,7 +109,7 @@ export default function SimpleTabs() {
 				</Menu.Item>
 			</Menu>
 			<TabPanel value={value} index={0}>
-				<BankPanel />
+				<BankPanel orgIdSelected={props.orgIdSelected} />
 			</TabPanel>
 			<TabPanel value={value} index={1}>
 				<SalesPanel />

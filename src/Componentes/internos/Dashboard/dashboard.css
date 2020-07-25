@@ -1,27 +1,113 @@
-#dashboardByModule{
-    border:1px solid #e7e7eb;
-    border-radius: 10px;
+#dashboardWorkspace {
+	border: 1px solid #e7e7eb;
+	border-radius: 10px;
 }
 
-#dashboardByModule .ui.menu{
-    margin-top:0!important;
-    border-style: none!important;
-    width: calc(100% - 1px);
-    border-bottom: 1px solid #e7e7eb!important;
+#dashboardWorkspace .MuiBox-root {
+	padding: 0 10px !important;
+}
+
+#dashboardWorkspace .ui.menu {
+	margin-top: 0 !important;
+	border-style: none !important;
+	width: calc(100% - 1px);
+	border-bottom: 1px solid #e7e7eb !important;
+}
+
+.dashboardModule {
+	height: 470px;
+}
+
+.dashboardModule .ag-root-wrapper {
+	border-style: none !important;
+}
+
+.dashboardModule .ag-header {
+	background-color: transparent !important;
+}
+
+.dashboardGridColumnGroup {
+	padding: 10px !important;
+	background-color: #fff;
+}
+
+.dashboardGridColumnGroup .ag-header-group-text {
+	font-family: "Goldplay", sans-serif;
+	font-weight: 700;
+}
+
+.dashboardGridColumn {
+	background-color: #f5f6fa;
+	border-top-color: #e5e5ea !important;
+}
+
+.dashboardGridEmptyColumn {
+	border-top-style: none !important;
+}
+
+.dashboardGridRow {
+	border-style: none !important;
+}
+
+.dashboardGridCell {
+	border-bottom: 1px solid #e7e7eb !important;
+	justify-content: center;
+}
+
+.dashboardGridCell .ag-react-container{
+	height: 100%;
+	display: flex;
+}
+
+.dashboardGridCellBusiness {
+	justify-content: center;
+	white-space: initial;
+	line-height: 1 !important;
+	text-align: center;
+}
+
+.dashboardModule .ag-header-cell,
+.dashboardModule .ag-header-group-cell {
+	padding: 0 5px;
+}
+
+.dashboardGridFirstColum {
+	background-color: #fff;
+	border-top-color: transparent !important;
+	justify-content: flex-start;
+	padding-left: 15px !important;
+}
+
+.dashboardGridFirstColum .ag-header-cell-label {
+	justify-content: flex-start;
+}
+
+.dashboardModule .dashboardGridRow .dashboardGridCell:first-child {
+	justify-content: flex-start;
 }
 
 .TabStyle {
-    font-size: 14px;
-    color:#232c51;
-    font-weight: bold;
-    outline: none;
-    text-transform: capitalize;
+	font-size: 14px;
+	color: #232c51;
+	font-weight: bold;
+	outline: none;
+	text-transform: capitalize;
 }
 
 .TabStyle:focus {
-    outline: none;
+	outline: none;
 }
 
 .TabsContainer {
-    background-color: #F3F3F3;
-} 
+	background-color: #f3f3f3;
+}
+
+.dashboardBusiness {
+	height: 365px;
+}
+
+.dashboardBusiness .ag-root-wrapper {
+	border-top-style: solid !important;
+	border-top-right-radius: 10px;
+	border-top-left-radius: 10px;
+}

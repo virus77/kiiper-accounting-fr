@@ -425,7 +425,7 @@ export default function Dashboard(props) {
 							<Title>Dashboard</Title>
 							<Grid item xs={12}>
 								<Paper className={classes.paper}>
-									<DashboardPanel />
+									<DashboardPanel orgIdSelected={orgIdSelected} />
 								</Paper>
 							</Grid>
 						</Grid>

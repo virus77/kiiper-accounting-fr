@@ -4,10 +4,6 @@ body {
 }
 
 /* estilo del contenido del grid */
-.ag-header-container {
-	background-color: #f5f6fa;
-}
-
 .ag-theme-alpine .ag-row {
 	color: #232c51 !important;
 	border-color: #e5e5ea;
@@ -270,7 +266,7 @@ body ::-webkit-scrollbar-track {
 
 .ag-theme-alpine .ag-header {
 	border-bottom-style: none !important;
-	background-color: #f5f6fa !important;
+	background-color: #f5f6fa;
 }
 
 .ag-root .ag-unselectable .ag-layout-normal {
@@ -333,11 +329,6 @@ body ::-webkit-scrollbar-track {
 	color: #232c51 !important;
 }
 
-.ag-theme-alpine .ag-header-cell,
-.ag-theme-alpine .ag-header-group-cell {
-	padding-left: 20px!important;
-}
-
 /* cels border and font color */
 .ag-theme-alpine
 	.ag-ltr
@@ -351,8 +342,7 @@ body ::-webkit-scrollbar-track {
 	.ag-cell-focus:not(.ag-cell-range-selected),
 .ag-theme-alpine .ag-rtl .ag-has-focus .ag-cell-focus.ag-cell-range-single-cell,
 .ag-theme-alpine .ag-rtl .ag-cell-range-single-cell.ag-cell-range-handle {
-	border-color: #7158e2 !important;
-	color: #232c51 !important;
+	border-color: transparent !important;
 }
 
 .ui.menu {
@@ -471,34 +461,28 @@ html .ui-button.ui-state-disabled:hover {
 .grid-cell-cenLeft {
 	text-align: center;
 	margin-left: 10px;
-	justify-content: center;
 }
 
 .grid-cell-Left {
 	margin-left: 2px;
-	justify-content: center;
 }
 
 .grid-cell-alignRight {
 	text-align: right;
-	justify-content: center;
 }
 
 /* estilo de mes y año en calendar  */
 .ui-datepicker select.ui-datepicker-month,
 .ui-datepicker select.ui-datepicker-year {
-	border-color: #7158e2;
+	border-color: #e7e7eb;
 	color: #212529;
 	border-radius: 5px;
 	color: #6c757d;
-}
-
-.ag-theme-alpine .ag-header-cell,
-.ag-theme-alpine .ag-header-group-cell {
-	padding-left: 18px;
-	padding-right: 0px;
+	width: auto;
+	margin: 0 5px;
 }
 
 .ag-theme-alpine .ag-ltr .ag-header-select-all {
-	margin-right: 0px !important;
+	margin-right: 12px;
+	margin-left:2px;
 }
