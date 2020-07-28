@@ -283,8 +283,6 @@ class BookTable extends Component {
 			props: { bookType },
 		} = this;
 
-		const closeBtn = <button className="close" onClick={(event) => this.manageModalShow(false, bookType)}>X</button>
-
 		return (
 			<div className="bookTableWrapper">
 				{/** Botón para generar un periodo específico de libro */}
