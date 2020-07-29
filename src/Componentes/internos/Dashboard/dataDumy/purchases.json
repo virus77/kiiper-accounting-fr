@@ -57,41 +57,6 @@
             "amountDue": 37682.9,
             "behind": "2 weeks",
             "currencyCode": "VEF"
-        },
-        {
-            "amountDue": 23049.98,
-            "behind": "2 weeks",
-            "currencyCode": "VEF"
-        },
-        {
-            "amountDue": 21000,
-            "behind": "2 weeks",
-            "currencyCode": "VEF"
-        },
-        {
-            "amountDue": 19999.98,
-            "behind": "2 weeks",
-            "currencyCode": "VEF"
-        },
-        {
-            "amountDue": 5400,
-            "behind": "2 weeks",
-            "currencyCode": "VEF"
-        },
-        {
-            "amountDue": 1490.3,
-            "behind": "2 weeks",
-            "currencyCode": "VEF"
-        },
-        {
-            "amountDue": 1200,
-            "behind": "2 weeks",
-            "currencyCode": "VEF"
-        },
-        {
-            "amountDue": 282.58,
-            "behind": "2 weeks",
-            "currencyCode": "VEF"
         }
     ],
     "listPurchasesbyGroup": [

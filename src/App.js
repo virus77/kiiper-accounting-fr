@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import Cookies from 'js-cookie';
+import $ from 'jquery';
 
 //Css
 import './App.css';
@@ -7,7 +8,7 @@ import kiiperLogoSm from './Imagenes/Kiiper_logoSm.png';
 import Principal from './Componentes/Principal';
 
 //Controles
-import { Button, Form, Row, Col } from 'react-bootstrap';
+import { Form } from 'react-bootstrap';
 
 class App extends Component {
   // Constructor of App component
@@ -30,21 +31,7 @@ class App extends Component {
 
     // Storing access token requested to Xero in a cookie
     this.setState({ accessToken: Cookies.get('accessToken') });
-
-    // If access token to Xero does not exist in the App state
-    if (!Cookies.get('accessToken')) {
-
-      // Go and open the login page to Xero
-      fetch('/getConsentUrl')
-        .then(res => res.json())
-        .then(consentUrl => window.open(consentUrl, "_self"))
-        .catch((error) => {
-          console.log(error);
-        });
-    }
-    // If access token does exist
-    else {
-
+    if (Cookies.get('accessToken')) {
       // Get organizations from logged user
       fetch('/getGrantedOrganisations')
         .then(res => res.json())
@@ -62,6 +49,48 @@ class App extends Component {
           console.log(error);
         });
     }
+  }
+
+  //Acceso de kiiper a xero y de xero a kiiper para el acceso a 
+  //las organizaciones
+  accesToXero = async () => {
+    // Fetch URL with parameters
+    let email = document.getElementById("ctrlEmail").value;
+    let password = document.getElementById("ctrlPassword").value;
+    var param = { Email: email, Password: password };
+    var accestoken = "";
+    $.ajax({
+      url: "http://ai.quierocasa.com.mx:50236/WsCaptcha.asmx/callAccessToXero",
+      data: JSON.stringify(param),
+      dataType: "json",
+      type: "POST",
+      async: false,
+      crossDomain: true,
+      contentType: "application/json; charset=utf-8",
+      success: function (data) {
+        if (data !== null) {
+          accestoken = data.d;
+        }
+      },
+      error: function (a, b, error) {
+        alert(error);
+      }
+    });
+
+    // Fetch URL with parameters
+    const fetchURL = `/callback?access_token=${accestoken}`;
+
+    // Fetching data from the endpoint
+    await fetch(fetchURL)
+      .then((res) => {
+        res.json()
+      })
+      .then((consentUrl) => {
+        window.open(consentUrl, "_self");
+      })
+      .catch((error) => {
+        console.log(error);
+      })
   }
 
   logoutFunction = () => {
@@ -83,70 +112,46 @@ class App extends Component {
       this.state.show ?
         document.body.className = "bodycolor" :
         document.body.className = "bodycolorForm" :
-      document.body.style.background = "#f5f6fa";
+      document.body.style.background = "#f3f3f3";
 
     return (
       <div>
         {/* Acción utilizada ocultar el formulario de inicio de sesión y darle paso al contenido */}
         {this.state.isInActive ?
-          /*  Acción utilizada ocultar el logo de kiiper para darle paso al formulario de inicio de sesion */
+          /* Acción utilizada ocultar el logo de kiiper para darle paso al formulario de inicio de sesion */
           <div className="App">
-            <div style={{ padding: "30px" }}>
-              <img style={{height:"20px"}} src={kiiperLogoSm} alt="img-logokiiper" />
+            <div style={{ padding: "35px" }}>
+              <img src={kiiperLogoSm} alt="img-logokiiper" />
             </div>
             <div className="formulario">
-              <div className="col-12" style={{ display: "flex", flexDirection: "column", alignItems: "center" }}>
-              <h1 style={{ padding: "0", fontSize: "2.5em", color: "#232C51" }}>
+              <div className="col-12">
+                <br />
+                <div style={{ padding: "40px 0px 0px 35px", fontSize: "30pt", color: "#232C51", fontWeight: "bold" }}>
                   Bienvenidos a kiiper
-                    </h1>
-                <h2 style={{ margin: "0", fontSize: "1.5em", color: "#232C51", fontWeight: 300 }}>
-                  Accounting routines done!
-                    </h2>
-                {/* <div style={{ padding: "45px 35px 0px 35px", fontSize: "12pt", color: "#232C51" }}>
-                  Para continuar debes ingresar tus datos e iniciar sesión
-                    </div>*/}
-                <Form style={{ padding: "50px 0px 0px 0px", fontSize: "1em", color: "#232C51" }}>
-                  {/* <Form.Group controlId="formBasicEmail">
-                      <Form.Label >Correo electrónico: </Form.Label>
-                      <Form.Control type="email" placeholder="ej. nombre@corrreo.com" />
-                      <Form.Text className="text-muted">
-                      </Form.Text>
-                    </Form.Group>
-                    <div style={{ padding: "10px 0px 0px 0px" }}>
-                      <Form.Group controlId="formBasicPassword">
-                        <Form.Label>Contraseña: </Form.Label>
-                        <Form.Control type="password" placeholder="Password" />
-                      </Form.Group>
-                    </div>
-                    <div style={{ padding: "10px 0px 0px 0px" }}>
-                      <Row>
-                        <Col>
-                          <Form.Group controlId="formBasicCheckbox">
-                            <Form.Check type="checkbox" label="No cerrar sesión" />
-                          </Form.Group>
-                        </Col>
-                        <Col>
-                          <Form.Group controlId="formBasicCheckbox">
-                            <Form.Label className="label">Olvidé mi contraseña</Form.Label>
-                          </Form.Group>
-                        </Col>
-                      </Row>
-                    </div>*/}
-                  <div style={{ padding: "0px 0px 0px 0px" }}>
-                    <Button style={{fontFamily:"'Muli',sans-serif",fontWeight:100}} type="submit" id="xeroSyncAnchor" onClick={() => { this.onIniciarProceso() }}>
-                      Iniciar sesión
-                      </Button>
                   </div>
-                  {/*<Row style={{ padding: "10px 0px 0px 0px" }}>
-                      <Col>
-                        <Form.Group controlId="formBasicCheckbox">
-                          <Form.Label className="label">¿No tienes cuenta con kiiper?</Form.Label>
-                        </Form.Group>
-                      </Col>
-                    </Row>*/}
-                  {/* <p className="accessToken text-center"><b style={{ fontSize: "11pt", color: "gray" }} >Access Token: </b>{accessToken}</p>
-                      <a id="xeroSyncAnchor2" href="/getConsentUrl"><img src="connect_xero_button_blue.png" className="img-fluid" alt="" /></a>*/}
+                <div style={{ padding: "25px 0px 0px 35px", fontSize: "18pt", color: "#232C51" }}>
+                  Accounting routines done!
+                  </div>
+                <div style={{ padding: "45px 35px 0px 35px", fontSize: "12pt", color: "#232C51" }}>
+                  Para continuar debes ingresar tus datos e iniciar sesión
+                  </div>
+                <Form style={{ padding: "20px 35px 0px 35px", fontSize: "11pt", color: "#232C51" }}>
+                  <Form.Group>
+                    <Form.Label >Correo electrónico: </Form.Label>
+                    <Form.Control id="ctrlEmail" type="email" placeholder="ej. nombre@corrreo.com" />
+                  </Form.Group>
+                  <div style={{ padding: "10px 0px 0px 0px" }}>
+                    <Form.Group>
+                      <Form.Label>Contraseña: </Form.Label>
+                      <Form.Control id="ctrlPassword" type="password" placeholder="Password" />
+                    </Form.Group>
+                  </div>
+                  <div style={{ padding: "40px 0px 0px 0px", color: "white", textAlign: "right" }}>
+                    <span id="xeroSyncAnchor" onClick={() => this.accesToXero()}>Iniciar sesión</span>
+                    <span id="spnAccessToken" style={{ display: "none" }}>{this.state.accessToken}</span>
+                  </div>
                 </Form>
+
               </div>
             </div>
           </div> :
