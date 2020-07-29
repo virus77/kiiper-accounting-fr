@@ -84,15 +84,16 @@ class Bank extends Component {
 							cellEditor: Datepicker,
 						},
 						{
-							headerName: "Cantidad",
+							headerName: "Saldo",
 							field: "amount",
 							headerClass: `dashboardGridColumn ${styles.HeaderStyle}`,
 							cellClass: "dashboardGridCell",
 							editable: true,
 							cellEditor: AmountBalanceReview,
+							valueFormatter: currencyFormatter,
 						},
 						{
-							headerName: "Verificar",
+							headerName: "",
 							field: "verify",
 							cellRenderer: "paramsRenderer",
 							sortable: false,
@@ -131,7 +132,7 @@ class Bank extends Component {
 							},
 						},
 						{
-							headerName: "Cantidad total",
+							headerName: "Monto",
 							field: "totalAmount",
 							headerClass: `dashboardGridColumn ${styles.HeaderStyle}`,
 							cellClass: "dashboardGridCell",
@@ -156,7 +157,7 @@ class Bank extends Component {
 					verified: "Verificar",
 					emptyColumn: "",
 					pendingItems: "2",
-					totalAmount: "12301",
+					totalAmount: "12.301,56",
 					behindB: "+3 months",
 				},
 				{
@@ -169,7 +170,7 @@ class Bank extends Component {
 					verified: "Verificar",
 					emptyColumn: "",
 					pendingItems: "2",
-					totalAmount: "12301",
+					totalAmount: "12.301,56",
 					behindB: "+3 months",
 				},
 				{
@@ -182,7 +183,7 @@ class Bank extends Component {
 					verified: "Verificar",
 					emptyColumn: "",
 					pendingItems: "2",
-					totalAmount: "12301",
+					totalAmount: "12.301,56",
 					behindB: "+3 months",
 				},
 				{
@@ -195,7 +196,7 @@ class Bank extends Component {
 					verified: "Verificar",
 					emptyColumn: "",
 					pendingItems: "¡Grandioso! Tu banco está está conciliado",
-					totalAmount: "12301",
+					totalAmount: "12.301,56",
 					behindB: "+3 months",
 				},
 				{
@@ -208,7 +209,7 @@ class Bank extends Component {
 					verified: "Verificar",
 					emptyColumn: "",
 					pendingItems: "2",
-					totalAmount: "12301",
+					totalAmount: "12.301,56",
 					behindB: "+3 months",
 				},
 				{
@@ -221,7 +222,7 @@ class Bank extends Component {
 					verified: "Verificar",
 					emptyColumn: "",
 					pendingItems: "2",
-					totalAmount: "12301",
+					totalAmount: "12.301,09",
 					behindB: "+3 months",
 				},
 			],
@@ -274,6 +275,22 @@ class Bank extends Component {
 
 export default Bank;
 
+// ----------------------------------------------------
+
+function currencyFormatter(params) {
+	if (params.value) return formatNumber(params.value);
+	else return "0";
+}
+
+function formatNumber(amount) {
+	const numberParts = amount.split(".");
+	const formatInteger = parseFloat(numberParts[0]).toFixed(2).replace(/(\d)(?=(\d{3})+\.)/g, "1.") ;
+	const displayedNumber = formatInteger.substring(0, formatInteger.length - 3) + "," + numberParts[1]
+	return displayedNumber;
+}
+
+// ----------------------------------------------------
+
 function AmountBalanceReview() {}
 AmountBalanceReview.prototype.init = function (params) {
 	let container = document.createElement("div");
@@ -300,6 +317,8 @@ AmountBalanceReview.prototype.afterGuiAttached = function () {
 	this.eInput.focus();
 	this.eInput.select();
 };
+
+// ----------------------------------------------------
 
 function Datepicker() {}
 Datepicker.prototype.init = function (params) {

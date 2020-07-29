@@ -78,21 +78,24 @@ class Purchases extends Component {
 				data: {
 					datasets: [
 						{
-							data: [1440000, 2000000, 3000000],
-							backgroundColor: ["#5EFEFF", "#9680ED", "#232C51"],
+							data: [0.2, 0.4, 0.3, 0.1],
+							backgroundColor: ["#44CDDB", "#9680ED", "#232C51", "#86FFF5"],
 						},
 					],
-					labels: ["Dayne Guarimara", "Eduardo Alvarez", "Alcaldia Municipio"],
+					labels: ["1 months", "2 months", "3 months", "+3 months"],
 				},
 				options: {
 					maintainAspectRatio: false,
 					plugins: {
 						datalabels: {
-							color: "#8596CA",
+							color: "#fff",
 							font: {
 								family: "'Goldplay',sans-serif",
 								weight: "700",
 							},
+							formatter: function(value,context) {
+								return Math.round(value*100) + '%';
+							 }
 						},
 					},
 					legend: {

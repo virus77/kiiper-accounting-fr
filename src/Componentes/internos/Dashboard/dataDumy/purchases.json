@@ -3,71 +3,60 @@
     "listPurchasesParClient": [
         {
             "amountDue": 22393590.17,
-            "behind": "3 months",
+            "behind": "1 months",
             "contactName": "PROSALMED, C.A",
             "currencyCode": "VEF"
         },
         {
             "amountDue": 9671583.52,
-            "behind": "3 months",
+            "behind": "2 months",
             "contactName": "NETUNO, C.A.",
             "currencyCode": "VEF"
         },
         {
             "amountDue": 105722.4,
-            "behind": "2 weeks",
+            "behind": "3 months",
             "contactName": "Ingrid Lilibeth Zerpa Gonzalez",
             "currencyCode": "VEF"
         },
         {
             "amountDue": 47413.79,
-            "behind": "2 weeks",
+            "behind": "+3 months",
             "contactName": "Panaderia Pasteleria Cueva de Iria C.A.",
-            "currencyCode": "VEF"
-        },
-        {
-            "amountDue": 37965.48,
-            "behind": " +3 weeks",
-            "contactName": "Excelsior Gama Supermercados, C.A.",
             "currencyCode": "VEF"
         }
     ],
     "listPurchases": [
         {
             "amountDue": 22393590.17,
-            "behind": "3 months",
+            "behind": "1 months",
             "currencyCode": "VEF"
         },
         {
             "amountDue": 9671583.52,
-            "behind": "3 months",
+            "behind": "2 months",
             "currencyCode": "VEF"
         },
         {
             "amountDue": 105722.4,
-            "behind": "2 weeks",
+            "behind": "3 months",
             "currencyCode": "VEF"
         },
         {
             "amountDue": 47413.79,
-            "behind": "2 weeks",
-            "currencyCode": "VEF"
-        },
-        {
-            "amountDue": 37682.9,
-            "behind": "2 weeks",
+            "behind": "+3 months",
             "currencyCode": "VEF"
         }
     ],
     "listPurchasesbyGroup": [
         {
-            "amountDue": 0,
-            "behind": "Not Expired",
-            "currencyCode": ""
+            "amountDue": 263241.93,
+            "behind": "1 month",
+            "currencyCode": "VEF"
         },
         {
             "amountDue": 263241.93,
-            "behind": "1 month",
+            "behind": "2 month",
             "currencyCode": "VEF"
         },
         {
@@ -76,9 +65,9 @@
             "currencyCode": "VEF"
         },
         {
-            "amountDue": 0,
+            "amountDue": 32065173.69,
             "behind": "+3 months",
-            "currencyCode": ""
+            "currencyCode": "VEF"
         }
     ]
 }

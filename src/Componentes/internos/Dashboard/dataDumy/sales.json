@@ -3,19 +3,19 @@
     "listSalesParClient": [
         {
             "amountDue": 937188799.6,
-            "behind": "2 months",
+            "behind": "1 months",
             "contactName": "Telefonica Venezolana C.A.",
             "currencyCode": "VEF"
         },
         {
             "amountDue": 7460.35,
-            "behind": "2 weeks",
+            "behind": "2 months",
             "contactName": "Hapag - Lloyd Venezuela C.A.",
             "currencyCode": "USD"
         },
         {
             "amountDue": 1482.18,
-            "behind": "2 months",
+            "behind": "3 months",
             "contactName": "AT&T Global Network Services Venezuela, LLC",
             "currencyCode": "USD"
         },
@@ -29,17 +29,17 @@
     "listSales": [
         {
             "amountDue": 937188799.6,
-            "behind": "2 months",
+            "behind": "1 months",
             "currencyCode": "VEF"
         },
         {
             "amountDue": 7460.35,
-            "behind": "2 weeks",
+            "behind": "2 months",
             "currencyCode": "USD"
         },
         {
             "amountDue": 1482.18,
-            "behind": "2 months",
+            "behind": "3 months",
             "currencyCode": "USD"
         },
         {
@@ -50,13 +50,13 @@
     ],
     "listSalesbyGroup": [
         {
-            "amountDue": 0,
-            "behind": "Not Expired",
-            "currencyCode": ""
+            "amountDue": 7460.35,
+            "behind": "1 month",
+            "currencyCode": "USD"
         },
         {
             "amountDue": 7460.35,
-            "behind": "1 month",
+            "behind": "2 month",
             "currencyCode": "USD"
         },
         {
