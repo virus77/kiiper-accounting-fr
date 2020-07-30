@@ -215,9 +215,9 @@ const calls = {
 	/// @param {text} endDate -  Format date DD/MM/YYYY"
 	/// @param {text} endPoint - Ruta de acceso al Endpoint dependiendo si es compras o venntas
 	getBook: (id_organisation, Periodo, initialDate, endDate, endPoint) => {
-		
+
 		// Fetch URL with parameters
-		const fetchURL = endPoint +`?id_organisation=${id_organisation}&initialDate=${initialDate}&endDate=${endDate}`;
+		const fetchURL = endPoint + `?id_organisation=${id_organisation}&initialDate=${initialDate}&endDate=${endDate}`;
 
 		return (
 			// Fetching data from the endpoint
@@ -285,6 +285,7 @@ const calls = {
 				})
 		);
 	},
+	
 	/// Petición para obtener el libro de Compras y ventas en Xero
 	/// deppendiendo del periodo
 	/// @param {text} id_organisation - organisation id
@@ -362,6 +363,25 @@ const calls = {
 					return false;
 				})
 		);
+	},
+
+	/// Petición para integrar el AccesToken de Xero a kiiper
+	/// @param {text} accesToken - accesToken proveniente de xero desde el bot
+	getFinalCallback: async (accesToken) => {
+		// Fetch URL with parameters
+		const fetchURL = `/finalCallback?access_token=${accesToken}`;
+
+		// Fetching data from the endpoint
+		return await fetch(fetchURL)
+			.then((res) => {
+				res.json()
+			})
+			.then((data) => {
+				return { data: data };
+			})
+			.catch((error) => {
+				console.log(error);
+			});
 	},
 
 	/// Consultar lista de declaraciones

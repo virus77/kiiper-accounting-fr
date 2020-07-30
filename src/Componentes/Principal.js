@@ -409,7 +409,7 @@ export default function Dashboard(props) {
 										>
 											Impuestos
 									</NavDropdown.Item>
-										<NavDropdown.Item eventKey={3.2} onClick={(event) => handleListItemClick(event, 3.2)} href="#Dashboard/Grupos">Dashboard Group</NavDropdown.Item>
+										{/*<NavDropdown.Item eventKey={3.2} onClick={(event) => handleListItemClick(event, 3.2)} href="#Dashboard/Grupos">Dashboard Group</NavDropdown.Item>*/}
 									</NavDropdown>
 								</Nav>
 							</Navbar.Collapse>
@@ -512,7 +512,7 @@ export default function Dashboard(props) {
 								</Paper>
 							</Grid>
 						</Grid>
-					) : event === "xeroOrgName" || event === 3.2 ? (
+					) : event === -1 ? (
 						<Grid container spacing={2}>
 							<div className="breadcrumbClass">
 								<div id="moduleTitle">

@@ -44,7 +44,12 @@
         },
         {
             "amountDue": 47413.79,
-            "behind": "+3 meses",
+            "behind": "2 weeks",
+            "currencyCode": "VEF"
+        },
+        {
+            "amountDue": 37682.9,
+            "behind": "2 weeks",
             "currencyCode": "VEF"
         }
     ],

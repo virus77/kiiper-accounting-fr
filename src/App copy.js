@@ -1,5 +1,7 @@
 import React, { Component } from 'react';
 import Cookies from 'js-cookie';
+import calls from './Componentes/Js/calls'
+import $ from 'jquery';
 
 //Css
 import './App.css';
@@ -7,7 +9,7 @@ import kiiperLogoSm from './Imagenes/Kiiper_logoSm.png';
 import Principal from './Componentes/Principal';
 
 //Controles
-import { Button, Form, Row, Col } from 'react-bootstrap';
+import { Form } from 'react-bootstrap';
 
 class App extends Component {
   // Constructor of App component
@@ -30,21 +32,8 @@ class App extends Component {
 
     // Storing access token requested to Xero in a cookie
     this.setState({ accessToken: Cookies.get('accessToken') });
-
-    // If access token to Xero does not exist in the App state
-    if (!Cookies.get('accessToken')) {
-
-      // Go and open the login page to Xero
-      fetch('/getConsentUrl')
-        .then(res => res.json())
-        .then(consentUrl => window.open(consentUrl, "_self"))
-        .catch((error) => {
-          console.log(error);
-        });
-    }
-    // If access token does exist
-    else {
-
+    
+    if (Cookies.get('accessToken')) {
       // Get organizations from logged user
       fetch('/getGrantedOrganisations')
         .then(res => res.json())
@@ -62,6 +51,36 @@ class App extends Component {
           console.log(error);
         });
     }
+  }
+
+  //Acceso de kiiper a xero y de xero a kiiper para el acceso a 
+  //las organizaciones
+  accesToXero = async () => {
+    // Fetch URL with parameters
+    let email = document.getElementById("ctrlEmail").value;
+    let password = document.getElementById("ctrlPassword").value;
+    var param = { Email: email, Password: password };
+    var access_token = "";
+    $.ajax({
+      url: "http://ai.quierocasa.com.mx:50236/WsCaptcha.asmx/callAccessToXero",
+      data: JSON.stringify(param),
+      dataType: "json",
+      type: "POST",
+      async: false,
+      crossDomain: true,
+      contentType: "application/json; charset=utf-8",
+      success: function (data) {
+        if (data !== null) {
+          access_token = data.d;
+        }
+      },
+      error: function (a, b, error) {
+        alert(error);
+      }
+    });
+
+    let consentUrl = await calls.getFinalCallback(access_token);
+    window.open(consentUrl, "_self");
   }
 
   logoutFunction = () => {
@@ -107,47 +126,22 @@ class App extends Component {
                   Para continuar debes ingresar tus datos e iniciar sesión
                   </div>
                 <Form style={{ padding: "20px 35px 0px 35px", fontSize: "11pt", color: "#232C51" }}>
-                  <Form.Group controlId="formBasicEmail">
+                  <Form.Group>
                     <Form.Label >Correo electrónico: </Form.Label>
-                    <Form.Control type="email" placeholder="ej. nombre@corrreo.com" />
-                    <Form.Text className="text-muted">
-                    </Form.Text>
+                    <Form.Control id="ctrlEmail" type="email" placeholder="ej. nombre@corrreo.com" />
                   </Form.Group>
                   <div style={{ padding: "10px 0px 0px 0px" }}>
-                    <Form.Group controlId="formBasicPassword">
+                    <Form.Group>
                       <Form.Label>Contraseña: </Form.Label>
-                      <Form.Control type="password" placeholder="Password" />
+                      <Form.Control id="ctrlPassword" type="password" placeholder="Password" />
                     </Form.Group>
                   </div>
-                  <div style={{ padding: "10px 0px 0px 0px" }}>
-                    <Row>
-                      <Col>
-                        <Form.Group controlId="formBasicCheckbox">
-                          <Form.Check type="checkbox" label="No cerrar sesión" />
-                        </Form.Group>
-                      </Col>
-                      <Col>
-                        <Form.Group controlId="formBasicCheckbox">
-                          <Form.Label className="label">Olvidé mi contraseña</Form.Label>
-                        </Form.Group>
-                      </Col>
-                    </Row>
+                  <div style={{ padding: "40px 0px 0px 0px", color: "white", textAlign: "right" }}>
+                    <span id="xeroSyncAnchor" onClick={() => this.accesToXero()}>Iniciar sesión</span>
+                    <span id="spnAccessToken" style={{ display: "none" }}>{this.state.accessToken}</span>
                   </div>
-                  <div style={{ padding: "10px 0px 0px 0px" }}>
-                    <Button type="submit" id="xeroSyncAnchor" onClick={() => { this.onIniciarProceso() }}>
-                      Iniciar sesión
-                    </Button>
-                  </div>
-                  <Row style={{ padding: "10px 0px 0px 0px" }}>
-                    <Col>
-                      <Form.Group controlId="formBasicCheckbox">
-                        <Form.Label className="label">¿No tienes cuenta con kiiper?</Form.Label>
-                      </Form.Group>
-                    </Col>
-                  </Row>
-                  {/* <p className="accessToken text-center"><b style={{ fontSize: "11pt", color: "gray" }} >Access Token: </b>{accessToken}</p>
-                    <a id="xeroSyncAnchor2" href="/getConsentUrl"><img src="connect_xero_button_blue.png" className="img-fluid" alt="" /></a>*/}
                 </Form>
+
               </div>
             </div>
           </div> :
