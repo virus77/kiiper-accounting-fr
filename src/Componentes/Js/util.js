@@ -638,18 +638,18 @@ const util = {
     returnHeaderFiscalBooks: function (orgIdSelected) {
         var columnDefs = [
             { headerName: 'withHoldingId', field: 'withHoldingId', xeroField: '_id', hide: true },
-            { headerName: '_id', field: '_id', xeroField: '_id', hide: true, cellClass: "grid-cell-cenLeft" },
+            { headerName: '_id', field: '_id', xeroField: '_id', hide: true, cellClass: "grid-cell-centered" },
             {
                 headerName: 'Tipo', field: 'Tipo', xeroField: 'Tipo', hide: true,
                 valueGetter: function () {
                     return 2;
                 },
             },
-            { headerName: 'Tipo', field: 'Tipo', xeroField: 'Tipo', hide: true, cellClass: "grid-cell-cenLeft" },
-            { headerName: "Fecha inicio", field: "init_date", xeroField: "init_date", flex: 1, cellClass: "grid-cell-cenLeft" },
-            { headerName: "Fecha fin", field: "end_date", xeroField: "end_date", flex: 1, cellClass: "grid-cell-cenLeft" },
-            { headerName: "Archivo", field: "file", flex: 1, cellRenderer: this.fileColumnRenderer, cellClass: "grid-cell-cenLeft" },
-            { headerName: "Actualizar", field: "updateFile", flex: 1, cellRenderer: this.updateFileColumnRenderer, cellClass: "grid-cell-cenLeft" },
+            { headerName: 'Tipo', field: 'Tipo', xeroField: 'Tipo', hide: true, cellClass: "grid-cell-centered" },
+            { headerName: "Fecha inicio", field: "init_date", xeroField: "init_date", flex: 1, cellClass: "grid-cell-centered" },
+            { headerName: "Fecha fin", field: "end_date", xeroField: "end_date", flex: 1, cellClass: "grid-cell-centered" },
+            { headerName: "Archivo", field: "file", flex: 1, cellRenderer: this.fileColumnRenderer, cellClass: "grid-cell-centered" },
+            { headerName: "Actualizar", field: "updateFile", flex: 1, cellRenderer: this.updateFileColumnRenderer, cellClass: "grid-cell-centered" },
         ]
         return (columnDefs)
     },

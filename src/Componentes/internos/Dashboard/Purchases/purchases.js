@@ -18,11 +18,11 @@ class Purchases extends Component {
 			overdueBill: {
 				columnDefs: [
 					{
-						headerName: "Cuentas atrasadas",
+						headerName: "Cuentas por pagar",
 						headerClass: "dashboardGridColumnGroup",
 						children: [
 							{
-								headerName: "Atraso",
+								headerName: "Antigüedad",
 								field: "behind",
 								headerClass: "dashboardGridColumn",
 								cellClass: "dashboardGridCellBusiness",
@@ -171,7 +171,7 @@ class Purchases extends Component {
 						</div>
 					</div>
 					<div className={styles.SalesChart}>
-						<div className={styles.ChartTitle}>Cuentas atrasadas</div>
+						<div className={styles.ChartTitle}>Antigüedad</div>
 						<div className={styles.ChartContainer}>
 							<Doughnut
 								data={this.state.charts.data}
