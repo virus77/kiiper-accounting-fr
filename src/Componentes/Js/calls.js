@@ -67,6 +67,28 @@ const calls = {
 		);
 	},
 
+		/// Call base64 element
+	/// @param {string} withholdingId - _Id from xero element
+	getFinalCallback: async (accestoken) => {
+		const fetchConfig = { method: "GET" };
+
+		// Fetch URL with parameters
+		const fetchURL = `/finalCallback?accessToken=${accestoken}`;
+
+		return (
+			// Fetching data from the endpoint
+			fetch(fetchURL, fetchConfig)
+				.then((res) => res.text())
+				.then((data) => {
+					return { data: data };
+				})
+				.catch((error) => {
+					console.log(error);
+					return false;
+				})
+		);
+	},
+
 	/// Start a process to request information from Xero to build
 	/// Insert data when change status to "Archivados" or "Recibidos":
 	/// @param {id} id_invoice_xero - idXero

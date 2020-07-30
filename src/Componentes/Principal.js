@@ -308,7 +308,11 @@ export default function Dashboard(props) {
 										{event === "xeroOrgName" ||
 											event === 0.1 ||
 											event === 1.1 ||
-											event === 1.2 ? (
+											event === 1.2 ||
+											event === 2.1 ||
+											event === 2.2 ||
+											event === 3.1 ||
+											event === 3.2 ? (
 												<div className={classes.toolbarIcon}>
 													<IconButton onClick={(event) => handleClick(-1)}>
 														<ChevronLeftIcon />
@@ -408,8 +412,8 @@ export default function Dashboard(props) {
 											href="#Reportes/Impuestos"
 										>
 											Impuestos
-									</NavDropdown.Item>
-										<NavDropdown.Item eventKey={3.2} onClick={(event) => handleListItemClick(event, 3.2)} href="#Dashboard/Grupos">Dashboard Group</NavDropdown.Item>
+								</NavDropdown.Item>
+										{/*<NavDropdown.Item eventKey={3.2} onClick={(event) => handleListItemClick(event, 3.2)} href="#Dashboard/Grupos">Dashboard Group</NavDropdown.Item>*/}
 									</NavDropdown>
 								</Nav>
 							</Navbar.Collapse>
@@ -512,7 +516,7 @@ export default function Dashboard(props) {
 								</Paper>
 							</Grid>
 						</Grid>
-					) : event === "xeroOrgName" || event === 3.2 ? (
+					) : event === -1 ? (
 						<Grid container spacing={2}>
 							<div className="breadcrumbClass">
 								<div id="moduleTitle">

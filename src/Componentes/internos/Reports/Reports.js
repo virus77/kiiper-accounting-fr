@@ -151,13 +151,13 @@ class BookTable extends Component {
 	//#region Métodos de ciclo de vida
 	componentDidMount() {
 		// Getting data from Xero and building data grid
-		this.onFillGrid("", "", "");
+		this.onFillGrid("", "", "", this.state.bookType === "Ventas" ? 1 : 2);
 	}
 
 	//#region Métodos de ciclo de vida
-	onFillGrid(Valor, x, y) {
+	onFillGrid(Valor, x, y, tipo) {
 		// Getting data from Xero and building data grid
-		util.getAndBuildGridDataReports(this.props.orgIdSelected, Valor, x, y).then(result => {
+		util.getAndBuildGridDataReports(this.props.orgIdSelected, Valor, x, y, tipo).then(result => {
 			// Setting component state
 			this.setState({
 				rowData: result.structure.gridItems,
@@ -189,7 +189,7 @@ class BookTable extends Component {
 			else {
 				this.setState({ taxbookId: taxbookId.data });
 				this.onDownloadFile();
-				this.onFillGrid("Grid", x, y);
+				this.onFillGrid("Grid", x, y, this.state.bookType === "Ventas" ? 1 : 2);
 				console.log("El periodo se generó correctamente");
 			}
 		} else {

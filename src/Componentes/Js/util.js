@@ -78,7 +78,7 @@ const util = {
             })
         );
     },
-    getAndBuildGridDataReports: async (orgIdSelected, call, startDate, endDate) => {
+    getAndBuildGridDataReports: async (orgIdSelected, call, startDate, endDate, tipoLibro) => {
 
         if (call === "") {
             var d = new Date();
@@ -97,9 +97,15 @@ const util = {
                 startDate,
                 endDate
             ).then(result => {
-
                 // Build grid data structured with editable columns
-                const structure = util.fillWorkspaceGrid(result.data, "", "", "", "", "FiscalBooks", orgIdSelected);
+                const structure = util.fillWorkspaceGrid(result.data,
+                    "",
+                    "",
+                    "",
+                    "",
+                    "FiscalBooks",
+                    orgIdSelected,
+                    tipoLibro);
 
                 return { structure: structure }
             })
@@ -110,7 +116,7 @@ const util = {
     /// @param {array} items - data requested from server
     /// @param {string} taxInfo - tax info with id and name
     /// @param {boolean} isAnEditableGrid - If the grid will have editable columns
-    fillWorkspaceGrid: (items, taxInfo, isAnEditableGrid, kindOfPeople, statusName, section, orgIdSelected) => {
+    fillWorkspaceGrid: (items, taxInfo, isAnEditableGrid, kindOfPeople, statusName, section, orgIdSelected, tipoLibro) => {
 
         let gridItems = [];
         let headersTemplate = [];
@@ -122,7 +128,7 @@ const util = {
                 break;
 
             case "FiscalBooks":
-                headersTemplate = util.returnHeaderFiscalBooks(orgIdSelected);
+                headersTemplate = util.returnHeaderFiscalBooks(orgIdSelected, tipoLibro);
                 break;
 
             default:
@@ -635,21 +641,25 @@ const util = {
         return (columnDefs)
     },
     /// Crea el header del componente de FiscalBooks
-    returnHeaderFiscalBooks: function (orgIdSelected) {
+    returnHeaderFiscalBooks: function (orgIdSelected, tipoLibro) {
         var columnDefs = [
-            { headerName: 'withHoldingId', field: 'withHoldingId', xeroField: '_id', hide: true },
-            { headerName: '_id', field: '_id', xeroField: '_id', hide: true, cellClass: "grid-cell-centered" },
             {
-                headerName: 'Tipo', field: 'Tipo', xeroField: 'Tipo', hide: true,
+                headerName: 'withHolding Id', field: 'withHoldingId', xeroField: 'withHoldingId', hide: true,
                 valueGetter: function () {
-                    return 2;
+                    return orgIdSelected;
+                }
+            },
+            { headerName: '_id', field: '_id', xeroField: '_id', hide: true, },
+            {
+                headerName: 'Tipo de Libro', field: 'TipoLibro', xeroField: 'TipoLibro', hide: true,
+                valueGetter: function () {
+                    return tipoLibro;
                 },
             },
-            { headerName: 'Tipo', field: 'Tipo', xeroField: 'Tipo', hide: true, cellClass: "grid-cell-centered" },
-            { headerName: "Fecha inicio", field: "init_date", xeroField: "init_date", flex: 1, cellClass: "grid-cell-centered" },
-            { headerName: "Fecha fin", field: "end_date", xeroField: "end_date", flex: 1, cellClass: "grid-cell-centered" },
-            { headerName: "Archivo", field: "file", flex: 1, cellRenderer: this.fileColumnRenderer, cellClass: "grid-cell-centered" },
-            { headerName: "Actualizar", field: "updateFile", flex: 1, cellRenderer: this.updateFileColumnRenderer, cellClass: "grid-cell-centered" },
+            { headerName: "Fecha inicio", field: "init_date", xeroField: "init_date", flex: 1, cellClass: "grid-cell-cenLeft" },
+            { headerName: "Fecha fin", field: "end_date", xeroField: "end_date", flex: 1, cellClass: "grid-cell-cenLeft" },
+            { headerName: "Archivo", field: "file", flex: 1, cellRenderer: this.fileColumnRenderer, cellClass: "grid-cell-cenLeft" },
+            { headerName: "Actualizar", field: "updateFile", flex: 1, cellRenderer: this.updateFileColumnRenderer, cellClass: "grid-cell-cenLeft" },
         ]
         return (columnDefs)
     },
@@ -751,19 +761,19 @@ const util = {
             switch (params.data.Tipo) {
                 case 1:
                     calls.getBook(
-                        params.data.withHoldingId, 
-                        1,
-                        params.data.init_date.format("DD/MM/YYYY"), 
-                        params.data.end_date.format("DD/MM/YYYY"), 
+                        params.data.withHoldingId,
+                        params.data.TipoLibro,
+                        params.data.init_date.format("DD/MM/YYYY"),
+                        params.data.end_date.format("DD/MM/YYYY"),
                         "/salesBook");
                     break;
 
                 case 2:
                     calls.getBook(
-                        params.data.withHoldingId, 
+                        params.data.withHoldingId,
                         1,
-                        params.data.init_date.format("DD/MM/YYYY"), 
-                        params.data.end_date.format("DD/MM/YYYY"), 
+                        params.data.init_date.format("DD/MM/YYYY"),
+                        params.data.end_date.format("DD/MM/YYYY"),
                         "/purchasesBook");
                     break;
                 default:
@@ -772,7 +782,7 @@ const util = {
         });
 
         return fileIcon;
-    },    
+    },
     //Action log in ag-grid
     printResult: function (res) {
         console.log('---------------------------------------');

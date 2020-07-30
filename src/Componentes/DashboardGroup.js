@@ -103,46 +103,20 @@ const columnDefs2 = {
 class DashboardGroup extends Component {
     columnDefs = {
         columnDefs: [
-            {
-                headerName: '', headerClass: styles.HeaderGroupStyle,
-                children: [
-                    { headerName: "Bank Accounts", field: "bank", sortable: true, filter: false, headerClass: styles.HeaderStyle },
-                ]
-            },
-            {
-                headerName: 'Bank statements importing', headerClass: styles.HeaderGroupStyle,
-                children: [
-                    { headerName: "Action", field: "action", sortable: true, filter: false, headerClass: styles.HeaderStyle },
-                    { headerName: "Behind", field: "behind", sortable: true, filter: false, headerClass: styles.HeaderStyle },
-                ]
-            },
-            {
-                headerName: 'Bank balance review', headerClass: styles.HeaderGroupStyle,
-                children: [
-                    { headerName: "Date", field: "date", sortable: true, filter: false, headerClass: styles.HeaderStyle },
-                    { headerName: "Amount", field: "amount", sortable: true, filter: false, headerClass: styles.HeaderStyle },
-                    { headerName: "Verified", field: "verified", cellRenderer: 'paramsRenderer', sortable: true, filter: false, headerClass: styles.HeaderStyle },
-                ]
-            },
-            {
-                headerName: 'Bank reconciliation', headerClass: styles.HeaderGroupStyle,
-                children: [
-                    { headerName: "Items", field: "pendingItems", sortable: true, filter: false, headerClass: styles.HeaderStyle },
-                    { headerName: "Total Amount", field: "totalAmount", sortable: true, filter: false, headerClass: styles.HeaderStyle },
-                    { headerName: "Behind", field: "behindB", sortable: true, filter: false, headerClass: styles.HeaderStyle }
-                ]
-            },
+            { headerName: "Items", field: "pendingItems", sortable: true, filter: false, headerClass: styles.HeaderStyle },
+            { headerName: "Total Amount", field: "totalAmount", sortable: true, filter: false, headerClass: styles.HeaderStyle },
+            { headerName: "Behind", field: "behindB", sortable: true, filter: false, headerClass: styles.HeaderStyle }
         ]
     }
 
     rowData = {
         rowData: [
-            { bank: "Banco Mercantil", action: "Celica", behind: 35000, date: '+3 months', amount: 'amount', verified: 'verified', items: '10', totalAmount: '12301', behindB: '1123' },
-            { bank: "Banco Mercantil", action: "Celica", behind: 35000, date: '+3 months', amount: 'amount', verified: 'verified', items: '10', totalAmount: '12301', behindB: '1123' },
-            { bank: "Banco Mercantil", action: "Celica", behind: 35000, date: '+3 months', amount: 'amount', verified: 'verified', items: '10', totalAmount: '12301', behindB: '1123' },
-            { bank: "Banco Mercantil", action: "Celica", behind: 35000, date: '+3 months', amount: 'amount', verified: 'verified', items: '10', totalAmount: '12301', behindB: '1123' },
-            { bank: "Banco Mercantil", action: "Celica", behind: 35000, date: '+3 months', amount: 'amount', verified: 'verified', items: '10', totalAmount: '12301', behindB: '1123' },
-            { bank: "Banco Mercantil", action: "Celica", behind: 35000, date: '+3 months', amount: 'amount', verified: 'verified', items: '10', totalAmount: '12301', behindB: '1123' }
+            { items: '10', totalAmount: '12301', behindB: '1123' },
+            { items: '10', totalAmount: '12301', behindB: '1123' },
+            { items: '10', totalAmount: '12301', behindB: '1123' },
+            { items: '10', totalAmount: '12301', behindB: '1123' },
+            { items: '10', totalAmount: '12301', behindB: '1123' },
+            { items: '10', totalAmount: '12301', behindB: '1123' }
         ]
     }
 
