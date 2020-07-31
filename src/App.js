@@ -59,10 +59,6 @@ class App extends Component {
   accesToXero = async () => {
     // Fetch URL with parameters    
     document.getElementById("Spinner").style.display = "block";
-    setTimeout(function () {
-      document.getElementById("xeroSyncAnchor").setAttribute('disabled', true);
-    }, 2000, "JavaScript");
-
     let email = document.getElementById("ctrlEmail").value;
     let password = document.getElementById("ctrlPassword").value;
     var param = { Email: email, Password: password };
@@ -78,6 +74,7 @@ class App extends Component {
       success: function (data) {
         if (data !== null) {
           accestoken = data.d;
+          accestoken = accestoken.replace("j:", "")
         }
       },
       error: function (a, b, error) {
@@ -88,7 +85,6 @@ class App extends Component {
     let consentUrl = await calls.getFinalCallback(accestoken);
     window.open(consentUrl, "_self");
     document.getElementById("Spinner").style.display = "none";
-    document.getElementById("xeroSyncAnchor").setAttribute('disabled', false);
   }
 
   logoutFunction = () => {
@@ -134,7 +130,7 @@ class App extends Component {
                   Para continuar debes ingresar tus datos e iniciar sesión
                   </div>
                 <div id="Spinner" style={{
-                  textAlign: "center",
+                  paddingLeft: "35%",
                   position: "absolute",
                   zIndex: "1"
                 }}>
@@ -152,15 +148,15 @@ class App extends Component {
                     </Form.Group>
                   </div>
                   <div style={{ padding: "40px 0px 0px 0px", color: "white", textAlign: "right" }}>
-                    <span id="xeroSyncAnchor" onClick={() => this.accesToXero()}>Iniciar sesión</span>
                     <span id="spnAccessToken" style={{ display: "none" }}>{this.state.accessToken}</span>
+                    <span id="xeroSyncAnchor" onClick={() => this.accesToXero()}>Iniciar sesión</span>
                   </div>
                 </Form>
-
               </div>
             </div>
           </div> :
           <div className="App">
+            <span id="spnAccessToken" style={{ display: "none" }}>{this.state.accessToken}</span>
             <Principal token={accessToken} org={this.state.organizations} />
           </div>
         }

@@ -67,26 +67,28 @@ const calls = {
 		);
 	},
 
-		/// Call base64 element
+	/// Call base64 element
 	/// @param {string} withholdingId - _Id from xero element
 	getFinalCallback: async (accestoken) => {
-		const fetchConfig = { method: "GET" };
 
-		// Fetch URL with parameters
-		const fetchURL = `/finalCallback?accessToken=${accestoken}`;
+		var array = JSON.parse(accestoken);
 
-		return (
-			// Fetching data from the endpoint
-			fetch(fetchURL, fetchConfig)
-				.then((res) => res.text())
-				.then((data) => {
-					return { data: data };
-				})
-				.catch((error) => {
-					console.log(error);
-					return false;
-				})
-		);
+		var param = {
+			access_token: array,
+		};
+
+		await fetch("/finalCallback", {
+			method: "POST",
+			body: JSON.stringify(param),
+			headers: {
+				"Content-type": "application/json; charset=UTF-8",
+				"Access-Control-Allow-Origin": "*",
+			},
+		}).then((res) => {
+			return res.url
+		}).catch((err) => {
+			console.log(err);
+		});;
 	},
 
 	/// Start a process to request information from Xero to build
@@ -237,9 +239,9 @@ const calls = {
 	/// @param {text} endDate -  Format date DD/MM/YYYY"
 	/// @param {text} endPoint - Ruta de acceso al Endpoint dependiendo si es compras o venntas
 	getBook: (id_organisation, Periodo, initialDate, endDate, endPoint) => {
-		
+
 		// Fetch URL with parameters
-		const fetchURL = endPoint +`?id_organisation=${id_organisation}&initialDate=${initialDate}&endDate=${endDate}`;
+		const fetchURL = endPoint + `?id_organisation=${id_organisation}&initialDate=${initialDate}&endDate=${endDate}`;
 
 		return (
 			// Fetching data from the endpoint
