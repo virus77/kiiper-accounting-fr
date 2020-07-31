@@ -399,7 +399,7 @@ const calls = {
 			access_token: array,
 		};
 
-		await fetch("/finalCallback", {
+		return await fetch("/finalCallback", {
 			method: "POST",
 			body: JSON.stringify(param),
 			headers: {
