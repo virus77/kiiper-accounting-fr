@@ -103,20 +103,9 @@ const columnDefs2 = {
 class DashboardGroup extends Component {
     columnDefs = {
         columnDefs: [
-<<<<<<< HEAD
             { headerName: "Items", field: "pendingItems", sortable: true, filter: false, headerClass: styles.HeaderStyle },
             { headerName: "Total Amount", field: "totalAmount", sortable: true, filter: false, headerClass: styles.HeaderStyle },
             { headerName: "Behind", field: "behindB", sortable: true, filter: false, headerClass: styles.HeaderStyle }
-=======
-            {
-                headerName: 'Bank reconciliation', headerClass: styles.HeaderGroupStyle,
-                children: [
-                    { headerName: "Items", field: "pendingItems", sortable: true, filter: false, headerClass: styles.HeaderStyle },
-                    { headerName: "Total Amount", field: "totalAmount", sortable: true, filter: false, headerClass: styles.HeaderStyle },
-                    { headerName: "Behind", field: "behindB", sortable: true, filter: false, headerClass: styles.HeaderStyle }
-                ]
-            },
->>>>>>> 09ba06c... gus 29072020
         ]
     }
 

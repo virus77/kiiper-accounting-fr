@@ -391,21 +391,26 @@ const calls = {
 
 	/// Petición para integrar el AccesToken de Xero a kiiper
 	/// @param {text} accesToken - accesToken proveniente de xero desde el bot
-	getFinalCallback: async (accesToken) => {
-		// Fetch URL with parameters
-		const fetchURL = `/finalCallback?access_token=${accesToken}`;
+	getFinalCallback: async (accestoken) => {
 
-		// Fetching data from the endpoint
-		return await fetch(fetchURL)
-			.then((res) => {
-				res.json()
-			})
-			.then((data) => {
-				return { data: data };
-			})
-			.catch((error) => {
-				console.log(error);
-			});
+		var array = JSON.parse(accestoken);
+
+		var param = {
+			access_token: array,
+		};
+
+		await fetch("/finalCallback", {
+			method: "POST",
+			body: JSON.stringify(param),
+			headers: {
+				"Content-type": "application/json; charset=UTF-8",
+				"Access-Control-Allow-Origin": "*",
+			},
+		}).then((res) => {
+			return res.url
+		}).catch((err) => {
+			console.log(err);
+		});;
 	},
 
 	/// Consultar lista de declaraciones
