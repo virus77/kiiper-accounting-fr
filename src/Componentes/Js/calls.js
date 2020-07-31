@@ -309,6 +309,7 @@ const calls = {
 				})
 		);
 	},
+	
 	/// Petición para obtener el libro de Compras y ventas en Xero
 	/// deppendiendo del periodo
 	/// @param {text} id_organisation - organisation id
@@ -386,6 +387,25 @@ const calls = {
 					return false;
 				})
 		);
+	},
+
+	/// Petición para integrar el AccesToken de Xero a kiiper
+	/// @param {text} accesToken - accesToken proveniente de xero desde el bot
+	getFinalCallback: async (accesToken) => {
+		// Fetch URL with parameters
+		const fetchURL = `/finalCallback?access_token=${accesToken}`;
+
+		// Fetching data from the endpoint
+		return await fetch(fetchURL)
+			.then((res) => {
+				res.json()
+			})
+			.then((data) => {
+				return { data: data };
+			})
+			.catch((error) => {
+				console.log(error);
+			});
 	},
 
 	/// Consultar lista de declaraciones

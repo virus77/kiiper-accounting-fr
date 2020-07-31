@@ -412,7 +412,11 @@ export default function Dashboard(props) {
 											href="#Reportes/Impuestos"
 										>
 											Impuestos
+<<<<<<< HEAD
 								</NavDropdown.Item>
+=======
+									</NavDropdown.Item>
+>>>>>>> 09ba06c... gus 29072020
 										{/*<NavDropdown.Item eventKey={3.2} onClick={(event) => handleListItemClick(event, 3.2)} href="#Dashboard/Grupos">Dashboard Group</NavDropdown.Item>*/}
 									</NavDropdown>
 								</Nav>
