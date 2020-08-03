@@ -309,7 +309,7 @@ const calls = {
 				})
 		);
 	},
-	
+
 	/// Petición para obtener el libro de Compras y ventas en Xero
 	/// deppendiendo del periodo
 	/// @param {text} id_organisation - organisation id
@@ -626,6 +626,17 @@ const calls = {
 				return { data: data };
 			});
 	},
+
+	//Función que desloguea al usuario actual y destruye la sessión
+	logoutFunction: () => {
+
+		return fetch("/logout")
+			.then((res) => {
+				window.location.reload(false)
+			}).catch((err) => {
+				console.log(err);
+			});
+	}
 };
 
 export default calls;

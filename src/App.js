@@ -23,9 +23,6 @@ class App extends Component {
       isInActive: true,
       show: true
     }
-
-    // Logout function
-    this.logoutFunction = this.logoutFunction.bind(this)
   }
 
   /// Main App component function
@@ -86,11 +83,6 @@ class App extends Component {
     window.open(consentUrl, "_self");
     document.getElementById("Spinner").style.display = "none";
   }
-
-  logoutFunction = () => {
-    fetch('/logout')
-      .then(res => window.location.reload(false));
-  };
 
   // Starts process to login into Xero
   onIniciarProceso = () => {

@@ -24,6 +24,7 @@ import ChevronLeftIcon from "@material-ui/icons/ChevronLeft";
 
 //Icons
 import NotificationsIcon from "@material-ui/icons/Notifications";
+import CancelSharpIcon from '@material-ui/icons/CancelSharp';
 import Busqueda from "../Imagenes/kiiper_buscar.png";
 import Engrane from "../Imagenes/kiiper_engrane.png";
 import Suma from "../Imagenes/kiiper_mas.png";
@@ -32,10 +33,10 @@ import K from "../Imagenes/kiiper_K.png";
 
 //Componentes
 import util from "./Js/util";
+import calls from "./Js/calls";
 import Compras from "./internos/Negocio/Compras";
 import Ventas from "./internos/Negocio/Ventas";
 import Title from "./internos/Title";
-import IframeComponent from "./internos/iFrame";
 import BanksConvert from "../Componentes/internos/Banks/BanksConvert";
 import DashboardPanel from "./internos/Dashboard/dashboard";
 import { Reports } from "../Componentes/internos/Reports/Reports";
@@ -122,14 +123,29 @@ const useStyles = makeStyles((theme) => ({
 //#endregion
 
 //Función utilizada para llenar el dropdownlist
+function fillDropDownListGroup(props) {
+	let count = 0;
+	var organizations = props.org.map((res) => {
+		count++;
+		return {
+			type: "xeroGroupName",
+			name: "Grupo" + " " + res.xeroOrgName,
+			id: res.organisationId,
+			specialContrib: res.isSpecialContrib
+		};
+	});
+
+	return organizations;
+}
+
+//Función utilizada para llenar el dropdownlist
 function fillDropDownList(props) {
 	var organizations = props.org.map((res) => {
 		return {
 			type: res.xeroOrgName ? "xeroOrgName" : "xeroGroupName",
 			name: res.xeroOrgName ? res.xeroOrgName : res.xeroGroupName,
 			id: res.organisationId ? res.organisationId : res.groupId,
-			specialContrib: res.isSpecialContrib,
-			//Grupo: res.xeroGroupName ? '_____________________________________________' : "",
+			specialContrib: res.isSpecialContrib
 		};
 	});
 
@@ -142,6 +158,7 @@ export default function Dashboard(props) {
 
 	//Retrive data from organizarion and use for fill ddl
 	var organizations = fillDropDownList(props);
+	var group = fillDropDownListGroup(props);
 
 	const [event, eventKey] = React.useState(-1);
 	const handleListItemClick = (event, index) => {
@@ -176,13 +193,16 @@ export default function Dashboard(props) {
 			.getElementsByTagName("div")[0];
 
 		if (typeof item.type === "string") {
-			eventKey(item.type);
+			if (item.name.includes("Grupo"))
+				eventKey(-2);
+			else
+				eventKey(item.type === "xeroGroupName" ? item.type = "xeroOrgName" : "xeroOrgName");
 
 			// Setting organization selected in React to component
 			setorgIdSelected(item.id);
-			setorgNameSelected(item.name);
+			setorgNameSelected(item.name.includes("Grupo") ? "" : item.name);
 			setorgSpecialContrib(item.specialContrib);
-			setValue(item.name);
+			setValue(item.name.includes("Grupo") ? "" : item.name);
 
 			//Cambia el color en el ddlPrincipal dependiendo la selección
 			rw_2_input.style =
@@ -229,6 +249,11 @@ export default function Dashboard(props) {
 		// Deleting any bank selection class
 		const banks = [...document.querySelectorAll(".bankSelectionClass")];
 		banks.forEach((item) => item.classList.remove("bankSelectionClass"));
+	};
+
+	/// Resets banks modulo
+	const handleCancel = () => {
+		calls.logoutFunction();
 	};
 
 	//Asigna el cuadro al texto dependiendo si es org o grup
@@ -293,6 +318,9 @@ export default function Dashboard(props) {
 					<IconButton color="inherit">
 						<img src={Avatar} alt="img-Avatar" />
 					</IconButton>
+					<IconButton color="inherit" onClick={(event) => handleCancel()}>
+						<CancelSharpIcon />
+					</IconButton>
 				</Toolbar>
 			</AppBar>
 			<main className={classes.content}>
@@ -325,7 +353,7 @@ export default function Dashboard(props) {
 											<DropdownList
 												style={{ width: "240px" }}
 												filter
-												data={organizations}
+												data={event === "xeroOrgName" ? organizations : event === -2 ? organizations : group}
 												allowCreate="onFilter"
 												onChange={(value) => handleClick(value)}
 												itemComponent={ValueInput}

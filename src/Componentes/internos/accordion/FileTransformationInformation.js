@@ -168,9 +168,8 @@ class FileTransformationInformation extends Component {
 									)
 								}
 							/>
-							<h3>{this.props.bankData[0].name}</h3>
-							<div>Convertir movimientos bancarios- parcial</div>
-							<br></br>
+							<h3>Convertir movimientos bancarios (parcial)</h3>
+							<br/><br/>
 							<div>Siga estas instrucciones para transformar el archivo:</div>
 							<div>
 								<ul className="descriptionUnorderedList">
@@ -179,7 +178,7 @@ class FileTransformationInformation extends Component {
 									</li>
 									<li>
 										Descargue los movimientos bancarios desde el primer día del
-										mes que desee convertir en<strong>&nbsp;formato txt</strong>
+										mes que desee convertir en<strong>&nbsp;formato {  this.state.formatPartial  }</strong>
 									</li>
 									<li>
 										Adjunte el formato de movimientos bancarios en
@@ -191,10 +190,6 @@ class FileTransformationInformation extends Component {
 									<li>
 										Presione el botón<strong>&nbsp;Convertir</strong>
 									</li>
-									<li>
-										Descargue los movimientos bancarios convertidos en el botón
-										<strong>&nbsp;Descargar</strong>
-									</li>
 								</ul>
 								<div className="container-button-load">
 									{/* Component InpuFile para cambiar el estilo default del control input de tipo file */}
@@ -204,7 +199,7 @@ class FileTransformationInformation extends Component {
 										className="button-pill-blue"
 										onClick={this.onClickHandler}
 									>
-										<div className="text"> Transformar Archivo </div>
+										<div className="text"> Convertir </div>
 									</button>
 								</div>
 								{this.state.existFileTransformation ? (
@@ -234,11 +229,8 @@ class FileTransformationInformation extends Component {
 									)
 								}
 							/>
-							<h3 style={{ visibility: "hidden" }}>
-								{this.props.bankData[0].name}
-							</h3>
-							<div>Convertir estados de cuenta- mensual</div>
-							<br></br>
+							<h3>Convertir estados de cuenta (mensual)</h3>
+							<br/><br/>
 							<div>Siga estas instrucciones para transformar el archivo:</div>
 							<div>
 								<ul className="descriptionUnorderedList">
@@ -247,7 +239,7 @@ class FileTransformationInformation extends Component {
 									</li>
 									<li>
 										Descargue el estado de cuenta del mes que desee convertir en
-										<strong>&nbsp;formato pdf</strong>
+										<strong>&nbsp;formato {  this.state.formatMonth  }</strong>
 									</li>
 									<li>
 										Adjunte el estado de cuenta en
@@ -259,10 +251,6 @@ class FileTransformationInformation extends Component {
 									<li>
 										Presione el botón<strong>&nbsp;Convertir</strong>
 									</li>
-									<li>
-										Descargue el estado de cuenta con en el botón
-										<strong>&nbsp;Descargar</strong>
-									</li>
 								</ul>
 								<div className="container-button-load">
 									{/* Component InpuFile para cambiar el estilo default del control input de tipo file */}
@@ -272,7 +260,7 @@ class FileTransformationInformation extends Component {
 										className="button-pill-blue"
 										onClick={this.onClickHandler}
 									>
-										<div className="text"> Transformar Archivo </div>
+										<div className="text"> Convertir </div>
 									</button>
 								</div>
 								{this.state.existFileTransformation ? (
