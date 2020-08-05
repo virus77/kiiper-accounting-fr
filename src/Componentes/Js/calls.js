@@ -67,6 +67,30 @@ const calls = {
 		);
 	},
 
+	/// Call base64 element
+	/// @param {string} withholdingId - _Id from xero element
+	getFinalCallback: async (accestoken) => {
+
+		var array = JSON.parse(accestoken);
+
+		var param = {
+			access_token: array,
+		};
+
+		await fetch("/finalCallback", {
+			method: "POST",
+			body: JSON.stringify(param),
+			headers: {
+				"Content-type": "application/json; charset=UTF-8",
+				"Access-Control-Allow-Origin": "*",
+			},
+		}).then((res) => {
+			return res.url
+		}).catch((err) => {
+			console.log(err);
+		});;
+	},
+
 	/// Start a process to request information from Xero to build
 	/// Insert data when change status to "Archivados" or "Recibidos":
 	/// @param {id} id_invoice_xero - idXero
@@ -285,7 +309,6 @@ const calls = {
 				})
 		);
 	},
-	
 	/// Petición para obtener el libro de Compras y ventas en Xero
 	/// deppendiendo del periodo
 	/// @param {text} id_organisation - organisation id
@@ -367,21 +390,26 @@ const calls = {
 
 	/// Petición para integrar el AccesToken de Xero a kiiper
 	/// @param {text} accesToken - accesToken proveniente de xero desde el bot
-	getFinalCallback: async (accesToken) => {
-		// Fetch URL with parameters
-		const fetchURL = `/finalCallback?access_token=${accesToken}`;
+	getFinalCallback: async (accestoken) => {
 
-		// Fetching data from the endpoint
-		return await fetch(fetchURL)
-			.then((res) => {
-				res.json()
-			})
-			.then((data) => {
-				return { data: data };
-			})
-			.catch((error) => {
-				console.log(error);
-			});
+		var array = JSON.parse(accestoken);
+
+		var param = {
+			access_token: array,
+		};
+
+		return await fetch("/finalCallback", {
+			method: "POST",
+			body: JSON.stringify(param),
+			headers: {
+				"Content-type": "application/json; charset=UTF-8",
+				"Access-Control-Allow-Origin": "*",
+			},
+		}).then((res) => {
+			return res.url
+		}).catch((err) => {
+			console.log(err);
+		});;
 	},
 
 	/// Consultar lista de declaraciones
@@ -597,6 +625,17 @@ const calls = {
 				return { data: data };
 			});
 	},
+
+	//Función que desloguea al usuario actual y destruye la sessión
+	logoutFunction: () => {
+
+		return fetch("/logout")
+			.then((res) => {
+				window.location.reload(false)
+			}).catch((err) => {
+				console.log(err);
+			});
+	}
 };
 
 export default calls;

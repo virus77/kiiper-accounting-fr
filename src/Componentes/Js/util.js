@@ -97,7 +97,6 @@ const util = {
                 startDate,
                 endDate
             ).then(result => {
-
                 // Build grid data structured with editable columns
                 const structure = util.fillWorkspaceGrid(result.data,
                     "",
@@ -644,19 +643,23 @@ const util = {
     /// Crea el header del componente de FiscalBooks
     returnHeaderFiscalBooks: function (orgIdSelected, tipoLibro) {
         var columnDefs = [
-            { headerName: 'withHoldingId', field: 'withHoldingId', xeroField: '_id', hide: true },
-            { headerName: '_id', field: '_id', xeroField: '_id', hide: true, cellClass: "grid-cell-centered" },
+            {
+                headerName: 'withHolding Id', field: 'withHoldingId', xeroField: 'withHoldingId', hide: true,
+                valueGetter: function () {
+                    return orgIdSelected;
+                }
+            },
+            { headerName: '_id', field: '_id', xeroField: '_id', hide: true, },
             {
                 headerName: 'Tipo de Libro', field: 'TipoLibro', xeroField: 'TipoLibro', hide: true,
                 valueGetter: function () {
                     return tipoLibro;
                 },
             },
-            { headerName: 'Tipo', field: 'Tipo', xeroField: 'Tipo', hide: true, cellClass: "grid-cell-centered" },
-            { headerName: "Fecha inicio", field: "init_date", xeroField: "init_date", flex: 1, cellClass: "grid-cell-centered" },
-            { headerName: "Fecha fin", field: "end_date", xeroField: "end_date", flex: 1, cellClass: "grid-cell-centered" },
-            { headerName: "Archivo", field: "file", flex: 1, cellRenderer: this.fileColumnRenderer, cellClass: "grid-cell-centered" },
-            { headerName: "Actualizar", field: "updateFile", flex: 1, cellRenderer: this.updateFileColumnRenderer, cellClass: "grid-cell-centered" },
+            { headerName: "Fecha inicio", field: "init_date", xeroField: "init_date", flex: 1, cellClass: "grid-cell-cenLeft" },
+            { headerName: "Fecha fin", field: "end_date", xeroField: "end_date", flex: 1, cellClass: "grid-cell-cenLeft" },
+            { headerName: "Archivo", field: "file", flex: 1, cellRenderer: this.fileColumnRenderer, cellClass: "grid-cell-cenLeft" },
+            { headerName: "Actualizar", field: "updateFile", flex: 1, cellRenderer: this.updateFileColumnRenderer, cellClass: "grid-cell-cenLeft" },
         ]
         return (columnDefs)
     },
