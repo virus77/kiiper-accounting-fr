@@ -1,4 +1,8 @@
-#chartdiv {
-    width: 100%;
-    height: 100%;
+.report-container .ag-theme-alpine .ag-root-wrapper{
+   border:1px solid #e5e5ea !important;
+   border-radius:  10px!important;
+}
+
+.dashboardGroupGridCellBank{
+   justify-content: flex-start;
 }

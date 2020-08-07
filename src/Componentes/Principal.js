@@ -548,9 +548,8 @@ export default function Dashboard(props) {
 						<Grid container spacing={2}>
 							<div className="breadcrumbClass">
 								<div id="moduleTitle">
-									<Title>Dashboard Grupos</Title>
+									<Title>Dashboard Grupo</Title>
 								</div>
-								<span id="breadcrumbPath">&gt; Dashboard Grupos</span>
 							</div>
 							<Grid item xs={12}>
 								<Paper className={classes.paper}>

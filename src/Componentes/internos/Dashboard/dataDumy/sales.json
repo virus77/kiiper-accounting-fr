@@ -24,6 +24,12 @@
             "behind": "+3 meses",
             "contactName": "Deyanira",
             "currencyCode": "USD"
+        },
+        {
+            "amountDue": 47413.79,
+            "behind": "+3 meses",
+            "contactName": "Otros",
+            "currencyCode": "VEF"
         }
     ],
     "listSales": [

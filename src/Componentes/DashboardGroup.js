@@ -2,289 +2,185 @@ import React, { Component } from "react";
 
 /// controles
 import { Card } from "react-bootstrap";
-import { Bar } from 'react-chartjs-2';
-import { Doughnut } from 'react-chartjs-2';
-import { AgGridReact, SortableHeaderComponent } from 'ag-grid-react';
-
-/// Variation
-import es from "date-fns/locale/es";
-
-/// Componentes
-import calls from "../Componentes/Js/calls";
-import util from "../Componentes/Js/util";
+import { Bar } from "react-chartjs-2";
+import ChartDataLabels from "chartjs-plugin-datalabels";
+import { AgGridReact, SortableHeaderComponent } from "ag-grid-react";
 
 /// CSS
-import "../Componentes/internos/Css/styles.scss";
 import "bootstrap/dist/css/bootstrap.min.css";
 import "react-datepicker/dist/react-datepicker.css";
 import "../Css/DashboardGroup.css";
-import styles from '../Componentes/internos/Dashboard/Purchases/purchases.module.css';
+import "../Componentes/internos/Dashboard/dashboard.css";
 
-import 'ag-grid-community/dist/styles/ag-grid.css';
-import 'ag-grid-community/dist/styles/ag-theme-alpine.css';
+import "ag-grid-community/dist/styles/ag-grid.css";
+import "ag-grid-community/dist/styles/ag-theme-alpine.css";
 
-import PurchasesDataD from '../Componentes/internos/Dashboard/dataDumy/purchases.json'
-import bankDataD from '../Componentes/internos/Dashboard/dataDumy/accounts.json';
-/// Imágenes
-
-const data = {
-    datasets: [{
-        data: [1440000, 2000000, 3000000],
-        backgroundColor: [
-            '#5EFEFF',
-            '#9680ED',
-            '#232C51',
-        ]
-    }],
-
-    // These labels appear in the legend and in the tooltips when hovering different arcs
-    labels: [
-        'Dayne Guarimara',
-        'Eduardo Alvarez',
-        'Alcaldia Municipio Girardot'
-    ],
-
-    options: {
-
-    }
-};
-
-const arrayData = []
-
-const getData = PurchasesDataD.listPurchases.map((item) => {
-    arrayData.push({
-        behind: item.behind,
-        amount: `${item.currencyCode} ${item.amountDue}`,
-    })
-})
-
-const dataJson = {
-    rowData: arrayData
-}
-
-const arrayData2 = [];
-
-const getData2 = PurchasesDataD.listPurchasesParClient.map((item) => {
-    arrayData2.push({
-        amount: `${item.currencyCode} ${item.amountDue}`,
-        contact: item.contactName,
-    })
-})
-
-const dataJson2 = {
-    rowData: arrayData2
-}
-
-
-const columnDefs = {
-    columnDefs: [
-        {
-            headerName: 'Overdue bills', headerClass: styles.Title,
-            children: [
-                { headerName: "Behind", field: "behind", sortable: true, filter: false, headerClass: styles.SubTitle },
-                { headerName: "Amount", field: "amount", sortable: true, filter: false, headerClass: styles.SubTitle },
-            ]
-        },
-    ]
-}
-
-const columnDefs2 = {
-    columnDefs: [
-        {
-            headerName: 'Main Suppliers', headerClass: styles.Title,
-            children: [
-                { headerName: "Contact", field: "contact", sortable: true, filter: false, headerClass: styles.SubTitle },
-                { headerName: "Amount", field: "amount", sortable: true, filter: false, headerClass: styles.SubTitle },
-            ]
-        },
-    ]
-}
+import Purchases from "../Componentes/internos/Dashboard/Purchases/purchases.js";
+import Sales from "../Componentes/internos/Dashboard/Sales/sales.js";
+import banksDataD from "../Componentes/internos/Dashboard/dataDumy/accounts.json";
 
 class DashboardGroup extends Component {
-    columnDefs = {
-        columnDefs: [
-            { headerName: "Items", field: "pendingItems", sortable: true, filter: false, headerClass: styles.HeaderStyle },
-            { headerName: "Total Amount", field: "totalAmount", sortable: true, filter: false, headerClass: styles.HeaderStyle },
-            { headerName: "Behind", field: "behindB", sortable: true, filter: false, headerClass: styles.HeaderStyle }
-        ]
-    }
+	// Constructor declaration
+	constructor(props) {
+		super(props);
 
-    rowData = {
-        rowData: [
-            { items: '10', totalAmount: '12301', behindB: '1123' },
-            { items: '10', totalAmount: '12301', behindB: '1123' },
-            { items: '10', totalAmount: '12301', behindB: '1123' },
-            { items: '10', totalAmount: '12301', behindB: '1123' },
-            { items: '10', totalAmount: '12301', behindB: '1123' },
-            { items: '10', totalAmount: '12301', behindB: '1123' }
-        ]
-    }
+		// Component state
+		this.state = {
+			banks: {
+				columnDefs: [
+					{
+						headerName: "Cuenta bancaria",
+						field: "account",
+						headerClass: "dashboardGridColumn",
+						cellClass: "dashboardGroupGridCellBank",
+					},
+					{
+						headerName: "Registros",
+						field: "pendingItems",
+						headerClass: "dashboardGridColumn",
+						cellClass: "dashboardGroupGridCellBank",
+					},
+					{
+						headerName: "Monto",
+						field: "amount",
+						headerClass: "dashboardGridColumn",
+						cellClass: "dashboardGroupGridCellBank",
+					},
+					{
+						headerName: "Antigüedad",
+						field: "behind",
+						headerClass: "dashboardGridColumn",
+						cellClass: "dashboardGroupGridCellBank",
+					},
+				],
+				rowData: [],
+				defaultColDef: {
+					flex: 1,
+					resizable: false,
+					filterable: false,
+					sortable: true,
+				},
+			},
+			charts: {
+				plugins: [ChartDataLabels],
+				data: {
+					datasets: [
+						{
+							data: [65, 59, 80, 81, 56],
+							backgroundColor: [
+								"#44CDDB",
+								"#9680ED",
+								"#232C51",
+								"#86FFF5",
+								"#864aF5",
+							],
+						},
+					],
+					labels: ["Enero", "Febrero", "Marzo", "Abril", "Mayo"],
+				},
+				options: {
+					maintainAspectRatio: true,
+					plugins: {
+						datalabels: {
+							color: "#fff",
+							font: {
+								family: "'Goldplay',sans-serif",
+								weight: "700",
+							},
+							/*formatter: function (value) {
+								return Math.round(value * 100) + "%";
+							},*/
+						},
+					},
+					legend: {
+						display: false,
+						labels: {
+							fontColor: "#232C51",
+							fontFamily: "'Muli',sans-serif",
+							boxWidth: 10,
+							fontSize: 10,
+						},
+						position: "bottom",
+						align: "start",
+					},
+				},
+			},
+		};
+	}
 
-    arrayData2 = [];
+	// ----------------------------------------------------
+	/* Component events */
 
-    getData2 = bankDataD.accounts.map((item) => {
-        this.arrayData2.push({
-            bank: item.account_name,
-            action: 'Review Importing',
-            behind: '+3 months',
-            date: 'input date',
-            amount: 'amount',
-            verified: 'verified',
-            pendingItems: item.pending_items,
-            totalAmount: item.total_pending_amount,
-            behindB: ''
-        })
-    })
+	// Component Did Mount event
+	componentDidMount() {
+		// Setting overdue invoice data
+		const banksData = banksDataD.accounts.map((item) => {
+			return {
+				account: item.account_name,
+				pendingItems: "3",
+				amount: `${item.currency_code} ${item.total_pending_amount}`,
+				behind: "+3 items",
+			};
+		});
 
-    dataJson2 = {
-        rowData: this.arrayData2
-    }
+		this.setState((prevState) => ({
+			banks: {
+				...prevState.banks,
+				rowData: banksData,
+			},
+		}));
+	}
 
-    constructor(props) {
-        super(props);
-
-        this.state = {
-            data: {
-                labels: ['January', 'February', 'March', 'April', 'May'],
-                datasets: [
-                    {
-                        label: 'Rainfall',
-                        backgroundColor: 'rgba(75,192,192,1)',
-                        borderColor: 'rgba(0,0,0,1)',
-                        borderWidth: 2,
-                        data: [65, 59, 80, 81, 56]
-                    }
-                ]
-            }
-        }
-    }
-
-    render() {
-        return (
-            <div>
-                <div className="report-container" >
-                    <div class="row">
-                        <div class="col-sm-6">
-                            <Card ClassName="card-style50">
-                                <Card.Body>
-                                    <Card.Title>Reconciliación de bancos</Card.Title>
-                                    <div className="ag-theme-alpine" style={{ height: '340px', width: '100%', border: 'none' }}>
-                                        <AgGridReact
-                                            columnDefs={this.columnDefs.columnDefs}
-                                            groupHeaderHeight={50}
-                                            headerHeight={50}
-                                            rowData={this.dataJson2.rowData}
-                                            allowDragFromColumnsToolPanel={false}
-                                            enableMultiRowDragging={false}
-                                            colWidth={135}
-                                            frameworkComponents={
-                                                this.frameworkComponents
-                                            }
-                                            defaultColDef={{
-                                                sortable: true,
-                                                filter: false,
-                                                editable: false,
-                                                enablePivot: true,
-                                                // headerComponentFramework: SortableHeaderComponent,
-                                            }}>
-                                        </AgGridReact>
-                                    </div>
-                                </Card.Body>
-                            </Card>
-                        </div>
-                        <div class="col-sm-3">
-                            <Card>
-                                <Card.Body>
-                                    <Card.Title>Compras</Card.Title>
-                                    <div className="ag-theme-alpine" style={{ height: '340px', width: '100%', border: 'none' }}>
-                                        <AgGridReact
-                                            columnDefs={columnDefs.columnDefs}
-                                            groupHeaderHeight={50}
-                                            headerHeight={50}
-                                            rowData={dataJson.rowData}
-                                            allowDragFromColumnsToolPanel={false}
-                                            enableMultiRowDragging={false}
-                                            colWidth={160}
-                                            defaultColDef={{
-                                                sortable: true,
-                                                filter: false,
-                                                headerComponentFramework: SortableHeaderComponent,
-                                            }}>
-                                        </AgGridReact>
-                                    </div>
-                                </Card.Body>
-                            </Card>
-                        </div>
-                        <div class="col-sm-3">
-                            <Card>
-                                <Card.Body>
-                                    <Card.Title>Compras</Card.Title>
-                                    <div className="ag-theme-alpine" style={{ height: '100%', width: '100%' }}>
-                                        <Doughnut data={data} legend={false} />
-                                    </div>
-                                </Card.Body>
-                            </Card>
-                        </div>
-                    </div>
-                    <div class="row">
-                        <div class="col-sm-6">
-                            <Card ClassName="card-style50">
-                                <Card.Body>
-                                    <Card.Title>Reconciliación de bancos</Card.Title>
-                                    <Bar
-                                        data={this.state.data}
-                                        options={{
-                                            title: {
-                                                display: true,
-                                                text: 'Average Rainfall per month',
-                                                fontSize: 20
-                                            },
-                                            legend: {
-                                                display: true,
-                                                position: 'right'
-                                            }
-                                        }}
-                                    />
-                                </Card.Body>
-                            </Card>
-                        </div>
-                        <div class="col-sm-3">
-                            <Card>
-                                <Card.Body>
-                                    <Card.Title>Ventas</Card.Title>
-                                    <div className="ag-theme-alpine" style={{ height: '340px', width: '100%', border: 'none' }}>
-                                        <AgGridReact
-                                            columnDefs={columnDefs2.columnDefs}
-                                            groupHeaderHeight={50}
-                                            headerHeight={50}
-                                            rowData={dataJson2.rowData}
-                                            allowDragFromColumnsToolPanel={false}
-                                            enableMultiRowDragging={false}
-                                            colWidth={160}
-                                            defaultColDef={{
-                                                sortable: true,
-                                                filter: false,
-                                                headerComponentFramework: SortableHeaderComponent,
-                                            }}>
-                                        </AgGridReact>
-                                    </div>
-                                </Card.Body>
-                            </Card>
-                        </div>
-                        <div class="col-sm-3">
-                            <Card>
-                                <Card.Body>
-                                    <Card.Title>Ventas</Card.Title>
-                                    <div className="ag-theme-alpine" style={{ height: '100%', width: '100%' }}>
-                                        <Doughnut data={data} legend={false} />
-                                    </div>
-                                </Card.Body>
-                            </Card>
-                        </div>
-                    </div>
-                </div>
-            </div >
-        );
-    }
+	render() {
+		return (
+			<div className="report-container" style={{ display: "flex", padding:0 }}>
+				<div style={{ width: "50%" }}>
+					<div style={{ height: "100%" }}>
+						<Card style={{borderStyle:"none", height: "100%"}}>
+							<Card.Body>
+								<Card.Title>Conciliación bancaria</Card.Title>
+								<div
+									className="ag-theme-alpine"
+									style={{ height: "280px" }}
+								>
+									<AgGridReact
+										columnDefs={this.state.banks.columnDefs}
+										groupHeaderHeight={50}
+										headerHeight={50}
+										rowData={this.state.banks.rowData}
+										defaultColDef={this.state.banks.defaultColDef}
+									></AgGridReact>
+								</div>
+							</Card.Body>
+							<Card.Body style={{ paddingBottom: 0 }}>
+								<Bar
+									data={this.state.charts.data}
+									options={this.state.charts.options}
+								/>
+							</Card.Body>
+						</Card>
+					</div>
+				</div>
+				<div style={{ width: "50%" }}>
+					<div>
+						<Card style={{borderStyle:"none"}}>
+							<Card.Body>
+								<Card.Title>Ventas</Card.Title>
+								<Sales dashboardType="group" dashboardtableHeight="280px" />
+							</Card.Body>
+						</Card>
+					</div>
+					<div>
+						<Card style={{borderStyle:"none"}}>
+							<Card.Body>
+								<Card.Title>Compras</Card.Title>
+								<Purchases dashboardType="group" dashboardtableHeight="280px" />
+							</Card.Body>
+						</Card>
+					</div>
+				</div>
+			</div>
+		);
+	}
 }
 export { DashboardGroup };

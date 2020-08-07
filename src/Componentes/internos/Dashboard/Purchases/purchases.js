@@ -28,7 +28,7 @@ class Purchases extends Component {
 								cellClass: "dashboardGridCellBusiness",
 							},
 							{
-								headerName: "Cantidad",
+								headerName: "Monto",
 								field: "amount",
 								headerClass: "dashboardGridColumn",
 								cellClass: "dashboardGridCellBusiness",
@@ -57,7 +57,7 @@ class Purchases extends Component {
 								cellClass: "dashboardGridCellBusiness",
 							},
 							{
-								headerName: "Cantidad",
+								headerName: "Monto",
 								field: "amount",
 								headerClass: "dashboardGridColumn",
 								cellClass: "dashboardGridCellBusiness",
@@ -93,9 +93,9 @@ class Purchases extends Component {
 								family: "'Goldplay',sans-serif",
 								weight: "700",
 							},
-							formatter: function(value,context) {
-								return Math.round(value*100) + '%';
-							 }
+							formatter: function (value, context) {
+								return Math.round(value * 100) + "%";
+							},
 						},
 					},
 					legend: {
@@ -137,12 +137,14 @@ class Purchases extends Component {
 		// ----------------------------------------------------
 
 		// Setting main providers data
-		const mainProvidersData = PurchasesDataD.listPurchasesParClient.map((item) => {
-			return {
-				amount: `${item.currencyCode} ${item.amountDue}`,
-				contact: item.contactName,
-			};
-		});
+		const mainProvidersData = PurchasesDataD.listPurchasesParClient.map(
+			(item) => {
+				return {
+					amount: `${item.currencyCode} ${item.amountDue}`,
+					contact: item.contactName,
+				};
+			}
+		);
 
 		this.setState((prevState) => ({
 			mainProviders: {
@@ -160,7 +162,10 @@ class Purchases extends Component {
 			<div className={styles.Sales}>
 				<div className={styles.Bills}>
 					<div className={styles.SalesTable}>
-						<div className="ag-theme-alpine dashboardBusiness">
+						<div
+							className="ag-theme-alpine dashboardBusiness"
+							style={{height:this.props.dashboardtableHeight}}
+						>
 							<AgGridReact
 								columnDefs={this.state.overdueBill.columnDefs}
 								groupHeaderHeight={50}
@@ -180,31 +185,36 @@ class Purchases extends Component {
 						</div>
 					</div>
 				</div>
-				<div className={styles.Providers}>
-					<div className={styles.SalesTable}>
-						<div className="ag-theme-alpine dashboardBusiness">
-							<AgGridReact
-								columnDefs={this.state.mainProviders.columnDefs}
-								groupHeaderHeight={50}
-								headerHeight={50}
-								rowData={this.state.mainProviders.rowData}
-								defaultColDef={this.state.mainProviders.defaultColDef}
-							></AgGridReact>
+				{this.props.dashboardType !== "group" ? (
+					<div className={styles.Providers}>
+						<div className={styles.SalesTable}>
+							<div
+								className="ag-theme-alpine dashboardBusiness"
+								style={{height:this.props.dashboardtableHeight}}
+							>
+								<AgGridReact
+									columnDefs={this.state.mainProviders.columnDefs}
+									groupHeaderHeight={50}
+									headerHeight={50}
+									rowData={this.state.mainProviders.rowData}
+									defaultColDef={this.state.mainProviders.defaultColDef}
+								></AgGridReact>
+							</div>
+						</div>
+						<div className={styles.SalesChart}>
+							<div className={styles.ChartTitle}>
+								Principales proveedores a pagar
+							</div>
+							<div className={styles.ChartContainer}>
+								<Doughnut
+									data={this.state.charts.data}
+									options={this.state.charts.options}
+									width={200}
+								/>
+							</div>
 						</div>
 					</div>
-					<div className={styles.SalesChart}>
-						<div className={styles.ChartTitle}>
-							Principales proveedores a pagar
-						</div>
-						<div className={styles.ChartContainer}>
-							<Doughnut
-								data={this.state.charts.data}
-								options={this.state.charts.options}
-								width={200}
-							/>
-						</div>
-					</div>
-				</div>
+				) : null}
 			</div>
 		);
 	}

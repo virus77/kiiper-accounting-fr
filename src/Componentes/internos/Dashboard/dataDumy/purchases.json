@@ -24,6 +24,12 @@
             "behind": "+3 meses",
             "contactName": "Panaderia Pasteleria Cueva de Iria C.A.",
             "currencyCode": "VEF"
+        },
+        {
+            "amountDue": 47413.79,
+            "behind": "+3 meses",
+            "contactName": "Otros",
+            "currencyCode": "VEF"
         }
     ],
     "listPurchases": [
@@ -44,12 +50,7 @@
         },
         {
             "amountDue": 47413.79,
-            "behind": "2 weeks",
-            "currencyCode": "VEF"
-        },
-        {
-            "amountDue": 37682.9,
-            "behind": "2 weeks",
+            "behind": "+3 meses",
             "currencyCode": "VEF"
         }
     ],
