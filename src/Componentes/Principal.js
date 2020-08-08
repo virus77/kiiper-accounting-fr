@@ -125,28 +125,11 @@ const useStyles = makeStyles((theme) => ({
 
 //Función utilizada para llenar el dropdownlist
 function fillDropDownListGroup(props) {
-	let count = 0;
-	var organizations = props.org.map((res) => {
-		count++;
+	var group = props.grp.map((res) => {
 		return {
 			type: "xeroGroupName",
-			name: "Grupo" + " " + res.xeroOrgName,
-			id: res.organisationId,
-			specialContrib: res.isSpecialContrib
-		};
-	});
-
-	return organizations;
-}
-
-//Función utilizada para llenar el dropdownlist
-function fillDropDownList(props) {
-	var organizations = props.org.map((res) => {
-		return {
-			type: res.xeroOrgName ? "xeroOrgName" : "xeroGroupName",
-			name: res.xeroOrgName ? res.xeroOrgName : res.xeroGroupName,
-			id: res.organisationId ? res.organisationId : res.groupId,
-			specialContrib: res.isSpecialContrib
+			name: res.practiceName,
+			id: res.practiceID
 		};
 	});
 
@@ -162,10 +145,7 @@ export default function Dashboard(props) {
 	const classes = useStyles();
 	var rw_2_input = "";
 
-	//Retrive data from organizarion and use for fill ddl
-	var organizations = fillDropDownList(props);
 	var group = fillDropDownListGroup(props);
-
 	const [event, eventKey] = React.useState(-1);
 	const handleListItemClick = (event, index) => {
 		eventKey(index);
@@ -200,16 +180,19 @@ export default function Dashboard(props) {
 			.getElementsByTagName("div")[0];
 
 		if (typeof item.type === "string") {
-			if (item.name.includes("Grupo"))
+			if (item.type === "xeroGroupName") {
 				eventKey(-2);
+				organizations = await returnOrganizations(item.id);
+			}
 			else
 				eventKey(item.type === "xeroGroupName" ? item.type = "xeroOrgName" : "xeroOrgName");
 
 			// Setting organization selected in React to component
 			setorgIdSelected(item.id);
-			setorgNameSelected(item.name.includes("Grupo") ? "" : item.name);
 			setorgSpecialContrib(item.specialContrib);
-			setValue(item.name.includes("Grupo") ? "" : item.name);
+			setValue(item.type === "xeroGroupName" ? "" : item.name);
+			setorgNameSelected(item.type === "xeroGroupName" ? "" : item.name);
+
 
 			//Cambia el color en el ddlPrincipal dependiendo la selección
 			rw_2_input.style =
@@ -555,8 +538,9 @@ export default function Dashboard(props) {
 						<Grid container spacing={2}>
 							<div className="breadcrumbClass">
 								<div id="moduleTitle">
-									<Title>Dashboard Grupo</Title>
+									<Title>Dashboard Grupos</Title>
 								</div>
+								<span id="breadcrumbPath">&gt; Dashboard Grupos</span>
 							</div>
 							<Grid item xs={12}>
 								<Paper className={classes.paper}>

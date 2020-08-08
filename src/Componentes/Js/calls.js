@@ -309,6 +309,46 @@ const calls = {
 				})
 		);
 	},
+
+	//Petición que regresa los grupos a los que tengo acceso en xero
+	getGroupsList: async () => {
+
+		// Get groups from logged user
+		return await fetch('/getPractices')
+			.then(res => res.json())
+			.then(dataGroup => {
+				return dataGroup
+			})
+			.catch((error) => {
+				console.log(error);
+			});
+	},
+
+	/// Petición para obtener las organizaciones a las que tengo acceso
+	/// @param {string} practice_id - id de la práctica seleccionada
+	getOrganizations: async (practice_id) => {
+
+		// Fetch URL with parameters
+		const fetchURL = `/getOrganisationsByPractice?practice_id=${practice_id}`;
+
+		return await fetch(fetchURL)
+			.then((res) => res.json())
+			.then((dataOrg) => {
+				let organizations = dataOrg.map((res) => {
+					return {
+						type: "xeroOrgName",
+						name: res.xeroOrgName,
+						id: res.organisationId,
+						specialContrib: res.isSpecialContrib
+					};
+				});
+				return organizations;
+			}).catch((error) => {
+				console.log(error);
+				return false;
+			});
+	},
+
 	/// Petición para obtener el libro de Compras y ventas en Xero
 	/// deppendiendo del periodo
 	/// @param {text} id_organisation - organisation id
@@ -429,7 +469,7 @@ const calls = {
 		};
 
 		return fetch(
-			`/getStatements?id_organisation=5ea086c97cc16250b45f82e1&id_tax_type=${id_tax_type}&id_statement_status=${id_statement_status}`,
+			`/getStatements?id_organisation=${id_organisation}&id_tax_type=${id_tax_type}&id_statement_status=${id_statement_status}`,
 			fetchConfig
 		)
 			.then((res) => res.json())
@@ -628,7 +668,6 @@ const calls = {
 
 	//Función que desloguea al usuario actual y destruye la sessión
 	logoutFunction: () => {
-
 		return fetch("/logout")
 			.then((res) => {
 				window.location.reload(false)
