@@ -339,14 +339,6 @@ class Ventas extends Component {
 					break;
 
 				default:
-					if (activeItem.includes("Sel") === true)
-						this.setState({
-							activeItem: activeItem.substring(0, activeItem.length - 3),
-							show: false,
-							texto: "",
-						});
-					else
-						this.setState({ activeItem: activeItem, show: false, texto: "" });
 					break;
 			}
 		} else {
@@ -476,7 +468,7 @@ class Ventas extends Component {
 							<div className="idDibvDisabledsmall">
 								<span>Remitir</span>
 							</div>
-						) : activeItem === "Anulados" ? (
+						) : activeItem === "AnuladosSel" ? (
 							<div
 								className="idDivEnabledSmall"
 								onClick={() => this.onMoveData("Anulados", true)}

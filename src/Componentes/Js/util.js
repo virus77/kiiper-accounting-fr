@@ -53,6 +53,7 @@ const util = {
             })
         );
     },
+
     getAndBuildGridDataDeclaration: (dropDownListEvent, statusName, orgIdSelected, kindOfPeople = "") => {
 
         // Retrieving and setting data to perform a request to Xero
@@ -272,6 +273,7 @@ const util = {
             gridItems: gridItems
         };
     },
+
     /// Helps to determine the status of a voucher
     /// @param {string} statusName - the name of the status
     getStatusInfoConcept: (statusName) => {
@@ -340,6 +342,7 @@ const util = {
 
         return statusInfo;
     },
+
     getStatusInfoConceptDeclaration: (statusName) => {
         let statusInfo = {
             id: 1,
@@ -384,6 +387,7 @@ const util = {
 
         return statusInfo;
     },
+
     /// Helps to get the kind of tax of a voucher
     /// @param {float} taxIndex - The index configured by tax in DropDownList events property
     getTaxInfoConceptDeclaration: (taxIndex) => {
@@ -412,6 +416,7 @@ const util = {
 
         return taxInfo;
     },
+
     /// Helps to get the kind of tax of a voucher
     /// @param {float} taxIndex - The index configured by tax in DropDownList events property
     getTaxInfoConcept: (taxIndex, kindOfPeople) => {
@@ -440,6 +445,7 @@ const util = {
 
         return taxInfo;
     },
+
     /// Helps to know when a grid data needs to have editable columns
     /// @param {object} voucherStatus - status info of the voucher (sales, purchases)
     knowIfGridHeadersEditable: (voucherStatus) => {
@@ -453,6 +459,7 @@ const util = {
 
         return isEditableGrid;
     },
+
     //Crea el componente generidco del grid
     createDataDrid: function (columnDefs, rowData, defaultColDef, components, onRowSelected, onSelectionChanged) {
         return (
@@ -488,6 +495,7 @@ const util = {
             </div>
         )
     },
+
     /// rea el header del componente de ventas
     /// @param {object} Tipo - Maneja variable si es IVA o ISLR)
     /// @param {object} kindOfPeople - Indica si es cliente o proveedor 
@@ -525,6 +533,7 @@ const util = {
 
         return (columnDefs)
     },
+
     //Crea el header del componente de ventas
     /// @param {object} Tipo - Maneja variable si es IVA o ISLR)
     /// @param {object} kindOfPeople - Indica si es cliente o proveedor 
@@ -571,6 +580,7 @@ const util = {
         ]
         return (columnDefs)
     },
+
     /// Crea el header del componente de declaracion
     /// @param {object} Tipo - Maneja variable si es IVA o ISLR)
     /// @param {object} kindOfPeople - Indica si es cliente o proveedor 
@@ -632,6 +642,7 @@ const util = {
         ]
         return (columnDefs)
     },
+
     /// Crea el header del componente de FiscalBooks
     returnHeaderFiscalBooks: function (orgIdSelected, tipoLibro) {
         var columnDefs = [
@@ -655,6 +666,7 @@ const util = {
         ]
         return (columnDefs)
     },
+
     //Coloca icono de carga en el grid
     CellRendererUp: function (params) {
         var eDiv = document.createElement('div');
@@ -696,6 +708,7 @@ const util = {
         eDiv.appendChild(eDivIn);
         return eDiv;
     },
+
     //Coloca icono de descarga en el grid
     // y se ejecuta laa acción para descargar documento
     /// @param {object} params - parámetro 
@@ -729,6 +742,7 @@ const util = {
         eDiv.appendChild(span);
         return eDiv;
     },
+
     /// Ayuda a determinar la manera default en que se presenta la columna Archivo
     fileColumnRenderer: function (params) {
         let fileIcon = document.createElement("img");
@@ -742,6 +756,7 @@ const util = {
 
         return fileIcon;
     },
+
     /// Ayuda a determinar la manera default en que se presenta la columna Archivo
     updateFileColumnRenderer: function (params) {
         let fileIcon = document.createElement("img");
@@ -763,7 +778,7 @@ const util = {
                 case 2:
                     calls.getBook(
                         params.data.withHoldingId,
-                        1,
+                        params.data.TipoLibro,
                         params.data.init_date.format("DD/MM/YYYY"),
                         params.data.end_date.format("DD/MM/YYYY"),
                         "/purchasesBook");
@@ -775,6 +790,7 @@ const util = {
 
         return fileIcon;
     },
+
     //Action log in ag-grid
     printResult: function (res) {
         console.log('---------------------------------------');
@@ -794,6 +810,7 @@ const util = {
             });
         }
     },
+
     //Set format money
     formatMoney: function (amount, decimalCount = 2, decimal = ",", thousands = ".") {
         try {
@@ -814,6 +831,7 @@ const util = {
             console.log(e)
         }
     },
+
     //Valida si una cadena contiene algun dato de otra cadena
     contains: function (value, searchFor) {
         if (Object.prototype.toString.call(value) === '[object Array]') {
@@ -828,6 +846,7 @@ const util = {
             return v.indexOf(v2) > -1;
         }
     },
+
     /// Regresa rango de fechas del mes actual
     getmonthRange() {
         var date = new Date(), y = date.getFullYear(), m = date.getMonth();
@@ -837,6 +856,7 @@ const util = {
             { firstDay: moment(firstDay).format("DD/MM/YYYY"), lastDay: moment(lastDay).format("DD/MM/YYYY") }
         )
     },
+
     /// Regresa rango de fechas del mes previo al actual
     getPreviousRange() {
         var date = new Date(), y = date.getFullYear(), m = date.getMonth() - 1;
@@ -847,6 +867,7 @@ const util = {
             { firstDay: moment(firstDay).format("DD/MM/YYYY"), lastDay: moment(lastDay).format("DD/MM/YYYY") }
         )
     },
+
     //filtra por tipo de banco para obtener el estado de cuenta del mismo
     /// @param {object} _bank - Nombre del banco
     bankType: function (_bank) {
@@ -909,17 +930,7 @@ const util = {
         });
         return bankSelected;
     },
-    //Crea el Copyright
-    Copyright: function () {
-        return (
-            <Typography variant="body2" color="textSecondary" align="center">
-                {'Copyright © '}
-                <Link color="inherit" href="/">kiiper</Link>{' '}
-                {new Date().getFullYear()}
-                {'.'}
-            </Typography>
-        );
-    },
+
     //Coloca icono de descarga en el grid
     // y se ejecuta laa acción para descargar documento
     /// @param {object} dateTimeA - Fecha inicial
@@ -932,6 +943,19 @@ const util = {
         else if (momentA < momentB) return -1;
         else return 0;
     },
+
+    //Crea el Copyright
+    Copyright: function () {
+        return (
+            <Typography variant="body2" color="textSecondary" align="center">
+                {'Copyright © '}
+                <Link color="inherit" href="/">kiiper</Link>{' '}
+                {new Date().getFullYear()}
+                {'.'}
+            </Typography>
+        );
+    },
+
 };
 
 function NumberValidation() { }

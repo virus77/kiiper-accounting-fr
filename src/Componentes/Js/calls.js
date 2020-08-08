@@ -11,19 +11,10 @@ const calls = {
 	/// @param {string} orgIdSelected - organization id from Xero
 	getOrgConceptsInfo: (taxInfo, statusInfo, orgIdSelected) => {
 		// Organization selected by user previously
-		let orgIdDefault = orgIdSelected
-			? orgIdSelected
-			: "5ee993a0f9addb8a8cf25c4f";
-		// Testing validation purposes
-		orgIdDefault =
-			orgIdDefault === "5ee993a0f9addb8a8cf25c4f"
-				? "5ea086c97cc16250b45f82e1"
-				: orgIdDefault;
-
 		// Fetch URL with parameters
 		const fetchURL =
 			"/getWithholdings" +
-			`?id_organisation=${orgIdDefault}` +
+			`?id_organisation=${orgIdSelected}` +
 			`&id_tax_type=${taxInfo.id}` +
 			`&id_status=${statusInfo.id}`;
 

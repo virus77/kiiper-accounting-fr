@@ -343,7 +343,15 @@ export default function Dashboard(props) {
 											<DropdownList
 												style={{ width: "240px" }}
 												filter
-												data={event === "xeroOrgName" ? organizations : event === -2 ? organizations : group}
+												data={
+													event === "xeroOrgName" ||
+														event === 0.1 ||
+														event === 1.1 ||
+														event === 1.2 ||
+														event === 2.1 ||
+														event === 2.2 ||
+														event === 3.1 ||
+														event === 3.2 ? organizations : event === -2 ? organizations : group}
 												allowCreate="onFilter"
 												onChange={(value) => handleClick(value)}
 												itemComponent={ValueInput}

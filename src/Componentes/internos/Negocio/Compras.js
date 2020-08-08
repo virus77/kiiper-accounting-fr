@@ -249,14 +249,6 @@ class Compras extends Component {
 					});
 					break;
 				default:
-					if (activeItem.includes("Sel") === true)
-						this.setState({
-							activeItem: activeItem.substring(0, activeItem.length - 3),
-							show: false,
-							texto: "",
-						});
-					else
-						this.setState({ activeItem: activeItem, show: false, texto: "" });
 					break;
 			}
 		} else {
@@ -297,8 +289,8 @@ class Compras extends Component {
 								this.state.event === 4.2
 									? "≡  Comprobante de retención de IVA  "
 									: this.state.event === 4.1
-									? "≡  Comprobante de retención de ISLR  "
-									: "≡  Comprobante de retención de IVA  "
+										? "≡  Comprobante de retención de ISLR  "
+										: "≡  Comprobante de retención de IVA  "
 							}
 						>
 							<NavDropdown.Item
@@ -323,22 +315,22 @@ class Compras extends Component {
 							</NavDropdown.Item>
 						</NavDropdown>
 					) : (
-						<NavDropdown
-							id="ddlVentas"
-							title={"≡  Comprobante de retención de ISLR  "}
-						>
-							<NavDropdown.Item
-								eventKey={4.1}
-								onClick={(event) => this.handleListItemClick(event, 4.1)}
-								href="#Reportes/ISLR"
+							<NavDropdown
+								id="ddlVentas"
+								title={"≡  Comprobante de retención de ISLR  "}
 							>
-								<span className="ddlComVenLabel">
-									{" "}
+								<NavDropdown.Item
+									eventKey={4.1}
+									onClick={(event) => this.handleListItemClick(event, 4.1)}
+									href="#Reportes/ISLR"
+								>
+									<span className="ddlComVenLabel">
+										{" "}
 									Comprobante de retención de ISLR{" "}
-								</span>
-							</NavDropdown.Item>
-						</NavDropdown>
-					)}
+									</span>
+								</NavDropdown.Item>
+							</NavDropdown>
+						)}
 				</div>
 				{/*Pintado de grid dependiendo del menu superior del grid*/}
 				<Menu style={{ display: "flex" }}>
@@ -352,19 +344,19 @@ class Compras extends Component {
 						) : activeItem === "AprobadosSel" ? (
 							<span style={{ color: "#7158e2" }}>Aprobados</span>
 						) : (
-							<span>Aprobados</span>
-						)}
+									<span>Aprobados</span>
+								)}
 					</Menu.Item>
 					<Menu.Item
 						name="Anulados"
 						active={activeItem === "Anulados" ? true : false}
 						onClick={this.handleItemClick}
 					>
-						{activeItem === "Anulados" ? (
+						{activeItem === "AnuladosSel" ? (
 							<span style={{ color: "#7158e2" }}>Anulados</span>
 						) : (
-							<span>Anulados</span>
-						)}
+								<span>Anulados</span>
+							)}
 					</Menu.Item>
 					<Menu.Item
 						name="Archivados"
@@ -376,8 +368,8 @@ class Compras extends Component {
 						) : activeItem === "ArchivadosSel" ? (
 							<span style={{ color: "#7158e2" }}>Archivados</span>
 						) : (
-							<span>Archivados</span>
-						)}
+									<span>Archivados</span>
+								)}
 					</Menu.Item>
 					<div
 						style={{
@@ -424,16 +416,16 @@ class Compras extends Component {
 					<div id="salesGrid" className="ag-theme-alpine">
 						{activeItem === "Aprobados"
 							? util.createDataDrid(
-									this.state.columnDefs,
-									this.state.rowData,
-									this.state.rowSelection,
-									this.state.defaultColDef,
-									this.state.components,
-									this.onRowSelected.bind(this),
-									this.onSelectionChanged.bind(this)
-							  )
+								this.state.columnDefs,
+								this.state.rowData,
+								this.state.rowSelection,
+								this.state.defaultColDef,
+								this.state.components,
+								this.onRowSelected.bind(this),
+								this.onSelectionChanged.bind(this)
+							)
 							: activeItem === "Anulados"
-							? util.createDataDrid(
+								? util.createDataDrid(
 									this.state.columnDefs,
 									this.state.rowData,
 									this.state.rowSelection,
@@ -441,26 +433,26 @@ class Compras extends Component {
 									this.state.components,
 									this.onRowSelected.bind(this),
 									this.onSelectionChanged.bind(this)
-							  )
-							: activeItem === "Archivados"
-							? util.createDataDrid(
-									this.state.columnDefs,
-									this.state.rowData,
-									this.state.rowSelection,
-									this.state.defaultColDef,
-									this.state.components,
-									this.onRowSelected.bind(this),
-									this.onSelectionChanged.bind(this)
-							  )
-							: util.createDataDrid(
-									this.state.columnDefs,
-									this.state.rowData,
-									this.state.rowSelection,
-									this.state.defaultColDef,
-									this.state.components,
-									this.onRowSelected.bind(this),
-									this.onSelectionChanged.bind(this)
-							  )}
+								)
+								: activeItem === "Archivados"
+									? util.createDataDrid(
+										this.state.columnDefs,
+										this.state.rowData,
+										this.state.rowSelection,
+										this.state.defaultColDef,
+										this.state.components,
+										this.onRowSelected.bind(this),
+										this.onSelectionChanged.bind(this)
+									)
+									: util.createDataDrid(
+										this.state.columnDefs,
+										this.state.rowData,
+										this.state.rowSelection,
+										this.state.defaultColDef,
+										this.state.components,
+										this.onRowSelected.bind(this),
+										this.onSelectionChanged.bind(this)
+									)}
 					</div>
 					<div id="idDivAlert">
 						{this.state.show === true ? (
