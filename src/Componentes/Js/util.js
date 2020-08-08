@@ -53,6 +53,7 @@ const util = {
             })
         );
     },
+
     getAndBuildGridDataDeclaration: (dropDownListEvent, statusName, orgIdSelected, kindOfPeople = "") => {
 
         // Retrieving and setting data to perform a request to Xero
@@ -112,7 +113,7 @@ const util = {
             })
         );
     },
-    
+
     /// After getting the data from the organization in the function
     /// getOrgConceptsInfo the data is porcessed to give the right format
     /// @param {array} items - data requested from server
@@ -272,6 +273,7 @@ const util = {
             gridItems: gridItems
         };
     },
+
     /// Helps to determine the status of a voucher
     /// @param {string} statusName - the name of the status
     getStatusInfoConcept: (statusName) => {
@@ -340,6 +342,7 @@ const util = {
 
         return statusInfo;
     },
+
     getStatusInfoConceptDeclaration: (statusName) => {
         let statusInfo = {
             id: 1,
@@ -384,6 +387,7 @@ const util = {
 
         return statusInfo;
     },
+
     /// Helps to get the kind of tax of a voucher
     /// @param {float} taxIndex - The index configured by tax in DropDownList events property
     getTaxInfoConceptDeclaration: (taxIndex) => {
@@ -412,6 +416,7 @@ const util = {
 
         return taxInfo;
     },
+
     /// Helps to get the kind of tax of a voucher
     /// @param {float} taxIndex - The index configured by tax in DropDownList events property
     getTaxInfoConcept: (taxIndex, kindOfPeople) => {
@@ -440,6 +445,7 @@ const util = {
 
         return taxInfo;
     },
+
     /// Helps to know when a grid data needs to have editable columns
     /// @param {object} voucherStatus - status info of the voucher (sales, purchases)
     knowIfGridHeadersEditable: (voucherStatus) => {
@@ -453,6 +459,7 @@ const util = {
 
         return isEditableGrid;
     },
+
     //Crea el componente generidco del grid
     createDataDrid: function (columnDefs, rowData, defaultColDef, components, onRowSelected, onSelectionChanged) {
         return (
@@ -488,6 +495,7 @@ const util = {
             </div>
         )
     },
+
     /// rea el header del componente de ventas
     /// @param {object} Tipo - Maneja variable si es IVA o ISLR)
     /// @param {object} kindOfPeople - Indica si es cliente o proveedor 
@@ -516,12 +524,7 @@ const util = {
             { headerName: 'Fecha factura', field: 'FechaFactura', cellClass: "grid-cell-centered", xeroField: 'invoice_date', filter: 'agTextColumnFilter', filter: 'agTextColumnFilter', width: 130, sortable: true, cellClass: "grid-cell-centered" },
             { headerName: 'Base imponible', field: 'invoice_subtotal', xeroField: true, calculated: true, formulaName: 'base_taxable', width: 135, sortable: true, type: 'rightAligned' },
             { headerName: 'Total ' + Tipo, field: 'TotalIVA', xeroField: 'invoice_total_tax', type: 'rightAligned', width: 110, sortable: true },
-            {
-                headerName: '% retenido', field: 'Retencion', xeroField: 'retention_percentage', type: 'rightAligned', hide: Tipo === "IVA" ? false : true, calculated: true, width: 104, sortable: true, cellClass: "grid-cell-centered",
-                valueGetter: function (params) {
-                    return 75;
-                },
-            },
+            { headerName: '% retenido', field: 'Retencion', xeroField: 'retention_percentage', type: 'rightAligned', hide: Tipo === "IVA" ? false : true, calculated: true, width: 104, sortable: true, cellClass: "grid-cell-centered" },
             { headerName: 'Monto retenido', field: 'MontoRetenido', xeroField: true, calculated: true, formulaName: 'retention_amount', width: 129, sortable: true, type: 'rightAligned' },
             { headerName: 'Fecha de comprobante', field: 'approval_date', width: 170, sortable: true, editable: true, cellEditor: Datepicker, cellClass: "grid-cell-centered" },
             { headerName: 'No. Comprobante', field: 'Comprobante', width: 150, sortable: true, editable: true, cellEditor: NumberValidation, type: 'rightAligned', cellClass: "grid-cell-alignRight" },
@@ -530,6 +533,7 @@ const util = {
 
         return (columnDefs)
     },
+
     //Crea el header del componente de ventas
     /// @param {object} Tipo - Maneja variable si es IVA o ISLR)
     /// @param {object} kindOfPeople - Indica si es cliente o proveedor 
@@ -568,12 +572,7 @@ const util = {
             { headerName: 'Fecha factura', field: 'FechaFactura', xeroField: 'invoice_date', filter: 'agTextColumnFilter', width: 130, sortable: true, cellClass: "grid-cell-centered" },
             { headerName: 'Base imponible', field: 'invoice_subtotal', xeroField: 'invoice_subtotal', width: 135, sortable: true, type: 'rightAligned' },
             { headerName: 'Total ' + Tipo, field: 'TotalIVA', xeroField: 'retained_amount', width: 110, sortable: true, type: 'rightAligned' },
-            {
-                headerName: '% retenido', field: 'Retencion', xeroField: 'retention_percentage', hide: Tipo === "IVA" ? false : true, calculated: true, width: 104, sortable: true, cellClass: "grid-cell-cenLeft", type: 'rightAligned',
-                valueGetter: function () {
-                    return 75;
-                },
-            },
+            { headerName: '% retenido', field: 'Retencion', xeroField: 'retention_percentage', hide: Tipo === "IVA" ? false : true, calculated: true, width: 104, sortable: true, cellClass: "grid-cell-cenLeft", type: 'rightAligned' },
             { headerName: 'Monto retenido', field: 'MontoRetenido', xeroField: true, calculated: true, formulaName: 'retention_amount', width: 129, sortable: true, headerClass: "grid-cell-centered", type: 'rightAligned' },
             { headerName: 'Fecha de comprobante', field: 'date', xeroField: 'approval_date', filter: 'agTextColumnFilter', width: 170, sortable: true, cellClass: "grid-cell-centered" },
             { headerName: 'No. Comprobante', field: 'Comprobante', xeroField: 'correlative', width: 150, sortable: true, cellClass: "grid-cell-cenLeft", type: 'rightAligned' },
@@ -581,6 +580,7 @@ const util = {
         ]
         return (columnDefs)
     },
+
     /// Crea el header del componente de declaracion
     /// @param {object} Tipo - Maneja variable si es IVA o ISLR)
     /// @param {object} kindOfPeople - Indica si es cliente o proveedor 
@@ -642,6 +642,7 @@ const util = {
         ]
         return (columnDefs)
     },
+
     /// Crea el header del componente de FiscalBooks
     returnHeaderFiscalBooks: function (orgIdSelected, tipoLibro) {
         var columnDefs = [
@@ -665,6 +666,7 @@ const util = {
         ]
         return (columnDefs)
     },
+
     //Coloca icono de carga en el grid
     CellRendererUp: function (params) {
         var eDiv = document.createElement('div');
@@ -706,6 +708,7 @@ const util = {
         eDiv.appendChild(eDivIn);
         return eDiv;
     },
+
     //Coloca icono de descarga en el grid
     // y se ejecuta laa acción para descargar documento
     /// @param {object} params - parámetro 
@@ -739,6 +742,7 @@ const util = {
         eDiv.appendChild(span);
         return eDiv;
     },
+
     /// Ayuda a determinar la manera default en que se presenta la columna Archivo
     fileColumnRenderer: function (params) {
         let fileIcon = document.createElement("img");
@@ -752,6 +756,7 @@ const util = {
 
         return fileIcon;
     },
+
     /// Ayuda a determinar la manera default en que se presenta la columna Archivo
     updateFileColumnRenderer: function (params) {
         let fileIcon = document.createElement("img");
@@ -773,7 +778,7 @@ const util = {
                 case 2:
                     calls.getBook(
                         params.data.withHoldingId,
-                        1,
+                        params.data.TipoLibro,
                         params.data.init_date.format("DD/MM/YYYY"),
                         params.data.end_date.format("DD/MM/YYYY"),
                         "/purchasesBook");
@@ -785,6 +790,7 @@ const util = {
 
         return fileIcon;
     },
+
     //Action log in ag-grid
     printResult: function (res) {
         console.log('---------------------------------------');
@@ -804,6 +810,7 @@ const util = {
             });
         }
     },
+
     //Set format money
     formatMoney: function (amount, decimalCount = 2, decimal = ",", thousands = ".") {
         try {
@@ -824,6 +831,7 @@ const util = {
             console.log(e)
         }
     },
+
     //Valida si una cadena contiene algun dato de otra cadena
     contains: function (value, searchFor) {
         if (Object.prototype.toString.call(value) === '[object Array]') {
@@ -838,6 +846,7 @@ const util = {
             return v.indexOf(v2) > -1;
         }
     },
+
     /// Regresa rango de fechas del mes actual
     getmonthRange() {
         var date = new Date(), y = date.getFullYear(), m = date.getMonth();
@@ -847,6 +856,7 @@ const util = {
             { firstDay: moment(firstDay).format("DD/MM/YYYY"), lastDay: moment(lastDay).format("DD/MM/YYYY") }
         )
     },
+
     /// Regresa rango de fechas del mes previo al actual
     getPreviousRange() {
         var date = new Date(), y = date.getFullYear(), m = date.getMonth() - 1;
@@ -857,61 +867,62 @@ const util = {
             { firstDay: moment(firstDay).format("DD/MM/YYYY"), lastDay: moment(lastDay).format("DD/MM/YYYY") }
         )
     },
-       //filtra por tipo de banco para obtener el estado de cuenta del mismo
+
+    //filtra por tipo de banco para obtener el estado de cuenta del mismo
     /// @param {object} _bank - Nombre del banco
     bankType: function (_bank) {
         var bankName = _bank;
         const banks = [
-            { id: 1, name: "MercantilVES", formatPartial: 'txt', formatMonth: 'txt',  url: "/convertBankStatement/MercantilNatural" },
+            { id: 1, name: "MercantilVES", formatPartial: 'txt', formatMonth: 'txt', url: "/convertBankStatement/MercantilNatural" },
             { id: 2, name: "MercantilVES", formatPartial: 'txt', formatMonth: 'pdf', url: "/convertBankStatement/MercantilJuridica" },
-            { id: 3, name: "NacionaldeCréditoVES", formatPartial: 'xls', formatMonth: 'pdf',  url: "/convertBankStatement/BNC" },
-            { id: 4, name: "OccidentaldeDescuentoVES", formatPartial: 'csv', formatMonth: 'pdf',  url: "/convertBankStatement/BOD" },
-            { id: 5, name: "ProvincialUSD", formatPartial: 'xls', formatMonth: 'pdf',  url: "/convertBankStatement/Provincial" },
-            { id: 6, name: "BanescoUSD", formatPartial: 'txt', formatMonth: 'txt',  url: "/convertBankStatement/BanescoUS" },
-            { id: 7, name: "BanplusVES", formatPartial: 'xls', formatMonth: 'pdf',  url: "/convertBankStatement/Banplus" },
-            { id: 8, name: "AmerantUSD", formatPartial: 'pdf', formatMonth: 'pdf',  url: "/convertBankStatement/AmerantUS" },
-            { id: 9, name: "BicentenarioVES", formatPartial: 'txt', formatMonth: 'txt',  url: "/convertBankStatement/Bicentenario" },
-            { id: 10, name: "MiBancoVES", formatPartial: 'txt', formatMonth: 'txt',  url: "/convertBankStatement/MiBanco" },
-            { id: 11, name: "MercadopagoVES", formatPartial: 'xls', formatMonth: 'xls',  url: "/convertBankStatement/Mercadopago" },
-            { id: 12, name: "VenezolanodeCreditoVES", formatPartial: 'csv', formatMonth: 'pdf',  url: "/convertBankStatement/BVC" },
-            { id: 13, name: "BancaribeVES", formatPartial: 'txt', formatMonth: 'pdf',  url: "/convertBankStatement/Bancaribe" },
-            { id: 14, name: "VenezuelaVES", formatPartial: 'csv', formatMonth: 'pdf',  url: "/convertBankStatement/Vzla" },
-            { id: 15, name: "SafraUSD", formatPartial: 'txt', formatMonth: 'txt',  url: "/convertBankStatement/Safra" },
-            { id: 16, name: "BanescoPanamaUSD", formatPartial: 'pdf', formatMonth: 'pdf',  url: "/convertBankStatement/BanescoPanama" },
-            { id: 17, name: "DeutscheUSD", formatPartial: 'xlsx', formatMonth: 'xlsx',  url: "/convertBankStatement/Deutsche" },
-            { id: 18, name: "MultibanKUSD", formatPartial: 'xlsx', formatMonth: 'xlsx',  url: "/convertBankStatement/Multibank" },
-            { id: 19, name: "SantanderCOP", formatPartial: 'csv', formatMonth: 'csv',  url: "/convertBankStatement/Santander" },
-            { id: 20, name: "CaroníVES", formatPartial: 'txt', formatMonth: 'txt',  url: "/convertBankStatement/Caroni" },
-            { id: 21, name: "ExteriorVES", formatPartial: 'txt', formatMonth: 'pdf',  url: "/convertBankStatement/Exterior" },
-            { id: 22, name: "PlazaVES", formatPartial: 'txt', formatMonth: 'pdf',  url: "/convertBankStatement/Plaza" },
-            { id: 23, name: "TDBankUSD", formatPartial: 'pdf', formatMonth: 'pdf',  url: "/convertBankStatement/TDBank" },
-            { id: 24, name: "KearnyUSD", formatPartial: 'pdf', formatMonth: 'pdf',  url: "/convertBankStatement/Kearny" },
-            { id: 25, name: "WellsFargoUSD", formatPartial: 'pdf', formatMonth: 'pdf',  url: "/convertBankStatement/WellsFargo" },
-            { id: 26, name: "ChaseUSD", formatPartial: 'pdf', formatMonth: 'pdf',  url: "/convertBankStatement/Chase" },
-            { id: 27, name: "RidgewoodUSD", formatPartial: 'pdf', formatMonth: 'pdf',  url: "/convertBankStatement/Ridgewood" },
-            { id: 28, name: "SantanderCLP", formatPartial: 'xls', formatMonth: 'xls',  url: "/convertBankStatement/SantanderCLPChilePesos" },
-            { id: 29, name: "ArcaUSD", formatPartial: 'pdf', formatMonth: 'pdf',  url: "/convertBankStatement/ArcaUS" },
-            { id: 30, name: "BandesUSD", formatPartial: 'pdf', formatMonth: 'pdf',  url: "/convertBankStatement/BandesUruguayUS" },
-            { id: 31, name: "BandesEUR", formatPartial: 'pdf', formatMonth: 'pdf',  url: "/convertBankStatement/BandesUruguayEuros" },
-            { id: 32, name: "MercantilPanamaUSD", formatPartial: 'pdf', formatMonth: 'pdf',  url: "/convertBankStatement/MercantilPanamaUS" },
-            { id: 33, name: "PaypalUSD", formatPartial: 'pdf', formatMonth: 'pdf',  url: "/convertBankStatement/PaypalUS" },
-            { id: 34, name: "BancaribeCucacaoUSD", formatPartial: 'xls', formatMonth: 'pdf',  url: "/convertBankStatement/BancaribeCuracaoBank" },
-            { id: 35, name: "FaceBankUSD", formatPartial: 'xls', formatMonth: 'pdf',  url: "/convertBankStatement/FacebankUS" },
-            { id: 39, name: "CitibankUSD", formatPartial: 'pdf', formatMonth: 'pdf',  url: "/convertBankStatement/CitibankUS" },
-            { id: 42, name: "ITAUCOP", formatPartial: 'xls', formatMonth: 'pdf',  url: "/convertBankStatement/ItauColombiaPesos" },
-            { id: 43, name: "ProvincialVES", formatPartial: 'xls', formatMonth: 'pdf',  url: "/convertBankStatement/Provincial" },
-            { id: 47, name: "VeneolanodeCreditoUSD", formatPartial: 'pdf', formatMonth: 'pdf',  url: "/convertBankStatement/CaymanBranchUS" },
-            { id: 48, name: "BankOfAmericaUSD", formatPartial: 'pdf', formatMonth: 'pdf',  url: "/convertBankStatement/BankAmericaUS" },
-            { id: 52, name: "BanescoVES", formatPartial: 'txt', formatMonth: 'pdf',  url: "/convertBankStatement/Banesco" },
-            { id: 36, name: "ValleyNationalUSD", formatPartial: 'xls', formatMonth: 'xls',  url: "/convertBankStatement/ValleyNationalBankUS" },
-            { id: 37, name: "CommerceUSD", formatPartial: 'txt', formatMonth: 'pdf',  url: "/convertBankStatement/CommerceBank" },
-            { id: 38, name: "VSInternationalRentalUSD", formatPartial: 'pdf', formatMonth: 'pdf',  url: "/convertBankStatement/" },
-            { id: 53, name: "AmericanExpressUSD", formatPartial: 'pdf', formatMonth: 'pdf',  url: "/convertBankStatement/" },
-            { id: 54, name: "AppleUSD", formatPartial: 'pdf', formatMonth: 'pdf',  url: "/convertBankStatement/" },
-            { id: 55, name: "CapitalOneUSD", formatPartial: 'pdf', formatMonth: 'pdf',  url: "/convertBankStatement/" },
-            { id: 56, name: "HSBCPrivateUSD", formatPartial: 'pdf', formatMonth: 'pdf',  url: "/convertBankStatement/" },
-            { id: 57, name: "PonceUSD", formatPartial: 'pdf', formatMonth: 'pdf',  url: "/convertBankStatement/" },
-            { id: 58, name: "USBankUSD", formatPartial: 'pdf', formatMonth: 'pdf',  url: "/convertBankStatement/" }
+            { id: 3, name: "NacionaldeCréditoVES", formatPartial: 'xls', formatMonth: 'pdf', url: "/convertBankStatement/BNC" },
+            { id: 4, name: "OccidentaldeDescuentoVES", formatPartial: 'csv', formatMonth: 'pdf', url: "/convertBankStatement/BOD" },
+            { id: 5, name: "ProvincialUSD", formatPartial: 'xls', formatMonth: 'pdf', url: "/convertBankStatement/Provincial" },
+            { id: 6, name: "BanescoUSD", formatPartial: 'txt', formatMonth: 'txt', url: "/convertBankStatement/BanescoUS" },
+            { id: 7, name: "BanplusVES", formatPartial: 'xls', formatMonth: 'pdf', url: "/convertBankStatement/Banplus" },
+            { id: 8, name: "AmerantUSD", formatPartial: 'pdf', formatMonth: 'pdf', url: "/convertBankStatement/AmerantUS" },
+            { id: 9, name: "BicentenarioVES", formatPartial: 'txt', formatMonth: 'txt', url: "/convertBankStatement/Bicentenario" },
+            { id: 10, name: "MiBancoVES", formatPartial: 'txt', formatMonth: 'txt', url: "/convertBankStatement/MiBanco" },
+            { id: 11, name: "MercadopagoVES", formatPartial: 'xls', formatMonth: 'xls', url: "/convertBankStatement/Mercadopago" },
+            { id: 12, name: "VenezolanodeCreditoVES", formatPartial: 'csv', formatMonth: 'pdf', url: "/convertBankStatement/BVC" },
+            { id: 13, name: "BancaribeVES", formatPartial: 'txt', formatMonth: 'pdf', url: "/convertBankStatement/Bancaribe" },
+            { id: 14, name: "VenezuelaVES", formatPartial: 'csv', formatMonth: 'pdf', url: "/convertBankStatement/Vzla" },
+            { id: 15, name: "SafraUSD", formatPartial: 'txt', formatMonth: 'txt', url: "/convertBankStatement/Safra" },
+            { id: 16, name: "BanescoPanamaUSD", formatPartial: 'pdf', formatMonth: 'pdf', url: "/convertBankStatement/BanescoPanama" },
+            { id: 17, name: "DeutscheUSD", formatPartial: 'xlsx', formatMonth: 'xlsx', url: "/convertBankStatement/Deutsche" },
+            { id: 18, name: "MultibanKUSD", formatPartial: 'xlsx', formatMonth: 'xlsx', url: "/convertBankStatement/Multibank" },
+            { id: 19, name: "SantanderCOP", formatPartial: 'csv', formatMonth: 'csv', url: "/convertBankStatement/Santander" },
+            { id: 20, name: "CaroníVES", formatPartial: 'txt', formatMonth: 'txt', url: "/convertBankStatement/Caroni" },
+            { id: 21, name: "ExteriorVES", formatPartial: 'txt', formatMonth: 'pdf', url: "/convertBankStatement/Exterior" },
+            { id: 22, name: "PlazaVES", formatPartial: 'txt', formatMonth: 'pdf', url: "/convertBankStatement/Plaza" },
+            { id: 23, name: "TDBankUSD", formatPartial: 'pdf', formatMonth: 'pdf', url: "/convertBankStatement/TDBank" },
+            { id: 24, name: "KearnyUSD", formatPartial: 'pdf', formatMonth: 'pdf', url: "/convertBankStatement/Kearny" },
+            { id: 25, name: "WellsFargoUSD", formatPartial: 'pdf', formatMonth: 'pdf', url: "/convertBankStatement/WellsFargo" },
+            { id: 26, name: "ChaseUSD", formatPartial: 'pdf', formatMonth: 'pdf', url: "/convertBankStatement/Chase" },
+            { id: 27, name: "RidgewoodUSD", formatPartial: 'pdf', formatMonth: 'pdf', url: "/convertBankStatement/Ridgewood" },
+            { id: 28, name: "SantanderCLP", formatPartial: 'xls', formatMonth: 'xls', url: "/convertBankStatement/SantanderCLPChilePesos" },
+            { id: 29, name: "ArcaUSD", formatPartial: 'pdf', formatMonth: 'pdf', url: "/convertBankStatement/ArcaUS" },
+            { id: 30, name: "BandesUSD", formatPartial: 'pdf', formatMonth: 'pdf', url: "/convertBankStatement/BandesUruguayUS" },
+            { id: 31, name: "BandesEUR", formatPartial: 'pdf', formatMonth: 'pdf', url: "/convertBankStatement/BandesUruguayEuros" },
+            { id: 32, name: "MercantilPanamaUSD", formatPartial: 'pdf', formatMonth: 'pdf', url: "/convertBankStatement/MercantilPanamaUS" },
+            { id: 33, name: "PaypalUSD", formatPartial: 'pdf', formatMonth: 'pdf', url: "/convertBankStatement/PaypalUS" },
+            { id: 34, name: "BancaribeCucacaoUSD", formatPartial: 'xls', formatMonth: 'pdf', url: "/convertBankStatement/BancaribeCuracaoBank" },
+            { id: 35, name: "FaceBankUSD", formatPartial: 'xls', formatMonth: 'pdf', url: "/convertBankStatement/FacebankUS" },
+            { id: 39, name: "CitibankUSD", formatPartial: 'pdf', formatMonth: 'pdf', url: "/convertBankStatement/CitibankUS" },
+            { id: 42, name: "ITAUCOP", formatPartial: 'xls', formatMonth: 'pdf', url: "/convertBankStatement/ItauColombiaPesos" },
+            { id: 43, name: "ProvincialVES", formatPartial: 'xls', formatMonth: 'pdf', url: "/convertBankStatement/Provincial" },
+            { id: 47, name: "VeneolanodeCreditoUSD", formatPartial: 'pdf', formatMonth: 'pdf', url: "/convertBankStatement/CaymanBranchUS" },
+            { id: 48, name: "BankOfAmericaUSD", formatPartial: 'pdf', formatMonth: 'pdf', url: "/convertBankStatement/BankAmericaUS" },
+            { id: 52, name: "BanescoVES", formatPartial: 'txt', formatMonth: 'pdf', url: "/convertBankStatement/Banesco" },
+            { id: 36, name: "ValleyNationalUSD", formatPartial: 'xls', formatMonth: 'xls', url: "/convertBankStatement/ValleyNationalBankUS" },
+            { id: 37, name: "CommerceUSD", formatPartial: 'txt', formatMonth: 'pdf', url: "/convertBankStatement/CommerceBank" },
+            { id: 38, name: "VSInternationalRentalUSD", formatPartial: 'pdf', formatMonth: 'pdf', url: "/convertBankStatement/" },
+            { id: 53, name: "AmericanExpressUSD", formatPartial: 'pdf', formatMonth: 'pdf', url: "/convertBankStatement/" },
+            { id: 54, name: "AppleUSD", formatPartial: 'pdf', formatMonth: 'pdf', url: "/convertBankStatement/" },
+            { id: 55, name: "CapitalOneUSD", formatPartial: 'pdf', formatMonth: 'pdf', url: "/convertBankStatement/" },
+            { id: 56, name: "HSBCPrivateUSD", formatPartial: 'pdf', formatMonth: 'pdf', url: "/convertBankStatement/" },
+            { id: 57, name: "PonceUSD", formatPartial: 'pdf', formatMonth: 'pdf', url: "/convertBankStatement/" },
+            { id: 58, name: "USBankUSD", formatPartial: 'pdf', formatMonth: 'pdf', url: "/convertBankStatement/" }
         ];
 
         var bankSelected = banks.filter(function (bank) {
@@ -919,17 +930,7 @@ const util = {
         });
         return bankSelected;
     },
-    //Crea el Copyright
-    Copyright: function () {
-        return (
-            <Typography variant="body2" color="textSecondary" align="center">
-                {'Copyright © '}
-                <Link color="inherit" href="/">kiiper</Link>{' '}
-                {new Date().getFullYear()}
-                {'.'}
-            </Typography>
-        );
-    },
+
     //Coloca icono de descarga en el grid
     // y se ejecuta laa acción para descargar documento
     /// @param {object} dateTimeA - Fecha inicial
@@ -942,6 +943,19 @@ const util = {
         else if (momentA < momentB) return -1;
         else return 0;
     },
+
+    //Crea el Copyright
+    Copyright: function () {
+        return (
+            <Typography variant="body2" color="textSecondary" align="center">
+                {'Copyright © '}
+                <Link color="inherit" href="/">kiiper</Link>{' '}
+                {new Date().getFullYear()}
+                {'.'}
+            </Typography>
+        );
+    },
+
 };
 
 function NumberValidation() { }

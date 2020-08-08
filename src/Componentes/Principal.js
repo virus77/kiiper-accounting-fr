@@ -42,7 +42,7 @@ import BanksConvert from "../Componentes/internos/Banks/BanksConvert";
 import DashboardPanel from "./internos/Dashboard/dashboard";
 import { Reports } from "../Componentes/internos/Reports/Reports";
 import { DashboardGroup } from "./DashboardGroup";
-import Declaraciones from "../Componentes/internos/declaraciones/Declaraciones";
+import Declaraciones from "./internos/Impuestos/Declaraciones";
 
 //#region estilo
 const drawerWidth = 240;
@@ -375,12 +375,14 @@ export default function Dashboard(props) {
 												style={{ width: "240px" }}
 												filter
 												data={
-													event === "xeroOrgName"
-														? organizations
-														: event === -2
-														? organizations
-														: group
-												}
+													event === "xeroOrgName" ||
+														event === 0.1 ||
+														event === 1.1 ||
+														event === 1.2 ||
+														event === 2.1 ||
+														event === 2.2 ||
+														event === 3.1 ||
+														event === 3.2 ? organizations : event === -2 ? organizations : group}
 												allowCreate="onFilter"
 												onChange={(value) => handleClick(value)}
 												itemComponent={ValueInput}
