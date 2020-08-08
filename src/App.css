@@ -59,7 +59,7 @@ p {
 	right: 0;
 	bottom: 0;
 	margin: auto;
-	max-width: 400px;
+	width: 32%;
 	height: 520px;
 	border-radius: 3%;
 	display: flex;
@@ -93,7 +93,7 @@ p {
 
 .formContainer form label{
 	color: #232c51;
-	font-size: 1em;
+	font-size: 0.9em;
 	font-weight: 500!important;
 }
 
@@ -102,7 +102,7 @@ p {
 	border-radius: 7px;
 	height: 35px;
 	font-family: "Muli",sans-serif;
-	font-size: 1em;
+	font-size: 0.9em;
 	border-style: none;
 	font-weight: 200;
 	margin-bottom: 30px;
@@ -167,7 +167,7 @@ p {
 /*Color inicial del body para visualizar el formulario*/
 .bodycolor {
 	background: url(Imagenes/Kiiper_lineasSm.png) 0 -200px #232c51;
-	background-size: 100%;
+	background-size: cover;
 	/*-webkit-animation: imgFade 3s;
   animation: imgFade 3s;*/
 }
@@ -246,9 +246,9 @@ input[type="password"]::-ms-reveal:hover {
 }
 
 /* Logo */
-.MuiTypography-h6 {
+.kiiperLogoText {
 	line-height: 1 !important;
-	font-weight: 500 !important;
+	font-weight: 400 !important;
 }
 
 .MuiTypography-body2 {

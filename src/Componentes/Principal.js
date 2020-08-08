@@ -24,12 +24,13 @@ import ChevronLeftIcon from "@material-ui/icons/ChevronLeft";
 
 //Icons
 import NotificationsIcon from "@material-ui/icons/Notifications";
-import CancelSharpIcon from '@material-ui/icons/CancelSharp';
+import CancelSharpIcon from "@material-ui/icons/CancelSharp";
 import Busqueda from "../Imagenes/kiiper_buscar.png";
 import Engrane from "../Imagenes/kiiper_engrane.png";
 import Suma from "../Imagenes/kiiper_mas.png";
 import Avatar from "../Imagenes/kiiper_avatar.png";
 import K from "../Imagenes/kiiper_K.png";
+import CloseSession from "../Imagenes/kiiper_close_session.svg";
 
 //Componentes
 import util from "./Js/util";
@@ -129,7 +130,7 @@ function fillDropDownListGroup(props) {
 		return {
 			type: "xeroGroupName",
 			name: res.practiceName,
-			id: res.practiceID
+			id: res.practiceID,
 		};
 	});
 
@@ -138,7 +139,7 @@ function fillDropDownListGroup(props) {
 
 async function returnOrganizations(item) {
 	//Retrive data from organizarion and use for fill ddl
-	return await calls.getOrganizations(item)
+	return await calls.getOrganizations(item);
 }
 
 export default function Dashboard(props) {
@@ -171,9 +172,11 @@ export default function Dashboard(props) {
 	// Stores breadcrumb path
 	const [breadcrumbPath, setBreadcrumbPath] = useState("");
 
+	// Shows avatar profile options
+	const [avatarOptionsFlag, showAvatarOptions] = useState(false);
+
 	//Cambia el estatus del evento del clic en el DeopDownList
 	let handleClick = async (item) => {
-
 		//Obtiene el elemento div del ddl principal
 		rw_2_input = document
 			.querySelector("[id*=rw_]")
@@ -183,16 +186,18 @@ export default function Dashboard(props) {
 			if (item.type === "xeroGroupName") {
 				eventKey(-2);
 				organizations = await returnOrganizations(item.id);
-			}
-			else
-				eventKey(item.type === "xeroGroupName" ? item.type = "xeroOrgName" : "xeroOrgName");
+			} else
+				eventKey(
+					item.type === "xeroGroupName"
+						? (item.type = "xeroOrgName")
+						: "xeroOrgName"
+				);
 
 			// Setting organization selected in React to component
 			setorgIdSelected(item.id);
 			setorgSpecialContrib(item.specialContrib);
 			setValue(item.type === "xeroGroupName" ? "" : item.name);
 			setorgNameSelected(item.type === "xeroGroupName" ? "" : item.name);
-
 
 			//Cambia el color en el ddlPrincipal dependiendo la selección
 			rw_2_input.style =
@@ -278,13 +283,13 @@ export default function Dashboard(props) {
 						variant="h6"
 						color="inherit"
 						noWrap
-						className={classes.title}
+						className={`${classes.title} kiiperLogoText`}
 					>
 						{event === -1 ? (
 							"Kiiper"
 						) : (
-								<img style={{ height: "20px" }} src={K} alt="img-K" />
-							)}
+							<img style={{ height: "20px" }} src={K} alt="img-K" />
+						)}
 					</Typography>
 					{/* icon Busqueda*/}
 					<IconButton color="inherit">
@@ -305,11 +310,37 @@ export default function Dashboard(props) {
 						</Badge>
 					</IconButton>
 					{/* icon*/}
-					<IconButton color="inherit">
+					<IconButton
+						color="inherit"
+						className="avatarIcon"
+						onClick={() => {
+							avatarOptionsFlag
+								? showAvatarOptions(false)
+								: showAvatarOptions(true);
+						}}
+					>
 						<img src={Avatar} alt="img-Avatar" />
-					</IconButton>
-					<IconButton color="inherit" onClick={(event) => handleCancel()}>
-						<CancelSharpIcon />
+
+						{/** Avatar options panel */}
+						{avatarOptionsFlag ? (
+							<div className="avatarOptions">
+								<div className="avatarInfo">
+									<img alt="Avatar" src={Avatar} />
+									<div className="avatarInfoText avatarInfoName">
+										Kenia García
+									</div>
+									<div className="avatarInfoText">kenia.garcia@xero.com.mx</div>
+								</div>
+								<div className="avatarActions">
+									<ul className="avatarActionsList">
+										<li className="avatarActionListOption">
+											<img alt="CloseSession" src={CloseSession} />
+											<span>Cerrar sesión</span>
+										</li>
+									</ul>
+								</div>
+							</div>
+						) : null}
 					</IconButton>
 				</Toolbar>
 			</AppBar>
@@ -324,26 +355,32 @@ export default function Dashboard(props) {
 								<tr>
 									<td>
 										{event === "xeroOrgName" ||
-											event === 0.1 ||
-											event === 1.1 ||
-											event === 1.2 ||
-											event === 2.1 ||
-											event === 2.2 ||
-											event === 3.1 ||
-											event === 3.2 ? (
-												<div className={classes.toolbarIcon}>
-													<IconButton onClick={(event) => handleClick(-1)}>
-														<ChevronLeftIcon />
-													</IconButton>
-												</div>
-											) : null}
+										event === 0.1 ||
+										event === 1.1 ||
+										event === 1.2 ||
+										event === 2.1 ||
+										event === 2.2 ||
+										event === 3.1 ||
+										event === 3.2 ? (
+											<div className={classes.toolbarIcon}>
+												<IconButton onClick={(event) => handleClick(-1)}>
+													<ChevronLeftIcon />
+												</IconButton>
+											</div>
+										) : null}
 									</td>
 									<td>
 										<div className={classes.toolbarIcon}>
 											<DropdownList
 												style={{ width: "240px" }}
 												filter
-												data={event === "xeroOrgName" ? organizations : event === -2 ? organizations : group}
+												data={
+													event === "xeroOrgName"
+														? organizations
+														: event === -2
+														? organizations
+														: group
+												}
 												allowCreate="onFilter"
 												onChange={(value) => handleClick(value)}
 												itemComponent={ValueInput}
@@ -361,81 +398,81 @@ export default function Dashboard(props) {
 					</Navbar.Brand>
 					<Navbar.Toggle aria-controls="basic-navbar-nav" />
 					{event === "xeroOrgName" ||
-						event === 0.1 ||
-						event === 1.1 ||
-						event === 1.2 ||
-						event === 2.1 ||
-						event === 2.2 ||
-						event === 3.1 ||
-						event === 3.2 ? (
-							<Navbar.Collapse id="basic-navbar-nav">
-								<Nav className="mr-auto">
-									<Nav.Link
-										className="navBarOptionSelected"
-										style={{ padding: "0 30px" }}
-										eventKey={0.1}
-										onClick={(event) => handleListItemClick(event, 0.1)}
-										href="#home"
-									>
-										Dashboard
+					event === 0.1 ||
+					event === 1.1 ||
+					event === 1.2 ||
+					event === 2.1 ||
+					event === 2.2 ||
+					event === 3.1 ||
+					event === 3.2 ? (
+						<Navbar.Collapse id="basic-navbar-nav">
+							<Nav className="mr-auto">
+								<Nav.Link
+									className="navBarOptionSelected"
+									style={{ padding: "0 30px" }}
+									eventKey={0.1}
+									onClick={(event) => handleListItemClick(event, 0.1)}
+									href="#home"
+								>
+									Dashboard
 								</Nav.Link>
-									<NavDropdown
-										style={{ padding: "0 30px" }}
-										title="Negocio"
-										id="ddlNegocioId"
+								<NavDropdown
+									style={{ padding: "0 30px" }}
+									title="Negocio"
+									id="ddlNegocioId"
+								>
+									<NavDropdown.Item
+										eventKey={1.1}
+										onClick={(event) => handleListItemClick(event, 1.1)}
+										href="#Negocio/Ventas"
 									>
-										<NavDropdown.Item
-											eventKey={1.1}
-											onClick={(event) => handleListItemClick(event, 1.1)}
-											href="#Negocio/Ventas"
-										>
-											Ventas
+										Ventas
 									</NavDropdown.Item>
-										<NavDropdown.Item
-											eventKey={1.2}
-											onClick={(event) => handleListItemClick(event, 1.2)}
-											href="#Negocio/Compras"
-										>
-											Compras
-									</NavDropdown.Item>
-									</NavDropdown>
-									<NavDropdown
-										style={{ padding: "0 30px" }}
-										title="Contabilidad"
-										id="ddlContabilidadId"
+									<NavDropdown.Item
+										eventKey={1.2}
+										onClick={(event) => handleListItemClick(event, 1.2)}
+										href="#Negocio/Compras"
 									>
-										<NavDropdown.Item
-											eventKey={2.1}
-											onClick={(event) => handleListItemClick(event, 2.1)}
-											href="#Contabilidad/Bancos"
-										>
-											Bancos
+										Compras
 									</NavDropdown.Item>
-										<NavDropdown.Item
-											eventKey={3.1}
-											onClick={(event) => handleListItemClick(event, 2.2)}
-											href="#Contabilidad/Impuestos"
-										>
-											Impuestos
-									</NavDropdown.Item>
-									</NavDropdown>
-									<NavDropdown
-										style={{ padding: "0 30px" }}
-										title="Reportes"
-										id="ddlReportesId"
+								</NavDropdown>
+								<NavDropdown
+									style={{ padding: "0 30px" }}
+									title="Contabilidad"
+									id="ddlContabilidadId"
+								>
+									<NavDropdown.Item
+										eventKey={2.1}
+										onClick={(event) => handleListItemClick(event, 2.1)}
+										href="#Contabilidad/Bancos"
 									>
-										<NavDropdown.Item
-											eventKey={3.1}
-											onClick={(event) => handleListItemClick(event, 3.1)}
-											href="#Reportes/Impuestos"
-										>
-											Impuestos
-								</NavDropdown.Item>
-										{/*<NavDropdown.Item eventKey={3.2} onClick={(event) => handleListItemClick(event, 3.2)} href="#Dashboard/Grupos">Dashboard Group</NavDropdown.Item>*/}
-									</NavDropdown>
-								</Nav>
-							</Navbar.Collapse>
-						) : null}
+										Bancos
+									</NavDropdown.Item>
+									<NavDropdown.Item
+										eventKey={3.1}
+										onClick={(event) => handleListItemClick(event, 2.2)}
+										href="#Contabilidad/Impuestos"
+									>
+										Impuestos
+									</NavDropdown.Item>
+								</NavDropdown>
+								<NavDropdown
+									style={{ padding: "0 30px" }}
+									title="Reportes"
+									id="ddlReportesId"
+								>
+									<NavDropdown.Item
+										eventKey={3.1}
+										onClick={(event) => handleListItemClick(event, 3.1)}
+										href="#Reportes/Impuestos"
+									>
+										Impuestos
+									</NavDropdown.Item>
+									{/*<NavDropdown.Item eventKey={3.2} onClick={(event) => handleListItemClick(event, 3.2)} href="#Dashboard/Grupos">Dashboard Group</NavDropdown.Item>*/}
+								</NavDropdown>
+							</Nav>
+						</Navbar.Collapse>
+					) : null}
 				</Navbar>
 				<Container
 					maxWidth="lg"

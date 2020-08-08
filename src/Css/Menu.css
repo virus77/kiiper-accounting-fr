@@ -140,3 +140,63 @@
 .MuiBadge-anchorOriginTopRightRectangle {
 	transform: scale(1) translate(58%, -17%) !important;
 }
+
+/** Avatar options */
+.avatarIcon{
+	position: relative;
+}
+
+.avatarOptions{
+	position: absolute;
+	background-color: #fff;
+	top: 50px;
+	right: 0;
+	box-shadow: 0px 16px 24px rgba(35, 44, 81, 0.08);
+	max-width: 300px;
+	border-radius: 10px;
+	font-size: 0.45em;
+	color: #232C51;
+	font-weight: 100;
+	font-family: "Muli",sans-serif;
+}
+
+.avatarInfo{
+	border-bottom: 1px solid #e7e7eb;
+	padding: 30px 30px 10px;
+}
+
+.avatarInfo img{
+	height: 80px;
+}
+
+.avatarInfoText{
+	margin: 10px 0;
+}
+
+.avatarInfoName{
+	text-transform: uppercase;
+	font-weight: 400;
+}
+
+.avatarActionsList{
+	list-style: none;
+	padding: 0;
+	margin: 0;
+}
+
+.avatarActionListOption{
+	padding: 10px;
+	text-align: left;
+}
+
+.avatarActionListOption:hover{
+	background-color: #E6DEFD;
+}
+
+.avatarActionListOption img{
+	height: 10px;
+}
+
+.avatarActionListOption span{
+	margin-left: 10px;
+}
