@@ -8,6 +8,9 @@ import "ag-grid-community/dist/styles/ag-grid.css";
 import "ag-grid-community/dist/styles/ag-theme-alpine.css";
 import PurchasesDataD from "../dataDumy/purchases.json";
 
+// Total amount of providers table
+let totalAmountProviders = 0;
+
 class Purchases extends Component {
 	// Constructor declaration
 	constructor(props) {
@@ -75,15 +78,7 @@ class Purchases extends Component {
 			},
 			charts: {
 				plugins: [ChartDataLabels],
-				data: {
-					datasets: [
-						{
-							data: [0.2, 0.4, 0.3, 0.1],
-							backgroundColor: ["#44CDDB", "#9680ED", "#232C51", "#86FFF5"],
-						},
-					],
-					labels: ["1 months", "2 months", "3 months", "+3 months"],
-				},
+				data: {},
 				options: {
 					maintainAspectRatio: false,
 					plugins: {
@@ -93,8 +88,11 @@ class Purchases extends Component {
 								family: "'Goldplay',sans-serif",
 								weight: "700",
 							},
-							formatter: function (value, context) {
-								return Math.round(value * 100) + "%";
+							formatter: function (value) {
+								const partPercentage = parseFloat(
+									(value * 100) / totalAmountProviders
+								).toFixed(2);
+								return `${partPercentage}%`;
 							},
 						},
 					},
@@ -137,21 +135,63 @@ class Purchases extends Component {
 		// ----------------------------------------------------
 
 		// Setting main providers data
-		const mainProvidersData = PurchasesDataD.listPurchasesParClient.map(
-			(item) => {
-				return {
-					amount: `${item.currencyCode} ${item.amountDue}`,
-					contact: item.contactName,
-				};
-			}
-		);
-
-		this.setState((prevState) => ({
-			mainProviders: {
-				...prevState.mainProviders,
-				rowData: mainProvidersData,
+		fetch(`/getSuppliersYouOwe?id_organisation=${this.props.orgIdSelected}`, {
+			method: "GET",
+			headers: {
+				"Content-type": "application/json; charset=UTF-8",
+				"Access-Control-Allow-Origin": "*",
 			},
-		}));
+		})
+			.then((res) => res.json())
+			.then((data) => {
+				// Getting total amount from all providers
+				totalAmountProviders = data.reduce((total, provider) => {
+					return total + provider.AmountDue;
+				}, 0);
+
+				// Setting values for providers chart
+				const providersChartData = data.map((provider) => {
+					return provider.AmountDue;
+				});
+
+				// Setting labels for providers chart
+				const providersChartLabels = data.map((provider) => {
+					return provider.ContactName.substring(0,10) + "..";
+				});
+
+				// Setting values for providers table
+				const mainProvidersData = data.map((provider) => {
+					return {
+						amount: provider.AmountDue,
+						contact: provider.ContactName,
+					};
+				});
+
+				this.setState((prevState) => ({
+					mainProviders: {
+						...prevState.mainProviders,
+						rowData: mainProvidersData,
+					},
+					charts: {
+						...prevState.charts,
+						data: {
+							datasets: [
+								{
+									data: providersChartData,
+									backgroundColor: [
+										"#44CDDB",
+										"#9680ED",
+										"#232C51",
+										"#86FFF5",
+										"#8596CA",
+									],
+								},
+							],
+							labels: providersChartLabels,
+						},
+					},
+				}));
+			});
 	}
 
 	// ----------------------------------------------------
@@ -164,7 +204,7 @@ class Purchases extends Component {
 					<div className={styles.SalesTable}>
 						<div
 							className="ag-theme-alpine dashboardBusiness"
-							style={{height:this.props.dashboardtableHeight}}
+							style={{ height: this.props.dashboardtableHeight }}
 						>
 							<AgGridReact
 								columnDefs={this.state.overdueBill.columnDefs}
@@ -190,7 +230,7 @@ class Purchases extends Component {
 						<div className={styles.SalesTable}>
 							<div
 								className="ag-theme-alpine dashboardBusiness"
-								style={{height:this.props.dashboardtableHeight}}
+								style={{ height: this.props.dashboardtableHeight }}
 							>
 								<AgGridReact
 									columnDefs={this.state.mainProviders.columnDefs}

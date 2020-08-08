@@ -112,10 +112,10 @@ export default function SimpleTabs(props) {
 				<BankPanel orgIdSelected={props.orgIdSelected} />
 			</TabPanel>
 			<TabPanel value={value} index={1}>
-				<SalesPanel />
+				<SalesPanel orgIdSelected={props.orgIdSelected}/>
 			</TabPanel>
 			<TabPanel value={value} index={2}>
-				<PurchasesPanel />
+				<PurchasesPanel orgIdSelected={props.orgIdSelected}/>
 			</TabPanel>
 		</div>
 	);

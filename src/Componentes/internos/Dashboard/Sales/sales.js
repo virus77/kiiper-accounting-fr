@@ -8,6 +8,9 @@ import "ag-grid-community/dist/styles/ag-grid.css";
 import "ag-grid-community/dist/styles/ag-theme-alpine.css";
 import salesDataD from "../dataDumy/sales.json";
 
+// Total amount of clients table
+let totalAmountClients = 0;
+
 class Sales extends Component {
 	// Constructor declaration
 	constructor(props) {
@@ -75,15 +78,7 @@ class Sales extends Component {
 			},
 			charts: {
 				plugins: [ChartDataLabels],
-				data: {
-					datasets: [
-						{
-							data: [0.2, 0.3, 0.2, 0.3],
-							backgroundColor: ["#44CDDB", "#9680ED", "#232C51", "#86FFF5"],
-						},
-					],
-					labels: ["1 months", "2 months", "3 months", "+3 months"],
-				},
+				data: {},
 				options: {
 					maintainAspectRatio: false,
 					plugins: {
@@ -94,7 +89,10 @@ class Sales extends Component {
 								weight: "700",
 							},
 							formatter: function (value) {
-								return Math.round(value * 100) + "%";
+								const partPercentage = parseFloat(
+									(value * 100) / totalAmountClients
+								).toFixed(2);
+								return `${partPercentage}%`;
 							},
 						},
 					},
@@ -137,19 +135,62 @@ class Sales extends Component {
 		// ----------------------------------------------------
 
 		// Setting main clients data
-		const mainClientsData = salesDataD.listSalesParClient.map((item) => {
-			return {
-				amount: `${item.currencyCode} ${item.amountDue}`,
-				contact: item.contactName,
-			};
-		});
-
-		this.setState((prevState) => ({
-			mainClients: {
-				...prevState.mainClients,
-				rowData: mainClientsData,
+		fetch(`/getClientsOwingYou?id_organisation=${this.props.orgIdSelected}`, {
+			method: "GET",
+			headers: {
+				"Content-type": "application/json; charset=UTF-8",
+				"Access-Control-Allow-Origin": "*",
 			},
-		}));
+		})
+			.then((res) => res.json())
+			.then((data) => {
+				// Getting total amount from all clients
+				totalAmountClients = data.reduce((total, client) => {
+					return total + client.AmountDue;
+				}, 0);
+
+				// Setting values for clients chart
+				const clientsChartData = data.map((client) => {
+					return client.AmountDue;
+				});
+
+				// Setting labels for clients chart
+				const clientsChartLabels = data.map((client) => {
+					return client.ContactName.substring(0, 10) + "..";
+				});
+
+				const mainClientsData = data.map((item) => {
+					return {
+						amount: item.AmountDue,
+						contact: item.ContactName,
+					};
+				});
+
+				this.setState((prevState) => ({
+					mainClients: {
+						...prevState.mainClients,
+						rowData: mainClientsData,
+					},
+					charts: {
+						...prevState.charts,
+						data: {
+							datasets: [
+								{
+									data: clientsChartData,
+									backgroundColor: [
+										"#44CDDB",
+										"#9680ED",
+										"#232C51",
+										"#86FFF5",
+										"#8596CA",
+									],
+								},
+							],
+							labels: clientsChartLabels,
+						},
+					},
+				}));
+			});
 	}
 
 	// ----------------------------------------------------
@@ -162,7 +203,7 @@ class Sales extends Component {
 					<div className={styles.SalesTable}>
 						<div
 							className="ag-theme-alpine dashboardBusiness"
-							style={{height:this.props.dashboardtableHeight}}
+							style={{ height: this.props.dashboardtableHeight }}
 						>
 							<AgGridReact
 								columnDefs={this.state.overdueInvoice.columnDefs}
@@ -188,7 +229,7 @@ class Sales extends Component {
 						<div className={styles.SalesTable}>
 							<div
 								className="ag-theme-alpine dashboardBusiness"
-								style={{height:this.props.dashboardtableHeight}}
+								style={{ height: this.props.dashboardtableHeight }}
 							>
 								<AgGridReact
 									columnDefs={this.state.mainClients.columnDefs}
