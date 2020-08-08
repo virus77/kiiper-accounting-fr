@@ -1,7 +1,49 @@
+.OrgGroupSelection .rw-input-reset{
+	font-size: 1rem;
+	font-weight: 100;
+}
+
+.OrgGroupSelection .rw-popup{
+	box-shadow: 0px 4px 8px rgba(35, 44, 81, 0.08);
+	border-style: none;
+	border-radius: 8px;
+	padding: 5px;
+	margin-top: 15px;
+}
+
+.OrgGroupSelection .rw-filter-input .rw-select, .rw-filter-input .rw-btn{
+	background: transparent!important;
+}
+
+.OrgGroupSelection .rw-popup .rw-btn{
+	margin-bottom: 10px;
+}
+
+.OrgGroupSelection .rw-popup .rw-list-option > span{
+	display: flex;
+	align-items: center;
+}
+
+.OrgGroupSelection .rw-popup .rw-list-option > span strong{
+	margin-right: 10px;
+	margin-bottom: 2px;
+}
+
+.OrgGroupSelection .rw-list-option:hover{
+	background-color: #E6DEFD;
+	border-style: none;
+	color: #232c51;
+	border-radius: 8px;
+}
+
+.OrgGroupSelection .rw-list-option:hover.rw-state-focus{
+	color: #232c51;
+}
+
 /* asigna el tamaño de la lista desplegable*/
 .rw-list {
-	font-size: 11pt !important;
-	max-height: 300px !important;
+	font-size: 0.8rem;
+	max-height: 300px;
 }
 
 /* asigna color y borde del dllprincipal */
@@ -33,7 +75,11 @@
 /* asigna estilo del input */
 .rw-filter-input {
 	color: #232c51 !important;
-	background-color: #eceded;
+	background-color: #F5F6FA;
+	border-radius: 8px;
+	height: 30px;
+	border-style: none;
+	box-shadow: none;
 }
 
 .rw-btn {
