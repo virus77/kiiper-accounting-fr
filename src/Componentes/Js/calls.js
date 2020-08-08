@@ -38,7 +38,7 @@ const calls = {
 
 	/// Call base64 element
 	/// @param {string} withholdingId - _Id from xero element
-	getDocumentById: async (withholdingId) => {
+	getDocumentById: (withholdingId) => {
 		const fetchConfig = { method: "GET" };
 
 		// Fetch URL with parameters
@@ -47,9 +47,29 @@ const calls = {
 		return (
 			// Fetching data from the endpoint
 			fetch(fetchURL, fetchConfig)
-				.then((res) => res.text())
-				.then((data) => {
-					return { data: data };
+				.then((res) => {
+					return res.url
+				})
+				.catch((error) => {
+					console.log(error);
+					return false;
+				})
+		);
+	},
+
+	/// Call base64 element
+	/// @param {string} withholdingId - _Id from xero element
+	getDeclarationDocumentById: (id_statement) => {
+		const fetchConfig = { method: "GET" };
+
+		// Fetch URL with parameters
+		const fetchURL = `/downloadAuxiliarTaxReport?id_statement=${id_statement}`;
+
+		return (
+			// Fetching data from the endpoint
+			fetch(fetchURL, fetchConfig)
+				.then((res) => {
+					return res.url
 				})
 				.catch((error) => {
 					console.log(error);
@@ -461,32 +481,6 @@ const calls = {
 
 		return fetch(
 			`/getStatements?id_organisation=${id_organisation}&id_tax_type=${id_tax_type}&id_statement_status=${id_statement_status}`,
-			fetchConfig
-		)
-			.then((res) => res.json())
-			.then((data) => {
-				return {
-					data: data,
-				};
-			})
-			.catch((err) => {
-				console.log(err);
-			});
-	},
-
-	/// Descargar archivo auxiliar de declaración
-	/// @param {string} id_statement - ID de la declaración asociado a la petición /getStatements
-	getDownloadAuxiliarTaxReport: (id_statement) => {
-		const fetchConfig = {
-			method: "GET",
-			headers: {
-				Accept: "application/json",
-				"Content-Type": "application/json",
-			},
-		};
-
-		return fetch(
-			`/downloadAuxiliarTaxReport?id_statement=${id_statement}`,
 			fetchConfig
 		)
 			.then((res) => res.json())

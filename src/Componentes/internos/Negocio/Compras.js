@@ -232,32 +232,25 @@ class Compras extends Component {
 				case "Recibidos":
 				case "Archivados":
 				case "Aprobados":
-					this.setState({
-						activeItem: activeItem + "Sel",
-						show: false,
-						texto:
-							"El comprobante de retención ha sido anulado en Xero y cambió su estatus a ‘anulado’.",
-					});
-					break;
-
 				case "Anulados":
 					this.setState({
 						activeItem: activeItem + "Sel",
 						show: false,
 						texto:
-							"El comprobante de retención ha sido anulado en Xero y cambió su estatus.",
+							"El comprobante de retención ha sido anulado en Xero y cambió su estatus a: " + activeItem,
 					});
 					break;
 				default:
 					break;
 			}
 		} else {
-			if (activeItem.includes("Sel") === true)
+			if (activeItem.includes("Sel") === true) {
 				this.setState({
 					activeItem: activeItem.substring(0, activeItem.length - 3),
 					show: false,
 					texto: "",
 				});
+			}
 			else this.setState({ activeItem: activeItem, show: false, texto: "" });
 		}
 	};
