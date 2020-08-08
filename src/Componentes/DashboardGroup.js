@@ -4,7 +4,7 @@ import React, { Component } from "react";
 import { Card } from "react-bootstrap";
 import { Bar } from "react-chartjs-2";
 import ChartDataLabels from "chartjs-plugin-datalabels";
-import { AgGridReact, SortableHeaderComponent } from "ag-grid-react";
+import { AgGridReact } from "ag-grid-react";
 
 /// CSS
 import "bootstrap/dist/css/bootstrap.min.css";

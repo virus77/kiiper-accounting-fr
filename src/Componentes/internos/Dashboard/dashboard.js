@@ -1,11 +1,7 @@
 import React, { useState } from "react";
-import { makeStyles } from "@material-ui/core/styles";
-import AppBar from "@material-ui/core/AppBar";
-import Tabs from "@material-ui/core/Tabs";
-import Tab from "@material-ui/core/Tab";
 import Typography from "@material-ui/core/Typography";
 import Box from "@material-ui/core/Box";
-import styles from "./dashboard.css";
+import "./dashboard.css";
 import BankPanel from "./Banks/bank";
 import SalesPanel from "./Sales/sales";
 import PurchasesPanel from "./Purchases/purchases";
@@ -31,31 +27,8 @@ function TabPanel(props) {
 	);
 }
 
-function a11yProps(index) {
-	return {
-		id: `simple-tab-${index}`,
-		"aria-controls": `simple-tabpanel-${index}`,
-	};
-}
-
-const useStyles = makeStyles((theme) => ({
-	root: {
-		flexGrow: 1,
-		backgroundColor: "white",
-	},
-	label: {
-		backgroundColor: "green",
-		fontSize: 10,
-	},
-	tabsStyle: {
-		backgroundColor: "#F3F3F3",
-	},
-}));
-
-const Label = (props) => <div className={styles.TabStyle}>{props.label}</div>;
 
 export default function SimpleTabs(props) {
-	const classes = useStyles();
 	const [value, setValue] = useState(0);
 	const [tabItem, selectTabItem] = useState("CuentasBancarias");
 
@@ -65,7 +38,7 @@ export default function SimpleTabs(props) {
 	};
 
 	return (
-		<div id="dashboardWorkspace" className={classes.root}>
+		<div id="dashboardWorkspace">
 			{/*Pintado de grid dependiendo del menu superior del grid*/}
 			<Menu style={{ display: "flex" }}>
 				<Menu.Item

@@ -3,6 +3,7 @@ import styles from "./sales.module.css";
 import { Doughnut } from "react-chartjs-2";
 import { AgGridReact } from "ag-grid-react";
 import ChartDataLabels from "chartjs-plugin-datalabels";
+import util from "../../../Js/util.js";
 
 import "ag-grid-community/dist/styles/ag-grid.css";
 import "ag-grid-community/dist/styles/ag-theme-alpine.css";
@@ -159,10 +160,10 @@ class Sales extends Component {
 					return client.ContactName.substring(0, 10) + "..";
 				});
 
-				const mainClientsData = data.map((item) => {
+				const mainClientsData = data.map((client) => {
 					return {
-						amount: item.AmountDue,
-						contact: item.ContactName,
+						amount: util.formatMoney(client.AmountDue),
+						contact: client.ContactName,
 					};
 				});
 

@@ -3,6 +3,7 @@ import styles from "./purchases.module.css";
 import { Doughnut } from "react-chartjs-2";
 import { AgGridReact } from "ag-grid-react";
 import ChartDataLabels from "chartjs-plugin-datalabels";
+import util from "../../../Js/util.js";
 
 import "ag-grid-community/dist/styles/ag-grid.css";
 import "ag-grid-community/dist/styles/ag-theme-alpine.css";
@@ -162,7 +163,7 @@ class Purchases extends Component {
 				// Setting values for providers table
 				const mainProvidersData = data.map((provider) => {
 					return {
-						amount: provider.AmountDue,
+						amount: util.formatMoney(provider.AmountDue),
 						contact: provider.ContactName,
 					};
 				});

@@ -1,6 +1,8 @@
 #dashboardWorkspace {
 	border: 1px solid #e7e7eb;
 	border-radius: 10px;
+	flex:1;
+	background-color: #fff;
 }
 
 #dashboardWorkspace .MuiBox-root {
