@@ -18,6 +18,7 @@ class App extends Component {
     super();
     this.state = {
       accessToken: "",
+      groups: [],
       organizations: [],
       isActive: false,
       isInActive: true,
@@ -26,28 +27,21 @@ class App extends Component {
   }
 
   /// Main App component function
-  componentDidMount() {
+  componentDidMount = async () => {
 
     // Storing access token requested to Xero in a cookie
     document.getElementById("Spinner").style.display = "none";
     this.setState({ accessToken: Cookies.get('accessToken') });
     if (Cookies.get('accessToken')) {
-      // Get organizations from logged user
-      fetch('/getGrantedOrganisations')
-        .then(res => res.json())
-        .then(data => {
-          // Defining state of App component in order to show
-          // the content because of [isInActive = false]
-          this.setState({
-            organizations: data,
-            isInActive: false,
-            isActive: true,
-            show: false,
-          })
-        })
-        .catch((error) => {
-          console.log(error);
-        });
+      // Defining state of App component in order to show
+      // the content because of [isInActive = false]
+      let grupo = await calls.getGroupsList();
+      this.setState({
+        groups: grupo,
+        isInActive: false,
+        isActive: true,
+        show: false,
+      });
     }
   }
 
@@ -60,6 +54,8 @@ class App extends Component {
     let password = document.getElementById("ctrlPassword").value;
     var param = { Email: email, Password: password };
     var accestoken = "";
+    var paso = "";
+
     $.ajax({
       url: "http://ai.quierocasa.com.mx:50236/WsCaptcha.asmx/callAccessToXero",
       data: JSON.stringify(param),
@@ -71,7 +67,12 @@ class App extends Component {
       success: function (data) {
         if (data !== null) {
           accestoken = data.d;
-          accestoken = accestoken.replace("j:", "")
+          if (accestoken.includes("j:")) {
+            paso = "true";
+            accestoken = accestoken.replace("j:", "");
+          }
+          else
+            alert(accestoken);
         }
       },
       error: function (a, b, error) {
@@ -79,8 +80,10 @@ class App extends Component {
       }
     });
 
-    let consentUrl = await calls.getFinalCallback(accestoken);
-    window.open(consentUrl, "_self");
+    if (paso === "true") {
+      let consentUrl = await calls.getFinalCallback(accestoken);
+      window.open(consentUrl, "_self");
+    }
     document.getElementById("Spinner").style.display = "none";
   }
 
@@ -149,7 +152,7 @@ class App extends Component {
           </div> :
           <div className="App">
             <span id="spnAccessToken" style={{ display: "none" }}>{this.state.accessToken}</span>
-            <Principal token={accessToken} org={this.state.organizations} />
+            <Principal token={accessToken} grp={this.state.groups} />
           </div>
         }
       </div>

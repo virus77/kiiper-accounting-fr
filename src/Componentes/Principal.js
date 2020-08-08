@@ -45,6 +45,7 @@ import Declaraciones from "../Componentes/internos/declaraciones/Declaraciones";
 
 //#region estilo
 const drawerWidth = 240;
+var organizations = [];
 const useStyles = makeStyles((theme) => ({
 	root: {
 		display: "flex",
@@ -149,7 +150,12 @@ function fillDropDownList(props) {
 		};
 	});
 
-	return organizations;
+	return group;
+}
+
+async function returnOrganizations(item) {
+	//Retrive data from organizarion and use for fill ddl
+	return await calls.getOrganizations(item)
 }
 
 export default function Dashboard(props) {
@@ -186,7 +192,8 @@ export default function Dashboard(props) {
 	const [breadcrumbPath, setBreadcrumbPath] = useState("");
 
 	//Cambia el estatus del evento del clic en el DeopDownList
-	let handleClick = (item) => {
+	let handleClick = async (item) => {
+
 		//Obtiene el elemento div del ddl principal
 		rw_2_input = document
 			.querySelector("[id*=rw_]")
