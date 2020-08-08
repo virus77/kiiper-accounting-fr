@@ -470,12 +470,12 @@ html .ui-button.ui-state-disabled:hover {
 
 .grid-cell-Left {
 	margin-left: 2px;
-	justify-content: center;
+	justify-content: flex-start;
 }
 
 .grid-cell-alignRight {
 	text-align: right;
-	justify-content: center;
+	justify-content: flex-end;
 }
 
 /* estilo de mes y año en calendar  */

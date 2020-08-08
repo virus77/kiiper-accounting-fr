@@ -13,6 +13,7 @@ import "ag-grid-community/dist/styles/ag-theme-alpine.css";
 import styles from "./banks.module.css";
 import ParamsRenderer from "./cellRenderer";
 import calls from "../../../Js/calls";
+import util from "../../../Js/util";
 
 // Declaring momenty object
 const moment = require("moment"); // require
@@ -81,7 +82,7 @@ class Bank extends Component {
 							headerClass: `dashboardGridColumn ${styles.HeaderStyle}`,
 							cellClass: "dashboardGridCell",
 							editable: true,
-							cellEditor: Datepicker,
+							cellEditor: Datepicker
 						},
 						{
 							headerName: "Saldo",
@@ -136,6 +137,7 @@ class Bank extends Component {
 							field: "totalAmount",
 							headerClass: `dashboardGridColumn ${styles.HeaderStyle}`,
 							cellClass: "dashboardGridCell",
+							comparator: util.currencyComparator 
 						},
 						{
 							headerName: "Antigüedad",

@@ -28,6 +28,11 @@
 	background-color: transparent !important;
 }
 
+.dashboardGridColumn .ag-header-cell-label,
+.dashboardGridColumnGroup .ag-header-cell-label{
+	justify-content: center;
+}
+
 .dashboardGridColumnGroup {
 	padding: 10px !important;
 	background-color: #fff;

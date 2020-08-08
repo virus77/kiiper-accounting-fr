@@ -6,6 +6,7 @@
 	border: 1px solid #f5f6fa;
 	border-radius: 10px;
 	position: relative;
+	flex:1;
 }
 
 .container-transformation img.searchBankRecords {
@@ -25,6 +26,7 @@
 	color: #232c51;
 	font-family: "Muli", sans-serif;
 	margin-top: 0;
+	width: 80%;
 }
 
 .container-transformation .file-path {
@@ -47,10 +49,6 @@
 
 .descriptionUnorderedList {
 	padding: 5px 0 15px 15px;
-}
-
-.ag-cell-label-container .ag-header-cell-label {
-	justify-content: center;
 }
 
 .inputFileContainer {
@@ -81,4 +79,9 @@
 
 .inputFileLabel:hover {
 	background-color: #e5e5f3;
+}
+
+#banksTransacctionsGrid .ag-root-wrapper{
+	border-radius: 10px;
+	border-top:1px solid #e5e5ea!important;
 }

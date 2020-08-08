@@ -36,6 +36,7 @@ class Sales extends Component {
 								field: "amount",
 								headerClass: "dashboardGridColumn",
 								cellClass: "dashboardGridCellBusiness",
+								comparator: util.currencyComparator 
 							},
 						],
 					},
@@ -65,6 +66,7 @@ class Sales extends Component {
 								field: "amount",
 								headerClass: "dashboardGridColumn",
 								cellClass: "dashboardGridCellBusiness",
+								comparator: util.currencyComparator 
 							},
 						],
 					},

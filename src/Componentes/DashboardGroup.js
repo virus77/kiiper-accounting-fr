@@ -18,6 +18,7 @@ import "ag-grid-community/dist/styles/ag-theme-alpine.css";
 import Purchases from "../Componentes/internos/Dashboard/Purchases/purchases.js";
 import Sales from "../Componentes/internos/Dashboard/Sales/sales.js";
 import banksDataD from "../Componentes/internos/Dashboard/dataDumy/accounts.json";
+import util from "./Js/util.js";
 
 class DashboardGroup extends Component {
 	// Constructor declaration
@@ -45,6 +46,7 @@ class DashboardGroup extends Component {
 						field: "amount",
 						headerClass: "dashboardGridColumn",
 						cellClass: "dashboardGroupGridCellBank",
+						comparator: util.currencyComparator 
 					},
 					{
 						headerName: "Antigüedad",

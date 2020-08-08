@@ -5,7 +5,7 @@ import util from "../../Js/util";
 import { AgGridReact } from "ag-grid-react";
 import { CSVLink } from "react-csv";
 
-import Busqueda from '../../../Imagenes/searchBankRecords.svg';
+import Busqueda from "../../../Imagenes/searchBankRecords.svg";
 
 class FileTransformationInformation extends Component {
 	constructor(props) {
@@ -78,12 +78,14 @@ class FileTransformationInformation extends Component {
 				field: "date",
 				cellStyle: { textAlign: "center" },
 				width: 200,
+				comparator: util.dateComparator,
 			},
 			{
 				headerName: "Última transacción",
 				field: "lastTransactionDate",
 				cellStyle: { textAlign: "center" },
 				width: 200,
+				comparator: util.dateComparator,
 			},
 			{
 				headerName: "Descargar",
@@ -169,7 +171,8 @@ class FileTransformationInformation extends Component {
 								}
 							/>
 							<h3>Convertir movimientos bancarios (parcial)</h3>
-							<br/><br/>
+							<br />
+							<br />
 							<div>Siga estas instrucciones para transformar el archivo:</div>
 							<div>
 								<ul className="descriptionUnorderedList">
@@ -178,7 +181,8 @@ class FileTransformationInformation extends Component {
 									</li>
 									<li>
 										Descargue los movimientos bancarios desde el primer día del
-										mes que desee convertir en<strong>&nbsp;formato {  this.state.formatPartial  }</strong>
+										mes que desee convertir en
+										<strong>&nbsp;formato {this.state.formatPartial}</strong>
 									</li>
 									<li>
 										Adjunte el formato de movimientos bancarios en
@@ -230,7 +234,8 @@ class FileTransformationInformation extends Component {
 								}
 							/>
 							<h3>Convertir estados de cuenta (mensual)</h3>
-							<br/><br/>
+							<br />
+							<br />
 							<div>Siga estas instrucciones para transformar el archivo:</div>
 							<div>
 								<ul className="descriptionUnorderedList">
@@ -239,7 +244,7 @@ class FileTransformationInformation extends Component {
 									</li>
 									<li>
 										Descargue el estado de cuenta del mes que desee convertir en
-										<strong>&nbsp;formato {  this.state.formatMonth  }</strong>
+										<strong>&nbsp;formato {this.state.formatMonth}</strong>
 									</li>
 									<li>
 										Adjunte el estado de cuenta en
@@ -280,15 +285,23 @@ class FileTransformationInformation extends Component {
 					]
 				) : (
 					<div
-						id="myGrid"
+						id="banksTransacctionsGrid"
 						className="container-transformation ag-theme-alpine"
-						style={{ minHeight: "calc(100vh - 217px)", padding: 0, borderStyle: "none", width: "100%" }}
+						style={{
+							minHeight: "calc(100vh - 217px)",
+							padding: 0,
+							borderStyle: "none",
+							width: "100%",
+						}}
 					>
 						<AgGridReact
 							columnDefs={this.state.columnDefs}
 							rowData={this.state.rowData}
 							onCellFocused={(e) => {
 								this.onRowSelected(e.rowIndex, this.state.rowData[e.rowIndex]);
+							}}
+							defaultColDef={{
+								flex: 1,
 							}}
 						></AgGridReact>
 					</div>

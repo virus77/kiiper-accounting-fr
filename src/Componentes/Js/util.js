@@ -519,14 +519,14 @@ const util = {
                     return params.columnApi.getRowGroupColumns().length === 0;
                 },
             },
-            { headerName: 'No. Control', field: 'Control', xeroField: 'invoice_control', filter: 'agTextColumnFilter', width: 100, sortable: true, cellClass: "grid-cell-Left" },
+            { headerName: 'No. Control', field: 'Control', xeroField: 'invoice_control', filter: 'agTextColumnFilter', width: 120, sortable: true, cellClass: "grid-cell-Left", headerClass: "grid-cell-Left" },
             { headerName: kindOfPeople, field: 'Contacto', xeroField: 'contact_name', headerClass: "centerHeader", filter: 'agTextColumnFilter', width: 248, sortable: true },
-            { headerName: 'Fecha factura', field: 'FechaFactura', cellClass: "grid-cell-centered", xeroField: 'invoice_date', filter: 'agTextColumnFilter', filter: 'agTextColumnFilter', width: 130, sortable: true, cellClass: "grid-cell-centered" },
-            { headerName: 'Base imponible', field: 'invoice_subtotal', xeroField: true, calculated: true, formulaName: 'base_taxable', width: 135, sortable: true, type: 'rightAligned' },
-            { headerName: 'Total ' + Tipo, field: 'TotalIVA', xeroField: 'invoice_total_tax', type: 'rightAligned', width: 110, sortable: true },
+            { headerName: 'Fecha factura', field: 'FechaFactura', cellClass: "grid-cell-centered", xeroField: 'invoice_date', filter: 'agTextColumnFilter', filter: 'agTextColumnFilter', width: 130, sortable: true, cellClass: "grid-cell-centered", comparator: util.dateComparator  },
+            { headerName: 'Base imponible', field: 'invoice_subtotal', xeroField: true, calculated: true, formulaName: 'base_taxable', width: 135, sortable: true, type: 'rightAligned', comparator: util.currencyComparator },
+            { headerName: 'Total ' + Tipo, field: 'TotalIVA', xeroField: 'invoice_total_tax', type: 'rightAligned', width: 110, sortable: true, comparator: util.currencyComparator },
             { headerName: '% retenido', field: 'Retencion', xeroField: 'retention_percentage', type: 'rightAligned', hide: Tipo === "IVA" ? false : true, calculated: true, width: 104, sortable: true, cellClass: "grid-cell-centered" },
-            { headerName: 'Monto retenido', field: 'MontoRetenido', xeroField: true, calculated: true, formulaName: 'retention_amount', width: 129, sortable: true, type: 'rightAligned' },
-            { headerName: 'Fecha de comprobante', field: 'approval_date', width: 170, sortable: true, editable: true, cellEditor: Datepicker, cellClass: "grid-cell-centered" },
+            { headerName: 'Monto retenido', field: 'MontoRetenido', xeroField: true, calculated: true, formulaName: 'retention_amount', width: 129, sortable: true, type: 'rightAligned', comparator: util.currencyComparator },
+            { headerName: 'Fecha de comprobante', field: 'approval_date', width: 170, sortable: true, editable: true, cellEditor: Datepicker, cellClass: "grid-cell-centered", comparator: util.dateComparator },
             { headerName: 'No. Comprobante', field: 'Comprobante', width: 150, sortable: true, editable: true, cellEditor: NumberValidation, type: 'rightAligned', cellClass: "grid-cell-alignRight" },
             { headerName: '', field: '_id', width: 60, cellRenderer: this.CellRendererUp }
         ]
@@ -567,20 +567,35 @@ const util = {
                     }
                 },
             },
-            { headerName: 'No. Control', field: 'Control', xeroField: 'invoice_control', filter: 'agTextColumnFilter', width: 100, sortable: true, cellClass: "grid-cell-Left" },
+            { headerName: 'No. Control', field: 'Control', xeroField: 'invoice_control', filter: 'agTextColumnFilter', width: 120, sortable: true, cellClass: "grid-cell-Left", headerClass: "grid-cell-Left" },
             { headerName: kindOfPeople, field: 'Contacto', xeroField: 'contact_name', headerClass: "centerHeader", filter: 'agTextColumnFilter', width: 248, sortable: true },
-            { headerName: 'Fecha factura', field: 'FechaFactura', xeroField: 'invoice_date', filter: 'agTextColumnFilter', width: 130, sortable: true, cellClass: "grid-cell-centered" },
-            { headerName: 'Base imponible', field: 'invoice_subtotal', xeroField: 'invoice_subtotal', width: 135, sortable: true, type: 'rightAligned' },
-            { headerName: 'Total ' + Tipo, field: 'TotalIVA', xeroField: 'retained_amount', width: 110, sortable: true, type: 'rightAligned' },
+            { headerName: 'Fecha factura', field: 'FechaFactura', xeroField: 'invoice_date', filter: 'agTextColumnFilter', width: 130, sortable: true, cellClass: "grid-cell-centered", comparator: util.dateComparator },
+            { headerName: 'Base imponible', field: 'invoice_subtotal', xeroField: 'invoice_subtotal', width: 135, sortable: true, type: 'rightAligned', comparator: util.currencyComparator },
+            { headerName: 'Total ' + Tipo, field: 'TotalIVA', xeroField: 'retained_amount', width: 110, sortable: true, type: 'rightAligned', comparator: util.currencyComparator },
             { headerName: '% retenido', field: 'Retencion', xeroField: 'retention_percentage', hide: Tipo === "IVA" ? false : true, calculated: true, width: 104, sortable: true, cellClass: "grid-cell-cenLeft", type: 'rightAligned' },
-            { headerName: 'Monto retenido', field: 'MontoRetenido', xeroField: true, calculated: true, formulaName: 'retention_amount', width: 129, sortable: true, headerClass: "grid-cell-centered", type: 'rightAligned' },
-            { headerName: 'Fecha de comprobante', field: 'date', xeroField: 'approval_date', filter: 'agTextColumnFilter', width: 170, sortable: true, cellClass: "grid-cell-centered" },
+            { headerName: 'Monto retenido', field: 'MontoRetenido', xeroField: true, calculated: true, formulaName: 'retention_amount', width: 129, sortable: true, headerClass: "grid-cell-centered", type: 'rightAligned', comparator: util.currencyComparator },
+            { headerName: 'Fecha de comprobante', field: 'date', xeroField: 'approval_date', filter: 'agTextColumnFilter', width: 170, sortable: true, cellClass: "grid-cell-centered", comparator: util.dateComparator },
             { headerName: 'No. Comprobante', field: 'Comprobante', xeroField: 'correlative', width: 150, sortable: true, cellClass: "grid-cell-cenLeft", type: 'rightAligned' },
             { headerName: '', field: 'file', width: 60, cellRenderer: this.CellRendererP }
         ]
         return (columnDefs)
     },
-
+    /// Ayuda a ordenar las columnas de tipo fecha de acuerdo al formato DD/MM/YYYY
+    /// @param {string} date1 - primer valor de fecha a comparar
+    /// @param {string} date2- segundo valor de fecha a comparar
+    dateComparator: function (date1, date2){
+            var date1Number = parseInt(moment(date1,"DD/MM/YYYY").format("YYYYMMDD"));
+            var date2Number = parseInt(moment(date2,"DD/MM/YYYY").format("YYYYMMDD"));
+            return date1Number - date2Number;
+    },
+    /// Ayuda a ordenar las columnas de tipo fecha de acuerdo al formato DD/MM/YYYY
+    /// @param {string} currency1 - primer valor de moneda a comparar
+    /// @param {string} currency2- segundo valor de moneda a comparar
+    currencyComparator: function (currency1, currency2){
+            var currency1Number = parseFloat(currency1.replace(/\./g, "").replace(/\,/g, ".")).toFixed(2);
+            var currency2Number = parseFloat(currency2.replace(/\./g, "").replace(/\,/g, ".")).toFixed(2);
+            return currency1Number - currency2Number;
+    },
     /// Crea el header del componente de declaracion
     /// @param {object} Tipo - Maneja variable si es IVA o ISLR)
     /// @param {object} kindOfPeople - Indica si es cliente o proveedor 
@@ -615,9 +630,9 @@ const util = {
                     }
                 },
             },
-            { headerName: 'Fecha Límite', field: 'FechaLimite', xeroField: 'due_date', filter: 'agTextColumnFilter', filter: 'agTextColumnFilter', width: 150, sortable: true },
+            { headerName: 'Fecha Límite', field: 'FechaLimite', xeroField: 'due_date', filter: 'agTextColumnFilter', filter: 'agTextColumnFilter', width: 150, sortable: true, comparator: util.dateComparator },
             { headerName: 'Base sujeta a retención', field: 'invoice_subtotal', xeroField: 'statement_total_amount', width: 164, sortable: true, type: 'rightAligned' },
-            { headerName: 'Total retenido', field: 'Retencion', xeroField: 'statement_total_tax', type: 'rightAligned', calculated: true, width: 120, sortable: true, cellClass: "grid-cell-centered" },
+            { headerName: 'Total retenido', field: 'Retencion', xeroField: 'statement_total_tax', type: 'rightAligned', calculated: true, width: 120, sortable: true, cellClass: "grid-cell-centered", comparator: util.currencyComparator },
             {
                 headerName: 'Aprobado por', field: 'AprobadoPor', xeroField: 'aprobado_por', type: 'rightAligned', hide: statusName === "Aprobados" ? false : true, calculated: true, width: 120, sortable: true, cellClass: "grid-cell-centered",
             },
@@ -659,8 +674,8 @@ const util = {
                     return tipoLibro;
                 },
             },
-            { headerName: "Fecha inicio", field: "init_date", xeroField: "init_date", flex: 1, cellClass: "grid-cell-cenLeft" },
-            { headerName: "Fecha fin", field: "end_date", xeroField: "end_date", flex: 1, cellClass: "grid-cell-cenLeft" },
+            { headerName: "Fecha inicio", field: "init_date", xeroField: "init_date", flex: 1, cellClass: "grid-cell-cenLeft", comparator: util.dateComparator  },
+            { headerName: "Fecha fin", field: "end_date", xeroField: "end_date", flex: 1, cellClass: "grid-cell-cenLeft", comparator: util.dateComparator  },
             { headerName: "Archivo", field: "file", flex: 1, cellRenderer: this.fileColumnRenderer, cellClass: "grid-cell-cenLeft" },
             { headerName: "Actualizar", field: "updateFile", flex: 1, cellRenderer: this.updateFileColumnRenderer, cellClass: "grid-cell-cenLeft" },
         ]
