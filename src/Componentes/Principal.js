@@ -540,7 +540,6 @@ export default function Dashboard(props) {
 								<div id="moduleTitle">
 									<Title>Dashboard Grupos</Title>
 								</div>
-								<span id="breadcrumbPath">&gt; Dashboard Grupos</span>
 							</div>
 							<Grid item xs={12}>
 								<Paper className={classes.paper}>
