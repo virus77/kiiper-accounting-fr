@@ -20,8 +20,16 @@ p {
 	margin-bottom: 10px !important;
 }
 
-.App {
+.App, .AppLogin {
 	height: 100%;
+}
+
+.appLoginHeader{
+	padding:10px 15px;
+}
+
+.appLoginHeader img{
+	width: 45px;
 }
 
 .App-logo {
@@ -51,25 +59,83 @@ p {
 	right: 0;
 	bottom: 0;
 	margin: auto;
-	width: 33%;
-	height: 65%;
+	max-width: 430px;
+	height: 520px;
 	border-radius: 3%;
 	display: flex;
 	align-items: center;
 	justify-content: center;
+	overflow-y:auto;
+}
+
+.formContainer{
+	padding: 50px 50px 20px!important;
+	height: 100%;
+}
+
+.formLoginTitle{
+	font-size: 2.7em;
+	color: #232C51;
+	font-weight: 500;
+	font-family: "Goldplay",sans-serif;
+	width: 50%;
+	line-height: 1;
+	letter-spacing: 0.374px;
+}
+
+.formLoginInstructions{
+	font-size: 0.8em;
+	color: #232C51;
+	margin-top:10px;
+	margin-bottom: 30px;
+	letter-spacing: -0.408px;
+}
+
+.formContainer form label{
+	color: #232c51;
+	font-size: 0.8em;
+	font-weight: 500!important;
+}
+
+.formContainer form input{
+	background-color: #F5F6FA;
+	border-radius: 7px;
+	height: 35px;
+	font-family: "Muli",sans-serif;
+	font-size: 0.8em;
+	border-style: none;
+	font-weight: 200;
+	margin-bottom: 30px;
+}
+
+.formContainer form input:focus{
+	background-color: #fff!important;
+}
+
+.formContainer .form-control:focus{
+	box-shadow:0 0 0 0.1em #5EFEFF;
+}
+
+.formContainer form input:-internal-autofill-selected{
+	background-color: #F5F6FA;
+}
+
+.formActions{
+	padding-top: 20px;
 }
 
 /*Botón inicial*/
 #xeroSyncAnchor {
-	background-color: #232c51;
+	background-color: #7158e2;
 	cursor: pointer;
-	padding: 12px 20px;
+	padding: 10px 30px;
 	border: none;
-	border-radius: 11px;
+	border-radius: 10px;
 	font-size: 0.9em;
+	color: #fff;
 }
 #xeroSyncAnchor:hover {
-	background-color: #7158e2; /* Change the value to with anchors hover color*/
+	background-color: #232c51; /* Change the value to with anchors hover color*/
 }
 
 /*Color del header*/
@@ -133,26 +199,6 @@ p {
 	height: 650px;
 }
 
-/* Style input text */
-input[type="email"] {
-	background-color: white;
-	background-repeat: no-repeat;
-	padding: 4%;
-	color: #232c51;
-	border-radius: 7px;
-	border-color: #7158e2 !important;
-	box-shadow: #7158e2 !important;
-}
-
-/* Style input password */
-input[type="password"] {
-	background-color: white;
-	padding: 4%;
-	color: #232c51;
-	border-radius: 9px;
-	border-color: #7158e2 !important;
-	box-shadow: #7158e2 !important;
-}
 
 /* Style input checkbox */
 input[type="checkbox"] {

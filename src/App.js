@@ -108,20 +108,16 @@ class App extends Component {
         {/* Acción utilizada ocultar el formulario de inicio de sesión y darle paso al contenido */}
         {this.state.isInActive ?
           /* Acción utilizada ocultar el logo de kiiper para darle paso al formulario de inicio de sesion */
-          <div className="App">
-            <div style={{ padding: "35px" }}>
+          <div className="AppLogin">
+            <div className="appLoginHeader">
               <img src={kiiperLogoSm} alt="img-logokiiper" />
             </div>
             <div className="formulario">
-              <div className="col-12">
-                <br />
-                <div style={{ padding: "40px 0px 0px 35px", fontSize: "30pt", color: "#232C51", fontWeight: "bold" }}>
+              <div className="col-12 formContainer">
+                <div className="formLoginTitle">
                   Bienvenidos a kiiper
                   </div>
-                <div style={{ padding: "25px 0px 0px 35px", fontSize: "18pt", color: "#232C51" }}>
-                  Accounting routines done!
-                  </div>
-                <div style={{ padding: "45px 35px 0px 35px", fontSize: "12pt", color: "#232C51" }}>
+                <div className="formLoginInstructions">
                   Para continuar debes ingresar tus datos e iniciar sesión
                   </div>
                 <div id="Spinner" style={{
@@ -131,18 +127,16 @@ class App extends Component {
                 }}>
                   <Spinner color="#be97e8" />
                 </div>
-                <Form style={{ padding: "20px 35px 0px 35px", fontSize: "11pt", color: "#232C51" }}>
+                <Form>
                   <Form.Group>
                     <Form.Label >Correo electrónico: </Form.Label>
                     <Form.Control id="ctrlEmail" type="email" placeholder="ej. nombre@corrreo.com" />
                   </Form.Group>
-                  <div style={{ padding: "10px 0px 0px 0px" }}>
                     <Form.Group>
                       <Form.Label>Contraseña: </Form.Label>
                       <Form.Control id="ctrlPassword" type="password" placeholder="Password" />
                     </Form.Group>
-                  </div>
-                  <div style={{ padding: "40px 0px 0px 0px", color: "white", textAlign: "right" }}>
+                  <div className="formActions">
                     <span id="spnAccessToken" style={{ display: "none" }}>{this.state.accessToken}</span>
                     <span id="xeroSyncAnchor" onClick={() => this.accesToXero()}>Iniciar sesión</span>
                   </div>
