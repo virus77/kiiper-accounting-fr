@@ -41,7 +41,7 @@ import BanksConvert from "../Componentes/internos/Banks/BanksConvert";
 import DashboardPanel from "./internos/Dashboard/dashboard";
 import { Reports } from "../Componentes/internos/Reports/Reports";
 import { DashboardGroup } from "./DashboardGroup";
-import Declaraciones from "../Componentes/internos/declaraciones/Declaraciones";
+import Declaraciones from "./internos/Impuestos/Declaraciones";
 
 //#region estilo
 const drawerWidth = 240;
