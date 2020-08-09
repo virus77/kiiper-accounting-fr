@@ -38,11 +38,11 @@ import calls from "./Js/calls";
 import Compras from "./internos/Negocio/Compras";
 import Ventas from "./internos/Negocio/Ventas";
 import Title from "./internos/Title";
-import BanksConvert from "../Componentes/internos/Banks/BanksConvert";
+import BanksConvert from "./internos/Contabilidad/BanksConvert";
 import DashboardPanel from "./internos/Dashboard/dashboard";
-import { Reports } from "../Componentes/internos/Reports/Reports";
+import { Reports } from "../Componentes/internos/Reportes/Impuestos";
 import { DashboardGroup } from "./DashboardGroup";
-import Declaraciones from "../Componentes/internos/declaraciones/Declaraciones";
+import Declaraciones from "../Componentes/internos/Contabilidad/Declaraciones";
 
 //#region estilo
 const drawerWidth = 240;
@@ -288,8 +288,8 @@ export default function Dashboard(props) {
 						{event === -1 ? (
 							"Kiiper"
 						) : (
-							<img style={{ height: "20px" }} src={K} alt="img-K" />
-						)}
+								<img style={{ height: "20px" }} src={K} alt="img-K" />
+							)}
 					</Typography>
 					{/* icon Busqueda*/}
 					<IconButton color="inherit">
@@ -335,7 +335,7 @@ export default function Dashboard(props) {
 									<ul className="avatarActionsList">
 										<li className="avatarActionListOption">
 											<img alt="CloseSession" src={CloseSession} />
-											<span>Cerrar sesión</span>
+											<span onClick={(event) => handleCancel()}>Cerrar sesión</span>
 										</li>
 									</ul>
 								</div>
@@ -355,19 +355,19 @@ export default function Dashboard(props) {
 								<tr>
 									<td>
 										{event === "xeroOrgName" ||
-										event === 0.1 ||
-										event === 1.1 ||
-										event === 1.2 ||
-										event === 2.1 ||
-										event === 2.2 ||
-										event === 3.1 ||
-										event === 3.2 ? (
-											<div className={classes.toolbarIcon}>
-												<IconButton onClick={(event) => handleClick(-1)}>
-													<ChevronLeftIcon />
-												</IconButton>
-											</div>
-										) : null}
+											event === 0.1 ||
+											event === 1.1 ||
+											event === 1.2 ||
+											event === 2.1 ||
+											event === 2.2 ||
+											event === 3.1 ||
+											event === 3.2 ? (
+												<div className={classes.toolbarIcon}>
+													<IconButton onClick={(event) => handleClick(-1)}>
+														<ChevronLeftIcon />
+													</IconButton>
+												</div>
+											) : null}
 									</td>
 									<td>
 										<div className={classes.toolbarIcon}>
@@ -400,81 +400,81 @@ export default function Dashboard(props) {
 					</Navbar.Brand>
 					<Navbar.Toggle aria-controls="basic-navbar-nav" />
 					{event === "xeroOrgName" ||
-					event === 0.1 ||
-					event === 1.1 ||
-					event === 1.2 ||
-					event === 2.1 ||
-					event === 2.2 ||
-					event === 3.1 ||
-					event === 3.2 ? (
-						<Navbar.Collapse id="basic-navbar-nav">
-							<Nav className="mr-auto">
-								<Nav.Link
-									className="navBarOptionSelected"
-									style={{ padding: "0 30px" }}
-									eventKey={0.1}
-									onClick={(event) => handleListItemClick(event, 0.1)}
-									href="#home"
-								>
-									Dashboard
+						event === 0.1 ||
+						event === 1.1 ||
+						event === 1.2 ||
+						event === 2.1 ||
+						event === 2.2 ||
+						event === 3.1 ||
+						event === 3.2 ? (
+							<Navbar.Collapse id="basic-navbar-nav">
+								<Nav className="mr-auto">
+									<Nav.Link
+										className="navBarOptionSelected"
+										style={{ padding: "0 30px" }}
+										eventKey={0.1}
+										onClick={(event) => handleListItemClick(event, 0.1)}
+										href="#home"
+									>
+										Dashboard
 								</Nav.Link>
-								<NavDropdown
-									style={{ padding: "0 30px" }}
-									title="Negocio"
-									id="ddlNegocioId"
-								>
-									<NavDropdown.Item
-										eventKey={1.1}
-										onClick={(event) => handleListItemClick(event, 1.1)}
-										href="#Negocio/Ventas"
+									<NavDropdown
+										style={{ padding: "0 30px" }}
+										title="Negocio"
+										id="ddlNegocioId"
 									>
-										Ventas
+										<NavDropdown.Item
+											eventKey={1.1}
+											onClick={(event) => handleListItemClick(event, 1.1)}
+											href="#Negocio/Ventas"
+										>
+											Ventas
 									</NavDropdown.Item>
-									<NavDropdown.Item
-										eventKey={1.2}
-										onClick={(event) => handleListItemClick(event, 1.2)}
-										href="#Negocio/Compras"
+										<NavDropdown.Item
+											eventKey={1.2}
+											onClick={(event) => handleListItemClick(event, 1.2)}
+											href="#Negocio/Compras"
+										>
+											Compras
+									</NavDropdown.Item>
+									</NavDropdown>
+									<NavDropdown
+										style={{ padding: "0 30px" }}
+										title="Contabilidad"
+										id="ddlContabilidadId"
 									>
-										Compras
+										<NavDropdown.Item
+											eventKey={2.1}
+											onClick={(event) => handleListItemClick(event, 2.1)}
+											href="#Contabilidad/Bancos"
+										>
+											Bancos
 									</NavDropdown.Item>
-								</NavDropdown>
-								<NavDropdown
-									style={{ padding: "0 30px" }}
-									title="Contabilidad"
-									id="ddlContabilidadId"
-								>
-									<NavDropdown.Item
-										eventKey={2.1}
-										onClick={(event) => handleListItemClick(event, 2.1)}
-										href="#Contabilidad/Bancos"
+										<NavDropdown.Item
+											eventKey={3.1}
+											onClick={(event) => handleListItemClick(event, 2.2)}
+											href="#Contabilidad/Impuestos"
+										>
+											Impuestos
+									</NavDropdown.Item>
+									</NavDropdown>
+									<NavDropdown
+										style={{ padding: "0 30px" }}
+										title="Reportes"
+										id="ddlReportesId"
 									>
-										Bancos
+										<NavDropdown.Item
+											eventKey={3.1}
+											onClick={(event) => handleListItemClick(event, 3.1)}
+											href="#Reportes/Impuestos"
+										>
+											Impuestos
 									</NavDropdown.Item>
-									<NavDropdown.Item
-										eventKey={3.1}
-										onClick={(event) => handleListItemClick(event, 2.2)}
-										href="#Contabilidad/Impuestos"
-									>
-										Impuestos
-									</NavDropdown.Item>
-								</NavDropdown>
-								<NavDropdown
-									style={{ padding: "0 30px" }}
-									title="Reportes"
-									id="ddlReportesId"
-								>
-									<NavDropdown.Item
-										eventKey={3.1}
-										onClick={(event) => handleListItemClick(event, 3.1)}
-										href="#Reportes/Impuestos"
-									>
-										Impuestos
-									</NavDropdown.Item>
-									{/*<NavDropdown.Item eventKey={3.2} onClick={(event) => handleListItemClick(event, 3.2)} href="#Dashboard/Grupos">Dashboard Group</NavDropdown.Item>*/}
-								</NavDropdown>
-							</Nav>
-						</Navbar.Collapse>
-					) : null}
+										{/*<NavDropdown.Item eventKey={3.2} onClick={(event) => handleListItemClick(event, 3.2)} href="#Dashboard/Grupos">Dashboard Group</NavDropdown.Item>*/}
+									</NavDropdown>
+								</Nav>
+							</Navbar.Collapse>
+						) : null}
 				</Navbar>
 				<Container
 					maxWidth="lg"

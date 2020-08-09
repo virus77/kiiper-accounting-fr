@@ -19,6 +19,7 @@ import updateElement from "../../Imagenes/updateElement.svg";
 var moment = require('moment'); // require
 
 var withHoldingId = "";
+var _id = "";
 var fileName = "";
 
 const util = {
@@ -206,6 +207,13 @@ const util = {
                                     }
                                     break;
 
+                                //Quitar comentario cuando tenga valor
+                                //case "cuentaXero":
+                                case "statement_total_tax":
+                                case "statement_total_amount":
+                                    itemValue = util.formatMoney(itemValue.toFixed(2));
+                                    break;
+
                                 default:
                                     break;
                             }
@@ -311,9 +319,9 @@ const util = {
                 statusInfo.name = "Aprobados";
                 break;
 
-            case "Por aprobar":
+            case "PorAprobar":
                 statusInfo.id = 5;
-                statusInfo.name = "Por aprobar";
+                statusInfo.name = "PorAprobar";
                 break;
 
             case "Declarados":
@@ -321,9 +329,9 @@ const util = {
                 statusInfo.name = "Declarados";
                 break;
 
-            case "Por pagar":
+            case "PorPagar":
                 statusInfo.id = 7;
-                statusInfo.name = "Por pagar";
+                statusInfo.name = "PorPagar";
                 break;
 
             case "Pagados":
@@ -331,9 +339,9 @@ const util = {
                 statusInfo.name = "Pagados";
                 break;
 
-            case "Por generar":
+            case "PorGenerar":
                 statusInfo.id = 9;
-                statusInfo.name = "Por generar";
+                statusInfo.name = "PorGenerar";
                 break;
 
             default:
@@ -346,19 +354,19 @@ const util = {
     getStatusInfoConceptDeclaration: (statusName) => {
         let statusInfo = {
             id: 1,
-            name: "Por generar"
+            name: "PorGenerar"
         };
 
         switch (statusName) {
 
-            case "Por generar":
+            case "PorGenerar":
                 statusInfo.id = 1;
-                statusInfo.name = "Por generar";
+                statusInfo.name = "PorGenerar";
                 break;
 
-            case "Por aprobar":
+            case "PorAprobar":
                 statusInfo.id = 2;
-                statusInfo.name = "Por aprobar";
+                statusInfo.name = "PorAprobar";
                 break;
 
             case "Aprobados":
@@ -366,14 +374,14 @@ const util = {
                 statusInfo.name = "Aprobados";
                 break;
 
-            case "Por declarar":
+            case "PorDeclarar":
                 statusInfo.id = 4;
-                statusInfo.name = "Por declarar";
+                statusInfo.name = "PorDeclarar";
                 break;
 
-            case "Por pagar":
+            case "PorPagar":
                 statusInfo.id = 5;
-                statusInfo.name = "Por pagar";
+                statusInfo.name = "PorPagar";
                 break;
 
             case "Pagados":
@@ -521,7 +529,7 @@ const util = {
             },
             { headerName: 'No. Control', field: 'Control', xeroField: 'invoice_control', filter: 'agTextColumnFilter', width: 120, sortable: true, cellClass: "grid-cell-Left", headerClass: "grid-cell-Left" },
             { headerName: kindOfPeople, field: 'Contacto', xeroField: 'contact_name', headerClass: "centerHeader", filter: 'agTextColumnFilter', width: 248, sortable: true },
-            { headerName: 'Fecha factura', field: 'FechaFactura', cellClass: "grid-cell-centered", xeroField: 'invoice_date', filter: 'agTextColumnFilter', filter: 'agTextColumnFilter', width: 130, sortable: true, cellClass: "grid-cell-centered", comparator: util.dateComparator  },
+            { headerName: 'Fecha factura', field: 'FechaFactura', cellClass: "grid-cell-centered", xeroField: 'invoice_date', filter: 'agTextColumnFilter', filter: 'agTextColumnFilter', width: 130, sortable: true, cellClass: "grid-cell-centered", comparator: util.dateComparator },
             { headerName: 'Base imponible', field: 'invoice_subtotal', xeroField: true, calculated: true, formulaName: 'base_taxable', width: 135, sortable: true, type: 'rightAligned', comparator: util.currencyComparator },
             { headerName: 'Total ' + Tipo, field: 'TotalIVA', xeroField: 'invoice_total_tax', type: 'rightAligned', width: 110, sortable: true, comparator: util.currencyComparator },
             { headerName: '% retenido', field: 'Retencion', xeroField: 'retention_percentage', type: 'rightAligned', hide: Tipo === "IVA" ? false : true, calculated: true, width: 104, sortable: true, cellClass: "grid-cell-centered" },
@@ -580,34 +588,37 @@ const util = {
         ]
         return (columnDefs)
     },
+
     /// Ayuda a ordenar las columnas de tipo fecha de acuerdo al formato DD/MM/YYYY
     /// @param {string} date1 - primer valor de fecha a comparar
     /// @param {string} date2- segundo valor de fecha a comparar
-    dateComparator: function (date1, date2){
-            var date1Number = parseInt(moment(date1,"DD/MM/YYYY").format("YYYYMMDD"));
-            var date2Number = parseInt(moment(date2,"DD/MM/YYYY").format("YYYYMMDD"));
-            return date1Number - date2Number;
+    dateComparator: function (date1, date2) {
+        var date1Number = parseInt(moment(date1, "DD/MM/YYYY").format("YYYYMMDD"));
+        var date2Number = parseInt(moment(date2, "DD/MM/YYYY").format("YYYYMMDD"));
+        return date1Number - date2Number;
     },
+
     /// Ayuda a ordenar las columnas de tipo fecha de acuerdo al formato DD/MM/YYYY
     /// @param {string} currency1 - primer valor de moneda a comparar
     /// @param {string} currency2- segundo valor de moneda a comparar
-    currencyComparator: function (currency1, currency2){
-            var currency1Number = parseFloat(currency1.replace(/\./g, "").replace(/\,/g, ".")).toFixed(2);
-            var currency2Number = parseFloat(currency2.replace(/\./g, "").replace(/\,/g, ".")).toFixed(2);
-            return currency1Number - currency2Number;
+    currencyComparator: function (currency1, currency2) {
+        var currency1Number = parseFloat(currency1.replace(/\./g, "").replace(/\,/g, ".")).toFixed(2);
+        var currency2Number = parseFloat(currency2.replace(/\./g, "").replace(/\,/g, ".")).toFixed(2);
+        return currency1Number - currency2Number;
     },
+
     /// Crea el header del componente de declaracion
     /// @param {object} Tipo - Maneja variable si es IVA o ISLR)
     /// @param {object} kindOfPeople - Indica si es cliente o proveedor 
     returnHeaderDeclaration: function (Tipo, kindOfPeople, statusName) {
 
-        var seeCommitmentColumn = ['Por declarar', 'Por pagar', 'Pagados'];
-        var seePaymentColumn = ['Por pagar', 'Pagados'];
-        var seeCertificateColumn = ['Por declarar', 'Pagados'];
+        var seeCommitmentColumn = ['PorDeclarar', 'PorPagar', 'Pagados'];
+        var seePaymentColumn = ['PorPagar', 'Pagados'];
+        var seeCertificateColumn = ['PorDeclarar', 'Pagados'];
 
         var columnDefs = [
             //#region hidden rows
-            { headerName: 'statementId', field: 'statementId', xeroField: '_id', hide: true },
+            { headerName: 'statementId', field: '_id', xeroField: '_id', hide: true },
             //#endregion hidden rows
             {
                 headerName: 'Nombre', field: 'Nombre', xeroField: 'invoice_number', width: 164,
@@ -620,9 +631,7 @@ const util = {
                         case statusName !== "Anulados":
                             return params.columnApi.getRowGroupColumns().length === 0;
 
-                        case params.data.reissued === "":
                         case params.data.reissued === true:
-                        case params.data.reissued === undefined:
                             break;
 
                         default:
@@ -631,29 +640,15 @@ const util = {
                 },
             },
             { headerName: 'Fecha Límite', field: 'FechaLimite', xeroField: 'due_date', filter: 'agTextColumnFilter', filter: 'agTextColumnFilter', width: 150, sortable: true, comparator: util.dateComparator },
-            { headerName: 'Base sujeta a retención', field: 'invoice_subtotal', xeroField: 'statement_total_amount', width: 164, sortable: true, type: 'rightAligned' },
-            { headerName: 'Total retenido', field: 'Retencion', xeroField: 'statement_total_tax', type: 'rightAligned', calculated: true, width: 120, sortable: true, cellClass: "grid-cell-centered", comparator: util.currencyComparator },
-            {
-                headerName: 'Aprobado por', field: 'AprobadoPor', xeroField: 'aprobado_por', type: 'rightAligned', hide: statusName === "Aprobados" ? false : true, calculated: true, width: 120, sortable: true, cellClass: "grid-cell-centered",
-            },
-            {
-                headerName: 'Status', field: 'status', xeroField: 'status', type: 'rightAligned', hide: statusName === "Aprobados" ? false : true, calculated: true, width: 140, sortable: true, cellClass: "grid-cell-centered",
-            },
-            {
-                headerName: 'Cuenta Xero', field: 'cuentaXero', xeroField: 'cuentaXero', type: 'rightAligned', hide: statusName != "Por Generar" ? false : true, calculated: true, width: 120, sortable: true, cellClass: "grid-cell-centered",
-            },
-            {
-                headerName: 'Auxiliar', field: 'Auxiliar', xeroField: 'auxiliar', type: 'rightAligned', calculated: true, width: 110, sortable: true, cellClass: "grid-cell-centered",
-            },
-            {
-                headerName: 'Compromiso', field: 'compromiso', xeroField: 'compromiso', type: 'rightAligned', hide: !seeCommitmentColumn.includes(statusName), calculated: true, width: 110, sortable: true, cellClass: "grid-cell-centered",
-            },
-            {
-                headerName: 'Pago', field: 'Pago', xeroField: 'pago', type: 'rightAligned', hide: !seePaymentColumn.includes(statusName), calculated: true, width: 110, sortable: true, cellClass: "grid-cell-centered",
-            },
-            {
-                headerName: 'Certificado', field: 'Certificado', xeroField: 'certificado', type: 'rightAligned', hide: !seeCertificateColumn.includes(statusName), calculated: true, width: 110, sortable: true, cellClass: "grid-cell-centered",
-            },
+            { headerName: 'Base sujeta a retención', field: 'invoice_subtotal', xeroField: 'statement_total_amount', formulaName: 'statement_total_amount', width: 175, sortable: true, type: 'rightAligned' },
+            { headerName: 'Total retenido', field: 'Retencion', xeroField: 'statement_total_tax', formulaName: 'statement_total_tax', calculated: true, width: 120, sortable: true, type: 'rightAligned', comparator: util.currencyComparator },
+            { headerName: 'Aprobado por', field: 'AprobadoPor', xeroField: 'aprobado_por', type: 'rightAligned', hide: statusName === "Aprobados" ? false : true, calculated: true, width: 120, sortable: true, cellClass: "grid-cell-centered" },
+            { headerName: 'Status', field: 'status', xeroField: 'status', type: 'rightAligned', hide: statusName === "Aprobados" ? false : true, calculated: true, width: 140, sortable: true, cellClass: "grid-cell-centered", },
+            { headerName: 'Cuenta Xero', field: 'cuentaXero', xeroField: 'cuentaXero', formulaName: 'cuentaXero', type: 'rightAligned', hide: statusName != "Por Generar" ? false : true, calculated: true, width: 120, sortable: true, cellClass: "grid-cell-centered", },
+            { headerName: 'Auxiliar', field: 'Auxiliar', xeroField: 'auxiliar', calculated: true, width: 110, sortable: true, type: 'rightAligned', cellRenderer: this.CellRendererD },
+            { headerName: 'Compromiso', field: 'compromiso', xeroField: 'compromiso', type: 'rightAligned', hide: !seeCommitmentColumn.includes(statusName), calculated: true, width: 110, sortable: true, cellClass: "grid-cell-centered", },
+            { headerName: 'Pago', field: 'Pago', xeroField: 'pago', type: 'rightAligned', hide: !seePaymentColumn.includes(statusName), calculated: true, width: 110, sortable: true, cellClass: "grid-cell-centered", },
+            { headerName: 'Certificado', field: 'Certificado', xeroField: 'certificado', type: 'rightAligned', hide: !seeCertificateColumn.includes(statusName), calculated: true, width: 110, sortable: true, cellClass: "grid-cell-centered", },
         ]
         return (columnDefs)
     },
@@ -674,8 +669,8 @@ const util = {
                     return tipoLibro;
                 },
             },
-            { headerName: "Fecha inicio", field: "init_date", xeroField: "init_date", flex: 1, cellClass: "grid-cell-cenLeft", comparator: util.dateComparator  },
-            { headerName: "Fecha fin", field: "end_date", xeroField: "end_date", flex: 1, cellClass: "grid-cell-cenLeft", comparator: util.dateComparator  },
+            { headerName: "Fecha inicio", field: "init_date", xeroField: "init_date", flex: 1, cellClass: "grid-cell-cenLeft", comparator: util.dateComparator },
+            { headerName: "Fecha fin", field: "end_date", xeroField: "end_date", flex: 1, cellClass: "grid-cell-cenLeft", comparator: util.dateComparator },
             { headerName: "Archivo", field: "file", flex: 1, cellRenderer: this.fileColumnRenderer, cellClass: "grid-cell-cenLeft" },
             { headerName: "Actualizar", field: "updateFile", flex: 1, cellRenderer: this.updateFileColumnRenderer, cellClass: "grid-cell-cenLeft" },
         ]
@@ -725,7 +720,7 @@ const util = {
     },
 
     //Coloca icono de descarga en el grid
-    // y se ejecuta laa acción para descargar documento
+    // y se ejecuta la acción para descargar documento en los grid de negoocio
     /// @param {object} params - parámetro 
     CellRendererP: function (params) {
         withHoldingId = params.data.withHoldingId;
@@ -738,8 +733,40 @@ const util = {
         eDiv.onclick = async function () {
             let resp = await calls.getDocumentById(withHoldingId);
             var element = document.createElement('a');
-            element.setAttribute('href', 'data:application/octet-stream;base64,' + encodeURIComponent(resp.data));
-            element.setAttribute('download', fileName + ".pdf");
+            element.setAttribute('href', resp);
+            element.style.display = 'none';
+            document.body.appendChild(element);
+            element.click();
+            document.body.removeChild(element);
+        };
+        var img = document.createElement('img');
+        img.setAttribute("border", "0");
+        img.setAttribute("width", "18");
+        img.setAttribute("height", "21");
+        img.setAttribute("src", Download);
+        img.setAttribute("style", "cursor: pointer");
+
+        var span = document.createElement('span');
+        span.appendChild(img);
+        eDiv.appendChild(span);
+        return eDiv;
+    },
+
+    //Coloca icono de descarga en el grid
+    // y se ejecuta laa acción para descargar documento en el grod de Declaraciones
+    /// @param {object} params - parámetro 
+    CellRendererD: function (params) {
+        _id = params.data._id;
+        fileName = "Retención de IVA - " + params.data.invoice_number;
+        var eDiv = document.createElement('div');
+        eDiv.className = "file-container";
+        eDiv.setAttribute("id", "down_" + _id);
+        //Función utilooizada ára llamar el archivo en base64
+        //Convertirlo a pdf y descargarlo
+        eDiv.onclick = async function () {
+            let resp = await calls.getDeclarationDocumentById(_id);
+            var element = document.createElement('a');
+            element.setAttribute('href', resp);
             element.style.display = 'none';
             document.body.appendChild(element);
             element.click();
