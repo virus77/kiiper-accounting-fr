@@ -48,6 +48,49 @@ class Sales extends Component {
 					filterable: false,
 					sortable: true,
 				},
+				charts: {
+					plugins: [ChartDataLabels],
+					data: {
+						datasets: [
+							{
+								data: [0.3,0.1,0.1,0.5],
+								backgroundColor: [
+									"#44CDDB",
+									"#9680ED",
+									"#232C51",
+									"#86FFF5",
+								],
+							},
+						],
+						labels: ["Vigentes","1 mes","3 meses","+3 meses"],
+					},
+					options: {
+						maintainAspectRatio: false,
+						plugins: {
+							datalabels: {
+								color: "#fff",
+								font: {
+									family: "'Goldplay',sans-serif",
+									weight: "700",
+								},
+								formatter: function (value) {
+									return `${(value * 100)}%`;
+								},
+							},
+						},
+						legend: {
+							display: true,
+							labels: {
+								fontColor: "#232C51",
+								fontFamily: "'Muli',sans-serif",
+								boxWidth: 10,
+								fontSize: 10,
+							},
+							position: "bottom",
+							align: "start",
+						},
+					},
+				},
 			},
 			mainClients: {
 				columnDefs: [
@@ -78,37 +121,37 @@ class Sales extends Component {
 					filterable: false,
 					sortable: true,
 				},
-			},
-			charts: {
-				plugins: [ChartDataLabels],
-				data: {},
-				options: {
-					maintainAspectRatio: false,
-					plugins: {
-						datalabels: {
-							color: "#fff",
-							font: {
-								family: "'Goldplay',sans-serif",
-								weight: "700",
-							},
-							formatter: function (value) {
-								const partPercentage = parseFloat(
-									(value * 100) / totalAmountClients
-								).toFixed(2);
-								return `${partPercentage}%`;
+				charts: {
+					plugins: [ChartDataLabels],
+					data: {},
+					options: {
+						maintainAspectRatio: false,
+						plugins: {
+							datalabels: {
+								color: "#fff",
+								font: {
+									family: "'Goldplay',sans-serif",
+									weight: "700",
+								},
+								formatter: function (value) {
+									const partPercentage = parseFloat(
+										(value * 100) / totalAmountClients
+									).toFixed(2);
+									return `${partPercentage}%`;
+								},
 							},
 						},
-					},
-					legend: {
-						display: true,
-						labels: {
-							fontColor: "#232C51",
-							fontFamily: "'Muli',sans-serif",
-							boxWidth: 10,
-							fontSize: 10,
+						legend: {
+							display: true,
+							labels: {
+								fontColor: "#232C51",
+								fontFamily: "'Muli',sans-serif",
+								boxWidth: 10,
+								fontSize: 10,
+							},
+							position: "bottom",
+							align: "start",
 						},
-						position: "bottom",
-						align: "start",
 					},
 				},
 			},
@@ -173,23 +216,23 @@ class Sales extends Component {
 					mainClients: {
 						...prevState.mainClients,
 						rowData: mainClientsData,
-					},
-					charts: {
-						...prevState.charts,
-						data: {
-							datasets: [
-								{
-									data: clientsChartData,
-									backgroundColor: [
-										"#44CDDB",
-										"#9680ED",
-										"#232C51",
-										"#86FFF5",
-										"#8596CA",
-									],
-								},
-							],
-							labels: clientsChartLabels,
+						charts: {
+							...prevState.charts,
+							data: {
+								datasets: [
+									{
+										data: clientsChartData,
+										backgroundColor: [
+											"#44CDDB",
+											"#9680ED",
+											"#232C51",
+											"#86FFF5",
+											"#8596CA",
+										],
+									},
+								],
+								labels: clientsChartLabels,
+							},
 						},
 					},
 				}));
@@ -221,8 +264,8 @@ class Sales extends Component {
 						<div className={styles.ChartTitle}>Antigüedad</div>
 						<div className={styles.ChartContainer}>
 							<Doughnut
-								data={this.state.charts.data}
-								options={this.state.charts.options}
+								data={this.state.overdueInvoice.charts.data}
+								options={this.state.overdueInvoice.charts.options}
 							/>
 						</div>
 					</div>
@@ -249,8 +292,8 @@ class Sales extends Component {
 							</div>
 							<div className={styles.ChartContainer}>
 								<Doughnut
-									data={this.state.charts.data}
-									options={this.state.charts.options}
+									data={this.state.mainClients.charts.data}
+									options={this.state.mainClients.charts.options}
 									width={200}
 								/>
 							</div>

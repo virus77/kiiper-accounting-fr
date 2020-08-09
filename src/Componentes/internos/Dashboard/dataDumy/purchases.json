@@ -1,79 +1,79 @@
 {
-    "totalDue": 32328415.62,
+    "totalDue": "32.328.415,62",
     "listPurchasesParClient": [
         {
-            "amountDue": 22393590.17,
+            "amountDue": "22.393.590,17",
             "behind": "Vigentes",
             "contactName": "PROSALMED, C.A",
-            "currencyCode": "VEF"
+            "currencyCode": ""
         },
         {
-            "amountDue": 9671583.52,
+            "amountDue": "9.671.583,52",
             "behind": "1 mes",
             "contactName": "NETUNO, C.A.",
-            "currencyCode": "VEF"
+            "currencyCode": ""
         },
         {
-            "amountDue": 105722.4,
+            "amountDue": "105.722,4",
             "behind": "3 meses",
             "contactName": "Ingrid Lilibeth Zerpa Gonzalez",
-            "currencyCode": "VEF"
+            "currencyCode": ""
         },
         {
-            "amountDue": 47413.79,
+            "amountDue": "47.413,79",
             "behind": "+3 meses",
             "contactName": "Panaderia Pasteleria Cueva de Iria C.A.",
-            "currencyCode": "VEF"
+            "currencyCode": ""
         },
         {
-            "amountDue": 47413.79,
+            "amountDue": "47.413,79",
             "behind": "+3 meses",
             "contactName": "Otros",
-            "currencyCode": "VEF"
+            "currencyCode": ""
         }
     ],
     "listPurchases": [
         {
-            "amountDue": 22393590.17,
+            "amountDue": "22.393.590,17",
             "behind": "Vigentes",
-            "currencyCode": "VEF"
+            "currencyCode": ""
         },
         {
-            "amountDue": 9671583.52,
+            "amountDue": "9.671.583,52",
             "behind": "1 mes",
-            "currencyCode": "VEF"
+            "currencyCode": ""
         },
         {
-            "amountDue": 105722.4,
+            "amountDue": "105.722,4",
             "behind": "3 meses",
-            "currencyCode": "VEF"
+            "currencyCode": ""
         },
         {
-            "amountDue": 47413.79,
+            "amountDue": "47.413,79",
             "behind": "+3 meses",
-            "currencyCode": "VEF"
+            "currencyCode": ""
         }
     ],
     "listPurchasesbyGroup": [
         {
-            "amountDue": 263241.93,
+            "amountDue": "263.241,93",
             "behind": "1 mes",
-            "currencyCode": "VEF"
+            "currencyCode": ""
         },
         {
-            "amountDue": 263241.93,
+            "amountDue": "263.241,93",
             "behind": "2 meses",
-            "currencyCode": "VEF"
+            "currencyCode": ""
         },
         {
-            "amountDue": 32065173.69,
+            "amountDue": "32.065.173,69",
             "behind": "3 meses",
-            "currencyCode": "VEF"
+            "currencyCode": ""
         },
         {
-            "amountDue": 32065173.69,
+            "amountDue": "32.065.173,69",
             "behind": "+3 meses",
-            "currencyCode": "VEF"
+            "currencyCode": ""
         }
     ]
 }

@@ -1,79 +1,79 @@
 {
-    "totalDue": 937197762.35,
+    "totalDue": "937.197.762,35",
     "listSalesParClient": [
         {
-            "amountDue": 937188799.6,
+            "amountDue": "937.188.799,6",
             "behind": "1 mes",
             "contactName": "Telefonica Venezolana C.A.",
-            "currencyCode": "VEF"
+            "currencyCode": ""
         },
         {
-            "amountDue": 7460.35,
+            "amountDue": "7.460,35",
             "behind": "2 meses",
             "contactName": "Hapag - Lloyd Venezuela C.A.",
-            "currencyCode": "USD"
+            "currencyCode": ""
         },
         {
-            "amountDue": 1482.18,
+            "amountDue": "1.482,18",
             "behind": "3 meses",
             "contactName": "AT&T Global Network Services Venezuela, LLC",
-            "currencyCode": "USD"
+            "currencyCode": ""
         },
         {
-            "amountDue": 20.22,
+            "amountDue": "20,22",
             "behind": "+3 meses",
             "contactName": "Deyanira",
-            "currencyCode": "USD"
+            "currencyCode": ""
         },
         {
-            "amountDue": 47413.79,
+            "amountDue": "47.413,79",
             "behind": "+3 meses",
             "contactName": "Otros",
-            "currencyCode": "VEF"
+            "currencyCode": ""
         }
     ],
     "listSales": [
         {
-            "amountDue": 937188799.6,
+            "amountDue": "937.188.799,6",
             "behind": "1 mes",
-            "currencyCode": "VEF"
+            "currencyCode": ""
         },
         {
-            "amountDue": 7460.35,
+            "amountDue": "7.460,35",
             "behind": "2 meses",
-            "currencyCode": "USD"
+            "currencyCode": ""
         },
         {
-            "amountDue": 1482.18,
+            "amountDue": "1.482,18",
             "behind": "3 meses",
-            "currencyCode": "USD"
+            "currencyCode": ""
         },
         {
-            "amountDue": 20.22,
+            "amountDue": "20,22",
             "behind": "+3 meses",
-            "currencyCode": "USD"
+            "currencyCode": ""
         }
     ],
     "listSalesbyGroup": [
         {
-            "amountDue": 7460.35,
+            "amountDue": "7.460,35",
             "behind": "Vigentes",
-            "currencyCode": "USD"
+            "currencyCode": ""
         },
         {
-            "amountDue": 7460.35,
+            "amountDue": "7.460,35",
             "behind": "1 mes",
-            "currencyCode": "USD"
+            "currencyCode": ""
         },
         {
-            "amountDue": 937190281.78,
+            "amountDue": "937.190.281,78",
             "behind": "3 meses",
-            "currencyCode": "VEF"
+            "currencyCode": ""
         },
         {
-            "amountDue": 20.22,
+            "amountDue": "20,22",
             "behind": "+3 meses",
-            "currencyCode": "USD"
+            "currencyCode": ""
         }
     ]
 }

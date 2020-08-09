@@ -8,12 +8,14 @@ import "jquery-ui/themes/base/datepicker.css";
 import "jquery-ui/ui/core";
 import "jquery-ui/ui/widgets/datepicker";
 
+import Cookies from "js-cookie";
 import "ag-grid-community/dist/styles/ag-grid.css";
 import "ag-grid-community/dist/styles/ag-theme-alpine.css";
 import styles from "./banks.module.css";
 import ParamsRenderer from "./cellRenderer";
 import calls from "../../../Js/calls";
 import util from "../../../Js/util";
+import apiSummer from "../api/Account";
 
 // Declaring momenty object
 const moment = require("moment"); // require
@@ -241,13 +243,15 @@ class Bank extends Component {
 	/* Component events */
 
 	// Component Did Mount event
-	componentDidMount() {
+	componentDidMount  = async () => {
 		//Getting data from Xero and building data grid
 		calls.getBankAccounts(this.props.orgIdSelected).then((result) => {
 			if (result) {
 				this.setState({ accounts: result.data });
 			}
 		});
+
+		//const result = await apiSummer.getAccounts("", Cookies.get("accessToken"),);
 	}
 
 	// To cutom render Veirify column
