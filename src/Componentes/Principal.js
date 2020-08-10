@@ -126,7 +126,7 @@ const useStyles = makeStyles((theme) => ({
 
 //Función utilizada para llenar el dropdownlist
 function fillDropDownListGroup(props) {
-	var group = props.grp.map((res) => {
+	var groups = props.grp.map((res) => {
 		return {
 			type: "xeroGroupName",
 			name: res.practiceName,
@@ -134,7 +134,7 @@ function fillDropDownListGroup(props) {
 		};
 	});
 
-	return group;
+	return util.distinct(groups, "name");
 }
 
 async function returnOrganizations(item) {
@@ -196,22 +196,22 @@ export default function Dashboard(props) {
 			// Setting organization selected in React to component
 			setorgIdSelected(item.id);
 			setorgSpecialContrib(item.specialContrib);
-			setValue(item.type === "xeroGroupName" ? "" : item.name);
+			setValue(item.name);
 			setorgNameSelected(item.type === "xeroGroupName" ? "" : item.name);
 
 			//Cambia el color en el ddlPrincipal dependiendo la selección
-			rw_2_input.style =
-				"background-color: #5540c2 !important; border-color: #5540c2 !important;";
+			if (item.type === "xeroGroupName")
+				rw_2_input.style = "background-color: #232c51 !important; border-color: #232c51 !important;";
+			else if (item.type === "xeroOrgName")
+				rw_2_input.style = "background-color: #5540c2 !important; border-color: #5540c2 !important;";
 		} else {
 			rw_2_input = document
 				.querySelector("[id*=rw_]")
 				.getElementsByTagName("div")[0];
-			rw_2_input.style =
-				"background-color: #232c51 !important; border-color: #232c51 !important;";
+
 			eventKey(-1);
 			setValue("");
-			rw_2_input.style =
-				"background-color: #232c51 !important; border-color: #232c51 !important;";
+			rw_2_input.style = "background-color: #232c51 !important; border-color: #232c51 !important;";
 		}
 	};
 
@@ -327,9 +327,9 @@ export default function Dashboard(props) {
 								<div className="avatarInfo">
 									<img alt="Avatar" src={Avatar} />
 									<div className="avatarInfoText avatarInfoName">
-										Kenia García
+										Gustavo Magaña
 									</div>
-									<div className="avatarInfoText">kenia.garcia@xero.com.mx</div>
+									<div className="avatarInfoText">gustavo.magana@teneks.com.mx</div>
 								</div>
 								<div className="avatarActions">
 									<ul className="avatarActionsList">
@@ -573,12 +573,13 @@ export default function Dashboard(props) {
 								</Paper>
 							</Grid>
 						</Grid>
-					) : event === -1 ? (
+					) : event === -2 ? (
 						<Grid container spacing={2}>
 							<div className="breadcrumbClass">
 								<div id="moduleTitle">
 									<Title>Dashboard Grupos</Title>
 								</div>
+								<span id="breadcrumbPath">&gt; {Value}</span>
 							</div>
 							<Grid item xs={12}>
 								<Paper className={classes.paper}>

@@ -256,7 +256,11 @@ class FileTransformationInformation extends Component {
 									<li>
 										Presione el botón<strong>&nbsp;Convertir</strong>
 									</li>
+									<li style={{ visibility: "hidden" }}>
+										<br />
+									</li>
 								</ul>
+
 								<div className="container-button-load">
 									{/* Component InpuFile para cambiar el estilo default del control input de tipo file */}
 									<InputFile onChange={this.onChangeHandler} />
@@ -284,28 +288,28 @@ class FileTransformationInformation extends Component {
 						</div>,
 					]
 				) : (
-					<div
-						id="banksTransacctionsGrid"
-						className="container-transformation ag-theme-alpine"
-						style={{
-							minHeight: "calc(100vh - 217px)",
-							padding: 0,
-							borderStyle: "none",
-							width: "100%",
-						}}
-					>
-						<AgGridReact
-							columnDefs={this.state.columnDefs}
-							rowData={this.state.rowData}
-							onCellFocused={(e) => {
-								this.onRowSelected(e.rowIndex, this.state.rowData[e.rowIndex]);
+						<div
+							id="banksTransacctionsGrid"
+							className="container-transformation ag-theme-alpine"
+							style={{
+								minHeight: "calc(100vh - 217px)",
+								padding: 0,
+								borderStyle: "none",
+								width: "100%",
 							}}
-							defaultColDef={{
-								flex: 1,
-							}}
-						></AgGridReact>
-					</div>
-				)}
+						>
+							<AgGridReact
+								columnDefs={this.state.columnDefs}
+								rowData={this.state.rowData}
+								onCellFocused={(e) => {
+									this.onRowSelected(e.rowIndex, this.state.rowData[e.rowIndex]);
+								}}
+								defaultColDef={{
+									flex: 1,
+								}}
+							></AgGridReact>
+						</div>
+					)}
 			</div>
 		);
 	}
