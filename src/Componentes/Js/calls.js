@@ -78,29 +78,6 @@ const calls = {
 		);
 	},
 
-	/// Call base64 element
-	/// @param {string} withholdingId - _Id from xero element
-	getFinalCallback: async (accestoken) => {
-
-		var array = JSON.parse(accestoken);
-
-		var param = {
-			access_token: array,
-		};
-
-		await fetch("/finalCallback", {
-			method: "POST",
-			body: JSON.stringify(param),
-			headers: {
-				"Content-type": "application/json; charset=UTF-8",
-				"Access-Control-Allow-Origin": "*",
-			},
-		}).then((res) => {
-			return res.url
-		}).catch((err) => {
-			console.log(err);
-		});;
-	},
 
 	/// Start a process to request information from Xero to build
 	/// Insert data when change status to "Archivados" or "Recibidos":

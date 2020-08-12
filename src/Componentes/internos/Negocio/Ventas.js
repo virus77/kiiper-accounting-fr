@@ -16,7 +16,6 @@ import "../../internos/Css/Grid.scss";
 import "../../internos/Css/alert.css";
 
 // Declaring momenty object
-var moment = require("moment"); // require
 
 class Ventas extends Component {
 	constructor(props) {
@@ -215,7 +214,7 @@ class Ventas extends Component {
 
 			// Finding date added to voucher
 			let voucherDate =
-				selectedRow.approval_date != "" ? selectedRow.approval_date : "";
+				selectedRow.approval_date !== "" ? selectedRow.approval_date : "";
 
 			// Finding file uploaded to voucher
 			let voucherFile = document.querySelector(`[id=lbl_${withHoldingId}]`);
@@ -283,6 +282,8 @@ class Ventas extends Component {
 					arrayToSend.push({
 						withholdingId: withHoldingId,
 					});
+					break;
+					
 				default:
 					break;
 			}

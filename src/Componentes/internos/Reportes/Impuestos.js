@@ -1,7 +1,7 @@
 import React, { Component } from "react";
 
 /// controles
-import { Button, Card, Form, Modal } from "react-bootstrap";
+import { Button, Card, Modal } from "react-bootstrap";
 import DatePicker from "react-datepicker";
 import { registerLocale } from "react-datepicker";
 import { AgGridReact } from "ag-grid-react";
@@ -290,7 +290,7 @@ class BookTable extends Component {
 					className="periodSelectionGenerator"
 					onClick={(event) => this.manageModalShow(true, bookType)}
 				>
-					<img border="0" src={periodSelection} />
+					<img alt="period" border="0" src={periodSelection} />
 				</span>
 
 				{/** Título del libro*/}

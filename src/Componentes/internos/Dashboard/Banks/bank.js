@@ -8,7 +8,6 @@ import "jquery-ui/themes/base/datepicker.css";
 import "jquery-ui/ui/core";
 import "jquery-ui/ui/widgets/datepicker";
 
-import Cookies from "js-cookie";
 import "ag-grid-community/dist/styles/ag-grid.css";
 import "ag-grid-community/dist/styles/ag-theme-alpine.css";
 import styles from "./banks.module.css";
@@ -16,9 +15,6 @@ import ParamsRenderer from "./cellRenderer";
 import calls from "../../../Js/calls";
 import util from "../../../Js/util";
 //import apiSummer from "../api/Account";
-
-// Declaring momenty object
-const moment = require("moment"); // require
 
 class Bank extends Component {
 	// Constructor declaration
@@ -155,7 +151,6 @@ class Bank extends Component {
 					bank: "Banco Mercantil",
 					action: "Review importing",
 					behind: "+3 meses",
-					emptyColumn: "",
 					date: "",
 					amount: "",
 					verified: "Verificar",
@@ -172,7 +167,6 @@ class Bank extends Component {
 					date: "",
 					amount: "",
 					verified: "Verificar",
-					emptyColumn: "",
 					pendingItems: "2",
 					totalAmount: "12.301,56",
 					behindB: "+3 meses",
@@ -185,7 +179,6 @@ class Bank extends Component {
 					date: "",
 					amount: "",
 					verified: "Verificar",
-					emptyColumn: "",
 					pendingItems: "2",
 					totalAmount: "12.301,56",
 					behindB: "+3 meses",
@@ -198,7 +191,6 @@ class Bank extends Component {
 					date: "",
 					amount: "",
 					verified: "Verificar",
-					emptyColumn: "",
 					pendingItems: "¡Grandioso! Tu banco está está conciliado",
 					totalAmount: "12.301,56",
 					behindB: "+3 meses",
@@ -211,7 +203,6 @@ class Bank extends Component {
 					date: "",
 					amount: "",
 					verified: "Verificar",
-					emptyColumn: "",
 					pendingItems: "2",
 					totalAmount: "12.301,56",
 					behindB: "+3 meses",
@@ -224,7 +215,6 @@ class Bank extends Component {
 					date: "",
 					amount: "",
 					verified: "Verificar",
-					emptyColumn: "",
 					pendingItems: "2",
 					totalAmount: "12.301,09",
 					behindB: "+3 meses",

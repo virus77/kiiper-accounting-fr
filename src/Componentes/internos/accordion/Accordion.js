@@ -2,7 +2,6 @@
 
 /* React imports */
 import React, { Component } from "react";
-import PropTypes from "prop-types";
 
 /* Components import */
 import util from "../../Js/util";

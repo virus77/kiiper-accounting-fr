@@ -531,7 +531,7 @@ const util = {
             },
             { headerName: 'No. Control', field: 'Control', xeroField: 'invoice_control', filter: 'agTextColumnFilter', width: 120, sortable: true, cellClass: "grid-cell-Left", headerClass: "grid-cell-Left" },
             { headerName: kindOfPeople, field: 'Contacto', xeroField: 'contact_name', headerClass: "centerHeader", filter: 'agTextColumnFilter', width: 220, sortable: true },
-            { headerName: 'Fecha factura', field: 'FechaFactura', cellClass: "grid-cell-centered", xeroField: 'invoice_date', filter: 'agTextColumnFilter', filter: 'agTextColumnFilter', width: 133, sortable: true, cellClass: "grid-cell-centered", comparator: util.dateComparator },
+            { headerName: 'Fecha factura', field: 'FechaFactura', xeroField: 'invoice_date', filter: 'agTextColumnFilter', width: 133, sortable: true, cellClass: "grid-cell-centered", comparator: util.dateComparator },
             { headerName: 'Base imponible', field: 'invoice_subtotal', xeroField: true, calculated: true, formulaName: 'base_taxable', width: 135, sortable: true, type: 'rightAligned', comparator: util.currencyComparator },
             { headerName: 'Total ' + Tipo, field: 'TotalIVA', xeroField: 'invoice_total_tax', type: 'rightAligned', width: 110, sortable: true, comparator: util.currencyComparator },
             { headerName: '% retenido', field: 'Retencion', xeroField: 'retention_percentage', type: 'rightAligned', hide: Tipo === "IVA" ? false : true, calculated: true, width: 104, sortable: true, cellClass: "grid-cell-centered" },
@@ -615,17 +615,17 @@ const util = {
                     return params.columnApi.getRowGroupColumns().length === 0;
                 },
             },
-            { headerName: 'Fecha Límite', field: 'FechaLimite', xeroField: 'due_date', filter: 'agTextColumnFilter', filter: 'agTextColumnFilter', width: 150, sortable: true, comparator: util.dateComparator },
+            { headerName: 'Fecha Límite', field: 'FechaLimite', xeroField: 'due_date', filter: 'agTextColumnFilter', width: 150, sortable: true, comparator: util.dateComparator },
             { headerName: 'Base sujeta a retención', field: 'invoice_subtotal', xeroField: 'statement_total_amount', formulaName: 'statement_total_amount', width: 175, sortable: true, type: 'rightAligned' },
             { headerName: 'Total retenido', field: 'Retencion', xeroField: 'statement_total_tax', formulaName: 'statement_total_tax', calculated: true, width: 120, sortable: true, type: 'rightAligned', comparator: util.currencyComparator },
             //{ headerName: 'Aprobado por', field: 'AprobadoPor', xeroField: 'aprobado_por', type: 'rightAligned', hide: statusName === "Aprobados" ? false : true, calculated: true, width: 120, sortable: true, cellClass: "grid-cell-centered" },
             {
-                headerName: 'Status', field: 'status', xeroField: 'status', type: 'rightAligned', hide: statusName === "Aprobados" ? false : true, calculated: true, width: 140, sortable: true, type: 'rightAligned',
+                headerName: 'Status', field: 'status', xeroField: 'status', hide: statusName === "Aprobados" ? false : true, calculated: true, width: 140, sortable: true, type: 'rightAligned',
                 valueGetter: function (params) {
                     return 1;
                 }
             },
-            { headerName: 'Cuenta Xero', field: 'cuentaXero', xeroField: 'tax_balance', formulaName: 'tax_balance', type: 'rightAligned', hide: statusName != "Por Generar" ? false : true, calculated: true, width: 120, sortable: true },
+            { headerName: 'Cuenta Xero', field: 'cuentaXero', xeroField: 'tax_balance', formulaName: 'tax_balance', type: 'rightAligned', hide: statusName !== "Por Generar" ? false : true, calculated: true, width: 120, sortable: true },
             { headerName: 'Auxiliar', field: 'Auxiliar', xeroField: 'auxiliar', calculated: true, width: 110, sortable: true, type: 'rightAligned', cellRenderer: this.CellRendererD },
             { headerName: 'Compromiso', field: 'compromiso', xeroField: 'compromiso', type: 'rightAligned', hide: !seeCommitmentColumn.includes(statusName), calculated: true, width: 110, sortable: true, cellClass: "grid-cell-centered", },
             { headerName: 'Pago', field: 'Pago', xeroField: 'pago', type: 'rightAligned', hide: !seePaymentColumn.includes(statusName), calculated: true, width: 110, sortable: true, cellClass: "grid-cell-centered", },

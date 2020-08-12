@@ -1,5 +1,4 @@
 import React, { useState } from "react";
-import clsx from "clsx";
 
 //CSS
 import { makeStyles } from "@material-ui/core/styles";
@@ -24,7 +23,6 @@ import ChevronLeftIcon from "@material-ui/icons/ChevronLeft";
 
 //Icons
 import NotificationsIcon from "@material-ui/icons/Notifications";
-import CancelSharpIcon from "@material-ui/icons/CancelSharp";
 import Busqueda from "../Imagenes/kiiper_buscar.png";
 import Engrane from "../Imagenes/kiiper_engrane.png";
 import Suma from "../Imagenes/kiiper_mas.png";
@@ -260,6 +258,7 @@ export default function Dashboard(props) {
 		<span>
 			<strong>
 				<img
+					alt="xero"
 					border="0"
 					width="10"
 					height="10"

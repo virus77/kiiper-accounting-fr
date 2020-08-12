@@ -322,7 +322,7 @@ class Declaraciones extends Component {
     };
 
     onReloadStatement = async (statementId) => {
-        let result = await calls.updateStatement(statementId);
+        await calls.updateStatement(statementId);
     }
 
     /// Clear selected elements in the grid
