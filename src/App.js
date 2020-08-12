@@ -50,8 +50,8 @@ class App extends Component {
 		document.getElementById("Spinner").style.display = "block";
 		let email = document.getElementById("ctrlEmail").value;
 		let password = document.getElementById("ctrlPassword").value;
-		//let _urlFisico =@"https://login.xero.com/identity/user/login?ReturnUrl=%2Fidentity%2Fconnect%2Fauthorize%2Fcallback%3Fclient_id%3DD6BBEFA31BAF4160BCC8F8BF8434D5FC%26scope%3Dopenid%2520profile%2520email%2520accounting.transactions%2520accounting.settings%2520accounting.contacts%2520accounting.attachments%2520accounting.reports.read%2520offline_access%26response_type%3Dcode%26redirect_uri%3Dhttps%253A%252F%252Fkiiper-accounting.herokuapp.com%252Fcallback";
-		let _urlFisico = @"https://login.xero.com/identity/user/login?ReturnUrl=%2Fidentity%2Fconnect%2Fauthorize%2Fcallback%3Fclient_id%3DCCBAC45C2B804DE58FA0E6354DACFA5A%26scope%3Dopenid%2520profile%2520email%2520accounting.transactions%2520accounting.settings%2520accounting.contacts%2520accounting.attachments%2520accounting.reports.read%2520offline_access%26response_type%3Dcode%26redirect_uri%3Dhttp%253A%252F%252Flocalhost%253A5000%252Fcallback";
+		//let _urlFisico = "https://login.xero.com/identity/user/login?ReturnUrl=%2Fidentity%2Fconnect%2Fauthorize%2Fcallback%3Fclient_id%3DD6BBEFA31BAF4160BCC8F8BF8434D5FC%26scope%3Dopenid%2520profile%2520email%2520accounting.transactions%2520accounting.settings%2520accounting.contacts%2520accounting.attachments%2520accounting.reports.read%2520offline_access%26response_type%3Dcode%26redirect_uri%3Dhttps%253A%252F%252Fkiiper-accounting.herokuapp.com%252Fcallback";
+		let _urlFisico = "https://login.xero.com/identity/user/login?ReturnUrl=%2Fidentity%2Fconnect%2Fauthorize%2Fcallback%3Fclient_id%3DCCBAC45C2B804DE58FA0E6354DACFA5A%26scope%3Dopenid%2520profile%2520email%2520accounting.transactions%2520accounting.settings%2520accounting.contacts%2520accounting.attachments%2520accounting.reports.read%2520offline_access%26response_type%3Dcode%26redirect_uri%3Dhttp%253A%252F%252Flocalhost%253A5000%252Fcallback";
 		var param = { Email: email, Password: password, xeroRootWeb: _urlFisico };
 		var accestoken = "";
 		var paso = "";
