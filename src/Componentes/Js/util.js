@@ -20,8 +20,7 @@ var moment = require('moment'); // require
 
 var withHoldingId = "";
 var _id = "";
-var fileName = "";
-
+var statusName2 = "";
 const util = {
     /// Start a process to request information from Xero to build
     /// the structure data to render in the grid of the component Ventas and Compras
@@ -33,6 +32,7 @@ const util = {
 
         // Retrieving and setting data to perform a request to Xero
         const statusInfo = util.getStatusInfoConcept(statusName);
+        statusName2 = statusInfo.name;
         const taxInfo = util.getTaxInfoConcept(dropDownListEvent, kindOfPeople);
         const isEditableGrid = util.knowIfGridHeadersEditable(statusInfo);
 
@@ -207,13 +207,10 @@ const util = {
                                     }
                                     break;
 
-                                //Quitar comentario cuando tenga valor
-                                //case "cuentaXero":
+                                case "tax_balance":
                                 case "statement_total_tax":
-                                case "statement_total_amount":
-                                    itemValue = util.formatMoney(itemValue.toFixed(2));
+                                    itemValue = itemValue === "" ? "0,00" : util.formatMoney(parseFloat(itemValue).toFixed(2));
                                     break;
-
                                 default:
                                     break;
                             }
@@ -221,6 +218,9 @@ const util = {
 
                         // In case itemValue is empty just break
                         case itemValue === "":
+                            if (header.formulaName === "statement_total_amount")
+                                itemValue = itemValue === "" ? "0,00" : util.formatMoney(parseFloat(itemValue).toFixed(2));
+                            break;
                         default:
                             break;
 
@@ -530,7 +530,7 @@ const util = {
                 },
             },
             { headerName: 'No. Control', field: 'Control', xeroField: 'invoice_control', filter: 'agTextColumnFilter', width: 120, sortable: true, cellClass: "grid-cell-Left", headerClass: "grid-cell-Left" },
-            { headerName: kindOfPeople, field: 'Contacto', xeroField: 'contact_name', headerClass: "centerHeader", filter: 'agTextColumnFilter', width: 248, sortable: true },
+            { headerName: kindOfPeople, field: 'Contacto', xeroField: 'contact_name', headerClass: "centerHeader", filter: 'agTextColumnFilter', width: 220, sortable: true },
             { headerName: 'Fecha factura', field: 'FechaFactura', cellClass: "grid-cell-centered", xeroField: 'invoice_date', filter: 'agTextColumnFilter', filter: 'agTextColumnFilter', width: 133, sortable: true, cellClass: "grid-cell-centered", comparator: util.dateComparator },
             { headerName: 'Base imponible', field: 'invoice_subtotal', xeroField: true, calculated: true, formulaName: 'base_taxable', width: 135, sortable: true, type: 'rightAligned', comparator: util.currencyComparator },
             { headerName: 'Total ' + Tipo, field: 'TotalIVA', xeroField: 'invoice_total_tax', type: 'rightAligned', width: 110, sortable: true, comparator: util.currencyComparator },
@@ -538,7 +538,7 @@ const util = {
             { headerName: 'Monto retenido', field: 'MontoRetenido', xeroField: true, calculated: true, formulaName: 'retention_amount', width: 129, sortable: true, type: 'rightAligned', comparator: util.currencyComparator },
             { headerName: 'Fecha comprobante', field: 'approval_date', width: 170, sortable: true, editable: true, cellEditor: Datepicker, cellClass: "grid-cell-centered", comparator: util.dateComparator },
             { headerName: 'No. Comprobante', field: 'Comprobante', width: 150, sortable: true, editable: true, cellEditor: NumberValidation, type: 'rightAligned', cellClass: "grid-cell-alignRight" },
-            { headerName: '', field: '_id', width: 60, cellRenderer: this.CellRendererUp }
+            { headerName: '', field: '_id', width: 30, cellRenderer: this.CellRendererUp }
         ]
 
         return (columnDefs)
@@ -564,21 +564,15 @@ const util = {
                     return params.columnApi.getRowGroupColumns().length === 0;
                 },
                 checkboxSelection: function (params) {
-                    switch (true) {
-                        //Validar siempre trae aprobados
-                        case statusName !== "Anulados":
-                            return params.columnApi.getRowGroupColumns().length === 0;
-
-                        case params.data.reissued === true:
-                            break;
-
-                        default:
-                            return params.columnApi.getRowGroupColumns().length === 0;
-                    }
+                    return params.columnApi.getRowGroupColumns().length === 0;
                 },
+                cellStyle: params => {
+                    if (statusName2 === "Anulados")
+                        return params.data.reissued === true ? { 'pointer-events': 'none' } : '';
+                }
             },
             { headerName: 'No. Control', field: 'Control', xeroField: 'invoice_control', filter: 'agTextColumnFilter', width: 120, sortable: true, cellClass: "grid-cell-Left", headerClass: "grid-cell-Left" },
-            { headerName: kindOfPeople, field: 'Contacto', xeroField: 'contact_name', headerClass: "centerHeader", filter: 'agTextColumnFilter', width: 248, sortable: true },
+            { headerName: kindOfPeople, field: 'Contacto', xeroField: 'contact_name', headerClass: "centerHeader", filter: 'agTextColumnFilter', width: 220, sortable: true },
             { headerName: 'Fecha factura', field: 'FechaFactura', xeroField: 'invoice_date', filter: 'agTextColumnFilter', width: 133, sortable: true, cellClass: "grid-cell-centered", comparator: util.dateComparator },
             { headerName: 'Base imponible', field: 'invoice_subtotal', xeroField: 'invoice_subtotal', width: 135, sortable: true, type: 'rightAligned', comparator: util.currencyComparator },
             { headerName: 'Total ' + Tipo, field: 'TotalIVA', xeroField: 'retained_amount', width: 110, sortable: true, type: 'rightAligned', comparator: util.currencyComparator },
@@ -586,7 +580,13 @@ const util = {
             { headerName: 'Monto retenido', field: 'MontoRetenido', xeroField: true, calculated: true, formulaName: 'retention_amount', width: 129, sortable: true, headerClass: "grid-cell-centered", type: 'rightAligned', comparator: util.currencyComparator },
             { headerName: 'Fecha comprobante', field: 'date', xeroField: 'approval_date', filter: 'agTextColumnFilter', width: 170, sortable: true, cellClass: "grid-cell-centered", comparator: util.dateComparator },
             { headerName: 'No. Comprobante', field: 'Comprobante', xeroField: 'correlative', width: 150, sortable: true, cellClass: "grid-cell-cenLeft", type: 'rightAligned' },
-            { headerName: '', field: 'file', width: 60, cellRenderer: this.CellRendererP }
+            { headerName: '', field: 'file', width: 30, cellRenderer: this.CellRendererP },
+            {
+                headerName: 'Remitido', field: 'Remitido', xeroField: 'Remitido', hide: statusName2 === "Anulados" ? false : true, width: 88, sortable: true, cellClass: "grid-cell-centered",
+                valueGetter: function (params) {
+                    return params.data.reissued === true ? "Sí" : 'No';
+                }
+            },
         ]
         return (columnDefs)
     },
@@ -612,25 +612,20 @@ const util = {
                     return params.columnApi.getRowGroupColumns().length === 0;
                 },
                 checkboxSelection: function (params) {
-                    switch (true) {
-                        //Validar siempre trae aprobados
-                        case statusName !== "Anulados":
-                            return params.columnApi.getRowGroupColumns().length === 0;
-
-                        case params.data.reissued === true:
-                            break;
-
-                        default:
-                            return params.columnApi.getRowGroupColumns().length === 0;
-                    }
+                    return params.columnApi.getRowGroupColumns().length === 0;
                 },
             },
             { headerName: 'Fecha Límite', field: 'FechaLimite', xeroField: 'due_date', filter: 'agTextColumnFilter', filter: 'agTextColumnFilter', width: 150, sortable: true, comparator: util.dateComparator },
             { headerName: 'Base sujeta a retención', field: 'invoice_subtotal', xeroField: 'statement_total_amount', formulaName: 'statement_total_amount', width: 175, sortable: true, type: 'rightAligned' },
             { headerName: 'Total retenido', field: 'Retencion', xeroField: 'statement_total_tax', formulaName: 'statement_total_tax', calculated: true, width: 120, sortable: true, type: 'rightAligned', comparator: util.currencyComparator },
-            { headerName: 'Aprobado por', field: 'AprobadoPor', xeroField: 'aprobado_por', type: 'rightAligned', hide: statusName === "Aprobados" ? false : true, calculated: true, width: 120, sortable: true, cellClass: "grid-cell-centered" },
-            { headerName: 'Status', field: 'status', xeroField: 'status', type: 'rightAligned', hide: statusName === "Aprobados" ? false : true, calculated: true, width: 140, sortable: true, cellClass: "grid-cell-centered", },
-            { headerName: 'Cuenta Xero', field: 'cuentaXero', xeroField: 'cuentaXero', formulaName: 'cuentaXero', type: 'rightAligned', hide: statusName != "Por Generar" ? false : true, calculated: true, width: 120, sortable: true, cellClass: "grid-cell-centered", },
+            //{ headerName: 'Aprobado por', field: 'AprobadoPor', xeroField: 'aprobado_por', type: 'rightAligned', hide: statusName === "Aprobados" ? false : true, calculated: true, width: 120, sortable: true, cellClass: "grid-cell-centered" },
+            {
+                headerName: 'Status', field: 'status', xeroField: 'status', type: 'rightAligned', hide: statusName === "Aprobados" ? false : true, calculated: true, width: 140, sortable: true, type: 'rightAligned',
+                valueGetter: function (params) {
+                    return 1;
+                }
+            },
+            { headerName: 'Cuenta Xero', field: 'cuentaXero', xeroField: 'tax_balance', formulaName: 'tax_balance', type: 'rightAligned', hide: statusName != "Por Generar" ? false : true, calculated: true, width: 120, sortable: true },
             { headerName: 'Auxiliar', field: 'Auxiliar', xeroField: 'auxiliar', calculated: true, width: 110, sortable: true, type: 'rightAligned', cellRenderer: this.CellRendererD },
             { headerName: 'Compromiso', field: 'compromiso', xeroField: 'compromiso', type: 'rightAligned', hide: !seeCommitmentColumn.includes(statusName), calculated: true, width: 110, sortable: true, cellClass: "grid-cell-centered", },
             { headerName: 'Pago', field: 'Pago', xeroField: 'pago', type: 'rightAligned', hide: !seePaymentColumn.includes(statusName), calculated: true, width: 110, sortable: true, cellClass: "grid-cell-centered", },
@@ -685,19 +680,25 @@ const util = {
         inputF.className = "file-upload";
         inputF.setAttribute("id", 'file_' + params.data.withHoldingId);
         inputF.onchange = async function () {
-            var file = inputF.files[0];
-            var reader = new FileReader();
-            // Read file content on file loaded event
-            reader.onload = function () {
-                var label = document.createElement('label');
-                label.setAttribute("style", "display: none");
-                label.style.display = 'none';
-                label.setAttribute("id", "lbl_" + params.data.withHoldingId);
-                label.innerText = reader.result;
-                document.body.appendChild(label);
+            // Select the very first file from list 
+            var fileToLoad = inputF.files[0];
+            // FileReader function for read the file. 
+            var fileReader = new FileReader();
+            var base64;
+            // Onload of file read the file content 
+            fileReader.onload = function (fileLoadedEvent) {
+                base64 = fileLoadedEvent.target.result;
+                var TEXTAREA = document.createElement('TEXTAREA');
+                TEXTAREA.setAttribute("style", "display: none");
+                TEXTAREA.style.display = 'none';
+                TEXTAREA.setAttribute("id", "lbl_" + params.data.withHoldingId);
+                TEXTAREA.innerHTML = base64;
+                document.body.appendChild(TEXTAREA);
+                // Print data in console 
+                console.log(base64);
             };
             // Convert data to base64 
-            reader.readAsDataURL(file);
+            fileReader.readAsDataURL(fileToLoad);
         };
         eDivIn.appendChild(inputF);
 
@@ -710,7 +711,6 @@ const util = {
     /// @param {object} params - parámetro 
     CellRendererP: function (params) {
         withHoldingId = params.data.withHoldingId;
-        fileName = "Retención de IVA - " + params.data.invoice_number;
         var eDiv = document.createElement('div');
         eDiv.className = "file-container";
         eDiv.setAttribute("id", "down_" + withHoldingId);
@@ -743,7 +743,6 @@ const util = {
     /// @param {object} params - parámetro 
     CellRendererD: function (params) {
         _id = params.data._id;
-        fileName = "Retención de IVA - " + params.data.invoice_number;
         var eDiv = document.createElement('div');
         eDiv.className = "file-container";
         eDiv.setAttribute("id", "down_" + _id);
@@ -1033,7 +1032,11 @@ NumberValidation.prototype.init = function (params) {
 
     let inputField = document.createElement("input");
     inputField.style = "border-style: none; width: 100%; height: 100%;";
-    inputField.value = voucherDate !== "Invalid date" ? voucherDate : "";
+    if (params.value.length <= 6)
+        inputField.value = voucherDate !== "Invalid date" ? voucherDate : "";
+    else
+        inputField.value = params.value;
+
     inputField.maxLength = 14;
     inputField.addEventListener('input', this.inputChanged.bind(this, params));
     container.appendChild(inputField);
@@ -1100,7 +1103,14 @@ Datepicker.prototype.afterGuiAttached = function () {
 };
 
 Datepicker.prototype.getValue = function () {
-    return this.eInput.value;
+    let date = new Date();
+    let endDate = moment(date).format("DD/MM/YYYY");
+    if (util.compareDates(this.eInput.value, endDate) === 1) {
+        alert("La fecha seleccionada, no puede ser mayor a la fecha actual: " + endDate);
+        return "";
+    }
+    else
+        return this.eInput.value;
 };
 
 Datepicker.prototype.destroy = function () {

@@ -67,10 +67,10 @@ class Declaraciones extends Component {
     //#region Métodos de ciclo de vida
     componentWillMount() {
 
-        calls.getBankAccounts(this.props.orgIdSelected).then(result => {
-            if (result.data !== undefined) this.setState({ accounts: result.data });
-            //console.log("data", result.data);
-        });
+        //calls.getBankAccounts(this.props.orgIdSelected).then(result => {
+        //    if (result.data !== undefined) this.setState({ accounts: result.data });
+        //console.log("data", result.data);
+        //});
 
         // Getting data from Xero and building data grid
         util.getAndBuildGridDataDeclaration(null, "PorGenerar", this.props.orgIdSelected).then(result => {
@@ -167,7 +167,6 @@ class Declaraciones extends Component {
                             this.setState({ activeItem: name })
                         }
                     }
-
                 }
                 else
                     this.setState({ activeItem: name, show: false })
@@ -221,7 +220,7 @@ class Declaraciones extends Component {
                     }
                 }
                 else
-                    this.setState({ activeItem: name, show: false })
+                    this.setState({ show: false });
                 break;
             default:
                 break;
@@ -239,7 +238,7 @@ class Declaraciones extends Component {
         // Gathering items selected information
         gridSelectedRows.forEach(selectedRow => {
 
-            const statementId = selectedRow.statementId;
+            const _id = selectedRow._id;
 
             // Defining JSON oject to add to list of voucher to send
             // in voucher view action button 
@@ -248,25 +247,25 @@ class Declaraciones extends Component {
                 case "PorGenerar":
                     // Storing data from items selected in Sales grid
                     arrayToSend.push({
-                        _id: statementId
+                        id_statement: _id
                     });
                     break;
                 case "PorAprobar":
                     // Storing data from items selected in Sales grid
                     arrayToSend.push({
-                        _id: statementId
+                        id_statement: _id
                     });
                     break;
                 case "Aprobados":
                     // Storing data from items selected in Sales grid
                     arrayToSend.push({
-                        _id: statementId
+                        id_statement: _id
                     });
                     break;
                 case "PorDeclarar":
                     // Storing data from items selected in Sales grid
                     arrayToSend.push({
-                        _id: statementId,
+                        id_statement: _id,
                         commitmentFile: selectedRow.compromiso,
                         warrantFile: selectedRow.Certificado
                     });
@@ -274,7 +273,7 @@ class Declaraciones extends Component {
                 case "PorPagar":
                     // Storing data from items selected in Sales grid
                     arrayToSend.push({
-                        _id: statementId,
+                        id_statement: _id,
                         paymentFile: selectedRow.pago
                     });
                     break;

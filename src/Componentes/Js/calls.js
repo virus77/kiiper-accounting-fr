@@ -518,10 +518,8 @@ const calls = {
 	/// Rechazar una declaración (enviar una declaración desde el estatus Por aprobar a Por generar)
 	/// @param {string} id_statements - el cual es un arreglo que contiene
 	/// “id_statement” (ID de la declaración asociado a la petición /getStatements)
-	denyStatement: async (id_statements) => {
-		var param = {
-			arrayStatement: id_statements,
-		};
+	denyStatement: async (data) => {
+		var param = { arrayStatement: data };
 
 		return await fetch("/denyStatement", {
 			method: "POST",
@@ -530,125 +528,177 @@ const calls = {
 				"Content-type": "application/json; charset=UTF-8",
 				"Access-Control-Allow-Origin": "*",
 			},
-		})
-			.then((res) => res.text())
-			.then((data) => {
-				return { data: data };
-			});
+		}).then((res) => {
+			if (res.ok) {
+				console.log("request sucess");
+				return true;
+			} else {
+				console.log("request fail");
+				return false;
+			}
+		}).catch((err) => {
+			console.log(err);
+		});
 	},
 
-	/// Registrar una declaración (enviar una declaración desde el estatus Declarados a Por pagar o Pagados):
-	/// @param {formData} con
-	/// “id_statement” (ID de la declaración asociado a la petición /getStatements)
-	/// “commitmentFile” (archivo PDF de compromiso de declaración en formato base64)
-	/// “warrantFile” (archivo PDF de certificado de declaración en formato base64).
-	/// Cabe destacar que sólo se puede cargar uno de los archivos previamente mencionados
+	/// Registra la declaración
+	/// @param {array} arrayStatement el cual es un arreglo que contiene
 	registerStatement: async (data) => {
-		var param = {
-			arrayStatement: data,
-		};
+
+		var param = { arrayStatement: data };
 
 		return await fetch("/registerStatement", {
 			method: "POST",
-			body: param,
-		})
-			.then((res) => res.text())
-			.then((data) => {
-				return { data: data };
-			});
+			body: JSON.stringify(param),
+			headers: {
+				"Content-type": "application/json; charset=UTF-8",
+				"Access-Control-Allow-Origin": "*",
+			},
+		}).then((res) => {
+			if (res.ok) {
+				console.log("request sucess");
+				return true;
+			} else {
+				console.log("request fail");
+				return false;
+			}
+		}).catch((err) => {
+			console.log(err);
+		});
 	},
 
-	/// Pagar una declaración (enviar una declaración desde el estatus Por pagar a Pagados)
-	/// @param {formData} con
-	/// “id_statement” (ID de la declaración asociado a la petición /getStatements)
-	/// “paymentFile” (archivo PDF de pago  de declaración en formato base64),
-	/// “bankReference” (número de referencia bancaria)
-	/// “bankAccountCode” (código de cuenta bancaria asociado a la petición /getBankAccounts).
+	/// Generar el pago de la declaración
+	/// @param {array} arrayStatement el cual es un arreglo que contiene
 	payStatement: async (data) => {
-		var param = {
-			arrayStatement: data,
-		};
+
+		var param = { arrayStatement: data };
 
 		return await fetch("/payStatement", {
 			method: "POST",
-			body: param,
-		})
-			.then((res) => res.text())
-			.then((data) => {
-				return { data: data };
-			});
+			body: JSON.stringify(param),
+			headers: {
+				"Content-type": "application/json; charset=UTF-8",
+				"Access-Control-Allow-Origin": "*",
+			},
+		}).then((res) => {
+			if (res.ok) {
+				console.log("request sucess");
+				return true;
+			} else {
+				console.log("request fail");
+				return false;
+			}
+		}).catch((err) => {
+			console.log(err);
+		});
 	},
 
 	/// Generar una declaración (enviar una declaración desde el estatus Por generar a Por aprobar)
 	/// @param {array} arrayStatement el cual es un arreglo que contiene
-	/// “id_statement” (ID de la declaración asociado a la petición /getStatements)
 	generateStatement: async (data) => {
-		var param = {
-			arrayStatement: data,
-		};
+		var param = { arrayStatement: data };
 
 		return await fetch("/generateStatement", {
 			method: "POST",
-			body: param,
-		})
-			.then((res) => res.text())
-			.then((data) => {
-				return { data: data };
-			});
+			body: JSON.stringify(param),
+			headers: {
+				"Content-type": "application/json; charset=UTF-8",
+				"Access-Control-Allow-Origin": "*",
+			},
+		}).then((res) => {
+			if (res.ok) {
+				console.log("request sucess");
+				return true;
+			} else {
+				console.log("request fail");
+				return false;
+			}
+		}).catch((err) => {
+			console.log(err);
+		});
 	},
 
 	/// Aprobar una declaración (enviar una declaración desde el estatus Por aprobar a Aprobados)
 	/// @param {array} arrayStatement el cual es un arreglo que contiene
 	/// “id_statement” (ID de la declaración asociado a la petición /getStatements)
 	approveStatement: async (data) => {
-		var param = {
-			arrayStatement: data,
-		};
+
+		var param = { arrayStatement: data };
 
 		return await fetch("/approveStatement", {
 			method: "POST",
-			body: param,
-		})
-			.then((res) => res.text())
-			.then((data) => {
-				return { data: data };
-			});
+			body: JSON.stringify(param),
+			headers: {
+				"Content-type": "application/json; charset=UTF-8",
+				"Access-Control-Allow-Origin": "*",
+			},
+		}).then((res) => {
+			if (res.ok) {
+				console.log("request sucess");
+				return true;
+			} else {
+				console.log("request fail");
+				return false;
+			}
+		}).catch((err) => {
+			console.log(err);
+		});
 	},
 
 	/// Aprobar una declaración por parte del cliente (enviar una declaración desde el estatus
 	/// Por aprobar a Aprobados dependiendo de acción enviada por correo electrónico)
 	/// “id_statement” (ID de la declaración asociado a la petición /getStatements)
-	approveStatementClient: async (id_statement) => {
+	approveStatementClient: async (id_statement, approve) => {
 		var param = {
 			id_statement: id_statement,
+			approve: approve,
 		};
 
 		return await fetch("/approveStatementClient", {
 			method: "POST",
-			body: param,
-		})
-			.then((res) => res.text())
-			.then((data) => {
-				return { data: data };
-			});
+			body: JSON.stringify(param),
+			headers: {
+				"Content-type": "application/json; charset=UTF-8",
+				"Access-Control-Allow-Origin": "*",
+			},
+		}).then((res) => {
+			if (res.ok) {
+				console.log("request sucess");
+				return true;
+			} else {
+				console.log("request fail");
+				return false;
+			}
+		}).catch((err) => {
+			console.log(err);
+		});
 	},
 
 	/// Declarar un registro de declaración (enviar una declaración desde el estatus Aprobados a Declarados
 	/// @param {array} arrayStatement el cual es un arreglo que contiene
 	/// “id_statement” (ID de la declaración asociado a la petición /getStatements)
-	declareStatement: async (id_statement) => {
-		var param = {
-			id_statement: id_statement,
-		};
+	declareStatement: async (data) => {
+
+		var param = { arrayStatement: data };
 
 		return await fetch("/declareStatement", {
 			method: "POST",
-			body: param,
-		})
-			.then((res) => res.text())
-			.then((data) => {
-				return { data: data };
-			});
+			body: JSON.stringify(param),
+			headers: {
+				"Content-type": "application/json; charset=UTF-8",
+				"Access-Control-Allow-Origin": "*",
+			},
+		}).then((res) => {
+			if (res.ok) {
+				console.log("request sucess");
+				return true;
+			} else {
+				console.log("request fail");
+				return false;
+			}
+		}).catch((err) => {
+			console.log(err);
+		});
 	},
 
 	//Función que desloguea al usuario actual y destruye la sessión

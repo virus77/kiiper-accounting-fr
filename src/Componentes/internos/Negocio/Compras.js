@@ -20,7 +20,7 @@ class Compras extends Component {
 	constructor(props) {
 		super(props);
 		this.state = {
-			activeItem: "true",
+			activeItem: "Aprobados",
 			columnDefs: [],
 			rowData: [],
 			columnDefs2: [],
@@ -58,7 +58,7 @@ class Compras extends Component {
 		util
 			.getAndBuildGridData(
 				null,
-				"Aprobados",
+				this.state.activeItem,
 				"Proveedor",
 				this.props.orgIdSelected
 			)
@@ -115,7 +115,7 @@ class Compras extends Component {
 				this.setState({
 					rowData: result.structure.gridItems,
 					columnDefs: result.structure.headersTemplate,
-					activeItem: result.statusInfo.name,
+					activeItem: name.name,
 					Tipo: result.taxInfo.name,
 					event: result.taxInfo.event,
 				});
@@ -174,10 +174,7 @@ class Compras extends Component {
 				break;
 
 			default:
-				this.setState({
-					activeItem: name.toString().substring(0, name.length - 3),
-					show: false,
-				});
+				this.setState({ show: false });
 				break;
 		}
 	};
