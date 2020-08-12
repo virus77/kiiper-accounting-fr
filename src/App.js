@@ -50,7 +50,7 @@ class App extends Component {
 		document.getElementById("Spinner").style.display = "block";
 		let email = document.getElementById("ctrlEmail").value;
 		let password = document.getElementById("ctrlPassword").value;
-		var param = { Email: email, Password: password };
+		var param = { Email: email, Password: password, Password: "xeroRootWeb" };
 		var accestoken = "";
 		var paso = "";
 
