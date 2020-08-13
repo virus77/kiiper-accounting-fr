@@ -327,7 +327,7 @@ const calls = {
 						type: "xeroOrgName",
 						name: res.xeroOrgName,
 						id: res.organisationId,
-						specialContrib: res.isSpecialContrib
+						specialContrib: res.isSpecialContrib						
 					};
 				});
 				return organizations;

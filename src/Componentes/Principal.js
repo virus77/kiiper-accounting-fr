@@ -128,7 +128,7 @@ function fillDropDownListGroup(props) {
 		return {
 			type: "xeroGroupName",
 			name: res.practiceName,
-			id: res.practiceID,
+			id: res.practiceID
 		};
 	});
 
@@ -184,6 +184,7 @@ export default function Dashboard(props) {
 			if (item.type === "xeroGroupName") {
 				eventKey(-2);
 				organizations = await returnOrganizations(item.id);
+				organizations = organizations.concat(group.filter(g => g.name !== item.name));
 			} else
 				eventKey(
 					item.type === "xeroGroupName"
@@ -206,7 +207,6 @@ export default function Dashboard(props) {
 			rw_2_input = document
 				.querySelector("[id*=rw_]")
 				.getElementsByTagName("div")[0];
-
 			eventKey(-1);
 			setValue("");
 			rw_2_input.style = "background-color: #232c51 !important; border-color: #232c51 !important;";
@@ -282,8 +282,7 @@ export default function Dashboard(props) {
 						variant="h6"
 						color="inherit"
 						noWrap
-						className={`${classes.title} kiiperLogoText`}
-					>
+						className={`${classes.title} kiiperLogoText`}>
 						{event === -1 ? (
 							"Kiiper"
 						) : (
@@ -318,7 +317,7 @@ export default function Dashboard(props) {
 								: showAvatarOptions(true);
 						}}
 					>
-						<img src={Avatar} alt="img-Avatar" />
+						<img src={Avatar} alt="img-Avatar" style={{ width: "25px", height: "25px" }} />
 
 						{/** Avatar options panel */}
 						{avatarOptionsFlag ? (
@@ -388,7 +387,7 @@ export default function Dashboard(props) {
 												valueField="id"
 												textField="name"
 												value={Value}
-												groupBy="Grupo"
+												groupBy="line"
 											/>
 										</div>
 									</td>

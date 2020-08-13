@@ -563,6 +563,10 @@ const util = {
                 headerCheckboxSelection: function (params) {
                     return params.columnApi.getRowGroupColumns().length === 0;
                 },
+                headerStyle: params => {
+                    if (statusName2 === "Anulados")
+                        return params.data.reissued === true ? { 'pointer-events': 'none' } : '';
+                },
                 checkboxSelection: function (params) {
                     return params.columnApi.getRowGroupColumns().length === 0;
                 },
