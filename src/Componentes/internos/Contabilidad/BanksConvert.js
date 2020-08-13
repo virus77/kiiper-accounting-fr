@@ -44,7 +44,9 @@ class BanksConvert extends Component {
 	componentDidMount() {
 		//Getting data from Xero and building data grid
 		calls.getBankAccounts(this.props.orgIdSelected).then((result) => {
-			this.setState({ accounts: result.data });
+			if(result.data){
+				this.setState({ accounts: result.data });
+			}
 		});
 
 		// Reseting breadcrumb path every time component is rendered

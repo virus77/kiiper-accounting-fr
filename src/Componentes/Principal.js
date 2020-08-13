@@ -25,6 +25,7 @@ import ChevronLeftIcon from "@material-ui/icons/ChevronLeft";
 import NotificationsIcon from "@material-ui/icons/Notifications";
 import Busqueda from "../Imagenes/kiiper_buscar.png";
 import Engrane from "../Imagenes/kiiper_engrane.png";
+import EngraneDisabled from "../Imagenes/kiiper_engraneDisabled.png";
 import Suma from "../Imagenes/kiiper_mas.png";
 import Avatar from "../Imagenes/kiiper_avatar.png";
 import K from "../Imagenes/kiiper_K.png";
@@ -41,6 +42,7 @@ import DashboardPanel from "./internos/Dashboard/dashboard";
 import { Reports } from "../Componentes/internos/Reportes/Impuestos";
 import { DashboardGroup } from "./DashboardGroup";
 import Declaraciones from "../Componentes/internos/Contabilidad/Declaraciones";
+import AdminPanel from "./internos/AdminPanel.js";
 
 //#region estilo
 const drawerWidth = 240;
@@ -156,6 +158,9 @@ export default function Dashboard(props) {
 	const [Value, setValue] = useState("");
 
 	// Selected option from organizations List. Initialazed at zero
+	const [adminPanel, showAdminPanel] = useState(false);
+
+	// Selected option from organizations List. Initialazed at zero
 	const [orgIdSelected, setorgIdSelected] = useState("");
 
 	// Selected option from organizations List. Initialazed at zero
@@ -207,9 +212,22 @@ export default function Dashboard(props) {
 			rw_2_input = document
 				.querySelector("[id*=rw_]")
 				.getElementsByTagName("div")[0];
+
 			eventKey(-1);
 			setValue("");
 			rw_2_input.style = "background-color: #232c51 !important; border-color: #232c51 !important;";
+		}
+	};
+
+	// Manages admin panel view
+	const onAdminPanelClick = () => {
+		if(orgNameSelected){
+			if(!adminPanel) {
+				showAdminPanel(true);
+			}
+			else {
+				showAdminPanel(false);
+			}
 		}
 	};
 
@@ -282,7 +300,8 @@ export default function Dashboard(props) {
 						variant="h6"
 						color="inherit"
 						noWrap
-						className={`${classes.title} kiiperLogoText`}>
+						className={`${classes.title} kiiperLogoText`}
+					>
 						{event === -1 ? (
 							"Kiiper"
 						) : (
@@ -298,8 +317,11 @@ export default function Dashboard(props) {
 						<img src={Suma} alt="img-Suma" />
 					</IconButton>
 					{/* icon Engrane*/}
-					<IconButton color="inherit">
-						<img src={Engrane} alt="img-Engrane" />
+					<IconButton color="inherit" onClick={() => onAdminPanelClick()}>
+						{orgNameSelected ?
+							<img src={Engrane} alt="img-Engrane" /> :
+							<img src={EngraneDisabled} alt="img-Engrane" />
+						}
 					</IconButton>
 					{/* icon NotificationsIcon*/}
 					<IconButton color="inherit">
@@ -474,126 +496,131 @@ export default function Dashboard(props) {
 							</Navbar.Collapse>
 						) : null}
 				</Navbar>
-				<Container
-					maxWidth="lg"
-					style={{ padding: "20px!important" }}
-					className={classes.container}
-				>
-					{event === "xeroOrgName" || event === 0.1 ? (
-						<Grid container spacing={2}>
-							{/* Dashboard */}
-							<Title>Dashboard</Title>
-							<Grid item xs={12}>
-								<Paper className={classes.paper}>
-									<DashboardPanel orgIdSelected={orgIdSelected} />
-								</Paper>
+
+				{/** Si el panel de administración de organizaciones debe de ser mostrado */}
+				{!adminPanel ?
+					<Container
+						maxWidth="lg"
+						style={{ padding: "20px!important" }}
+						className={classes.container}
+					>
+						{event === "xeroOrgName" || event === 0.1 ? (
+							<Grid container spacing={2}>
+								{/* Dashboard */}
+								<Title>Dashboard</Title>
+								<Grid item xs={12}>
+									<Paper className={classes.paper}>
+										<DashboardPanel orgIdSelected={orgIdSelected} />
+									</Paper>
+								</Grid>
 							</Grid>
-						</Grid>
-					) : event === "xeroOrgName" || event === 1.1 ? (
-						<Grid container spacing={2}>
-							{/* Recent Sales  */}
-							<Title>Ventas</Title>
-							<Grid item xs={12}>
-								<Ventas
-									token={props.token}
-									orgIdSelected={orgIdSelected}
-									specialContrib={SpecialContrib}
-								/>
-							</Grid>
-						</Grid>
-					) : event === "xeroOrgName" || event === 1.2 ? (
-						<Grid container spacing={2}>
-							{/* Recent purchases */}
-							<Title>Compras</Title>
-							<Grid item xs={12}>
-								<Compras
-									token={props.token}
-									orgIdSelected={orgIdSelected}
-									specialContrib={SpecialContrib}
-								/>
-							</Grid>
-						</Grid>
-					) : event === "xeroOrgName" || event === 2.1 ? (
-						<Grid container spacing={2}>
-							{/* Breadcrumb  */}
-							<div className="breadcrumbClass">
-								<div
-									id="moduleTitle"
-									style={{ cursor: "pointer" }}
-									onClick={(event) => {
-										setShowModuleAgain(true);
-										setBreadcrumbPath("");
-										resetBanksModule();
-									}}
-								>
-									<Title>Bancos</Title>
-								</div>
-								<span id="breadcrumbPath">{breadcrumbPath}</span>
-							</div>
-							<Grid item xs={12}>
-								<Paper className={classes.paper}>
-									<BanksConvert
-										setBreadcrumbPath={setBreadcrumbPath}
-										setShowModuleAgain={setShowModuleAgain}
-										showModuleAgain={showModuleAgain}
+						) : event === "xeroOrgName" || event === 1.1 ? (
+							<Grid container spacing={2}>
+								{/* Recent Sales  */}
+								<Title>Ventas</Title>
+								<Grid item xs={12}>
+									<Ventas
+										token={props.token}
 										orgIdSelected={orgIdSelected}
 										specialContrib={SpecialContrib}
 									/>
-								</Paper>
+								</Grid>
 							</Grid>
-						</Grid>
-					) : event === "xeroOrgName" || event === 2.2 ? (
-						<Grid container spacing={2}>
-							{/* Recent purchases */}
-							<Title>Gestión de declaraciones</Title>
-							<Grid item xs={12}>
-								<Declaraciones
-									token={props.token}
-									orgIdSelected={orgIdSelected}
-									specialContrib={SpecialContrib}
-								/>
-							</Grid>
-						</Grid>
-					) : event === "xeroOrgName" || event === 3.1 ? (
-						<Grid container spacing={2}>
-							<div className="breadcrumbClass">
-								<div id="moduleTitle">
-									<Title>Reportes</Title>
-								</div>
-								<span id="breadcrumbPath">&gt; Impuestos</span>
-							</div>
-							<Grid item xs={12}>
-								<Paper className={classes.paper}>
-									<Reports
+						) : event === "xeroOrgName" || event === 1.2 ? (
+							<Grid container spacing={2}>
+								{/* Recent purchases */}
+								<Title>Compras</Title>
+								<Grid item xs={12}>
+									<Compras
+										token={props.token}
 										orgIdSelected={orgIdSelected}
 										specialContrib={SpecialContrib}
 									/>
-								</Paper>
+								</Grid>
 							</Grid>
-						</Grid>
-					) : event === -2 ? (
-						<Grid container spacing={2}>
-							<div className="breadcrumbClass">
-								<div id="moduleTitle">
-									<Title>Dashboard Grupos</Title>
+						) : event === "xeroOrgName" || event === 2.1 ? (
+							<Grid container spacing={2}>
+								{/* Breadcrumb  */}
+								<div className="breadcrumbClass">
+									<div
+										id="moduleTitle"
+										style={{ cursor: "pointer" }}
+										onClick={(event) => {
+											setShowModuleAgain(true);
+											setBreadcrumbPath("");
+											resetBanksModule();
+										}}
+									>
+										<Title>Bancos</Title>
+									</div>
+									<span id="breadcrumbPath">{breadcrumbPath}</span>
 								</div>
-								<span id="breadcrumbPath">&gt; {Value}</span>
-							</div>
-							<Grid item xs={12}>
-								<Paper className={classes.paper}>
-									<DashboardGroup
+								<Grid item xs={12}>
+									<Paper className={classes.paper}>
+										<BanksConvert
+											setBreadcrumbPath={setBreadcrumbPath}
+											setShowModuleAgain={setShowModuleAgain}
+											showModuleAgain={showModuleAgain}
+											orgIdSelected={orgIdSelected}
+											specialContrib={SpecialContrib}
+										/>
+									</Paper>
+								</Grid>
+							</Grid>
+						) : event === "xeroOrgName" || event === 2.2 ? (
+							<Grid container spacing={2}>
+								{/* Recent purchases */}
+								<Title>Gestión de declaraciones</Title>
+								<Grid item xs={12}>
+									<Declaraciones
+										token={props.token}
 										orgIdSelected={orgIdSelected}
 										specialContrib={SpecialContrib}
 									/>
-								</Paper>
+								</Grid>
 							</Grid>
-						</Grid>
-					) : null}
-					{/* Copyright */}
-					<Box pt={4}>
-						<util.Copyright />
-					</Box>
-				</Container>
+						) : event === "xeroOrgName" || event === 3.1 ? (
+							<Grid container spacing={2}>
+								<div className="breadcrumbClass">
+									<div id="moduleTitle">
+										<Title>Reportes</Title>
+									</div>
+									<span id="breadcrumbPath">&gt; Impuestos</span>
+								</div>
+								<Grid item xs={12}>
+									<Paper className={classes.paper}>
+										<Reports
+											orgIdSelected={orgIdSelected}
+											specialContrib={SpecialContrib}
+										/>
+									</Paper>
+								</Grid>
+							</Grid>
+						) : event === -2 ? (
+							<Grid container spacing={2}>
+								<div className="breadcrumbClass">
+									<div id="moduleTitle">
+										<Title>Dashboard Grupos</Title>
+									</div>
+									<span id="breadcrumbPath">&gt; {Value}</span>
+								</div>
+								<Grid item xs={12}>
+									<Paper className={classes.paper}>
+										<DashboardGroup
+											orgIdSelected={orgIdSelected}
+											specialContrib={SpecialContrib}
+										/>
+									</Paper>
+								</Grid>
+							</Grid>
+						) : null}
+						{/* Copyright */}
+						<Box pt={4}>
+							<util.Copyright />
+						</Box>
+					</Container>
+					: <AdminPanel />
+				}
 			</main>
 		</div>
 	);

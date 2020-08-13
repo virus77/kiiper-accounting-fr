@@ -4,6 +4,7 @@ import calls from "../../Js/calls";
 import util from "../../Js/util";
 import { AgGridReact } from "ag-grid-react";
 import { CSVLink } from "react-csv";
+import InputFile from "./InputFile";
 
 import Busqueda from "../../../Imagenes/searchBankRecords.svg";
 
@@ -197,7 +198,7 @@ class FileTransformationInformation extends Component {
 								</ul>
 								<div className="container-button-load">
 									{/* Component InpuFile para cambiar el estilo default del control input de tipo file */}
-									<InputFile onChange={this.onChangeHandler} />
+									<InputFile id="fileStatement" onClick={(event) => this.onChangeHandler(event)} />
 									<button
 										type="button"
 										className="button-pill-blue"
@@ -256,14 +257,11 @@ class FileTransformationInformation extends Component {
 									<li>
 										Presione el botón<strong>&nbsp;Convertir</strong>
 									</li>
-									<li style={{ visibility: "hidden" }}>
-										<br />
-									</li>
 								</ul>
 
 								<div className="container-button-load">
 									{/* Component InpuFile para cambiar el estilo default del control input de tipo file */}
-									<InputFile onChange={this.onChangeHandler} />
+									<InputFile id="fileBank" onChange={this.onChangeHandler} />
 									<button
 										type="button"
 										className="button-pill-blue"
@@ -310,52 +308,6 @@ class FileTransformationInformation extends Component {
 							></AgGridReact>
 						</div>
 					)}
-			</div>
-		);
-	}
-}
-
-/* -------------------------------------- NO BORRAR ¡¡¡SHINGAO!!! ---------------------------------------*/
-
-///  Componente InputFile para cambiar el estilo del botón
-/// default del input de tipo file que da el explorador web
-class InputFile extends Component {
-	constructor(props) {
-		super(props);
-	}
-
-	setFileInfo = (event) => {
-		var fileName = "";
-		var label = event.target.nextElementSibling,
-			labelVal = label.innerHTML;
-
-		if (event.target.files && event.target.files.length > 1)
-			fileName = (
-				event.target.getAttribute("data-multiple-caption") || ""
-			).replace("{count}", event.target.files.length);
-		else fileName = event.target.value.split("\\").pop();
-
-		if (fileName) label.innerHTML = fileName;
-		else label.innerHTML = labelVal;
-
-		this.props.onChangeHandler(event);
-	};
-
-	render() {
-		return (
-			<div className="inputFileContainer">
-				<input
-					type="file"
-					name="file"
-					id="inputFile"
-					className="inputFile margin-left-button"
-					onChange={(event) => this.setFileInfo(event)}
-					data-multiple-caption="{count} files selected"
-					multiple
-				/>
-				<label className="inputFileLabel" htmlFor="inputFile">
-					Selecciona un archivo...
-				</label>
 			</div>
 		);
 	}
