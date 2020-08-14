@@ -186,10 +186,10 @@ const util = {
                                     itemValue = util.formatMoney(itemValue.toFixed(2));
                                     break;
 
-                                case "retention_amount":
+                                case "retained_amount":
 
                                     // If retention amount came from request to Xero
-                                    let retentionAmount = item.retention_amount;
+                                    let retentionAmount = item.retained_amount;
                                     retentionAmount = retentionAmount ? retentionAmount : "";
 
                                     if (retentionAmount) {
@@ -201,7 +201,7 @@ const util = {
                                         let invoiceTotalTax = item.invoice_total_tax;
                                         invoiceTotalTax = invoiceTotalTax ? invoiceTotalTax : 0;
 
-                                        itemValue = parseFloat(invoiceTotalTax) * (item.retention_percentage * .010);
+                                        itemValue = invoiceTotalTax * (item.retention_percentage / 100);
                                         itemValue = util.formatMoney(itemValue.toFixed(2));
                                     }
                                     break;
@@ -534,7 +534,7 @@ const util = {
             { headerName: 'Base imponible', field: 'invoice_subtotal', xeroField: true, calculated: true, formulaName: 'base_taxable', width: 135, sortable: true, type: 'rightAligned', comparator: util.currencyComparator },
             { headerName: 'Total ' + Tipo, field: 'TotalIVA', xeroField: 'invoice_total_tax', type: 'rightAligned', width: 110, sortable: true, comparator: util.currencyComparator },
             { headerName: '% retenido', field: 'Retencion', xeroField: 'retention_percentage', type: 'rightAligned', hide: Tipo === "IVA" ? false : true, calculated: true, width: 104, sortable: true, cellClass: "grid-cell-centered" },
-            { headerName: 'Monto retenido', field: 'MontoRetenido', xeroField: true, calculated: true, formulaName: 'retention_amount', width: 129, sortable: true, type: 'rightAligned', comparator: util.currencyComparator },
+            { headerName: 'Monto retenido', field: 'MontoRetenido', xeroField: true, calculated: true, formulaName: 'retained_amount', width: 129, sortable: true, type: 'rightAligned', comparator: util.currencyComparator },
             { headerName: 'Fecha comprobante', field: 'approval_date', width: 170, sortable: true, editable: true, cellEditor: Datepicker, cellClass: "grid-cell-centered", comparator: util.dateComparator },
             { headerName: 'No. Comprobante', field: 'Comprobante', width: 150, sortable: true, editable: true, cellEditor: NumberValidation, type: 'rightAligned', cellClass: "grid-cell-alignRight" },
             { headerName: '', field: '_id', width: 30, cellRenderer: this.CellRendererUp }
@@ -575,9 +575,9 @@ const util = {
             { headerName: kindOfPeople, field: 'Contacto', xeroField: 'contact_name', headerClass: "centerHeader", filter: 'agTextColumnFilter', width: 220, sortable: true },
             { headerName: 'Fecha factura', field: 'FechaFactura', xeroField: 'invoice_date', filter: 'agTextColumnFilter', width: 133, sortable: true, cellClass: "grid-cell-centered", comparator: util.dateComparator },
             { headerName: 'Base imponible', field: 'invoice_subtotal', xeroField: 'invoice_subtotal', width: 135, sortable: true, type: 'rightAligned', comparator: util.currencyComparator },
-            { headerName: 'Total ' + Tipo, field: 'TotalIVA', xeroField: 'retained_amount', width: 110, sortable: true, type: 'rightAligned', comparator: util.currencyComparator },
+            { headerName: 'Total ' + Tipo, field: 'TotalIVA', xeroField: 'invoice_total_tax', width: 110, sortable: true, type: 'rightAligned', comparator: util.currencyComparator },
             { headerName: '% retenido', field: 'Retencion', xeroField: 'retention_percentage', hide: Tipo === "IVA" ? false : true, calculated: true, width: 104, sortable: true, cellClass: "grid-cell-cenLeft", type: 'rightAligned' },
-            { headerName: 'Monto retenido', field: 'MontoRetenido', xeroField: true, calculated: true, formulaName: 'retention_amount', width: 129, sortable: true, headerClass: "grid-cell-centered", type: 'rightAligned', comparator: util.currencyComparator },
+            { headerName: 'Monto retenido', field: 'MontoRetenido', xeroField: true, calculated: true, formulaName: 'retained_amount', width: 129, sortable: true, headerClass: "grid-cell-centered", type: 'rightAligned', comparator: util.currencyComparator },
             { headerName: 'Fecha comprobante', field: 'date', xeroField: 'approval_date', filter: 'agTextColumnFilter', width: 170, sortable: true, cellClass: "grid-cell-centered", comparator: util.dateComparator },
             { headerName: 'No. Comprobante', field: 'Comprobante', xeroField: 'correlative', width: 150, sortable: true, cellClass: "grid-cell-cenLeft", type: 'rightAligned' },
             { headerName: '', field: 'file', width: 30, cellRenderer: this.CellRendererP },
@@ -680,44 +680,13 @@ const util = {
         inputF.className = "file-upload";
         inputF.setAttribute("id", 'file_' + params.data.withHoldingId);
         eDivIn.appendChild(inputF);
+
         eDiv.appendChild(eDivIn);
         return eDiv;
     },
 
     //Coloca icono de descarga en el grid
     // y se ejecuta la acción para descargar documento en los grid de negoocio
-    /// @param {object} params - parámetro 
-    CellRendererP: function (params) {
-        withHoldingId = params.data.withHoldingId;
-        var eDiv = document.createElement('div');
-        eDiv.className = "file-container";
-        eDiv.setAttribute("id", "down_" + withHoldingId);
-        //Función utilooizada ára llamar el archivo en base64
-        //Convertirlo a pdf y descargarlo
-        eDiv.onclick = async function () {
-            let resp = await calls.getDocumentById(withHoldingId);
-            var element = document.createElement('a');
-            element.setAttribute('href', resp);
-            element.style.display = 'none';
-            document.body.appendChild(element);
-            element.click();
-            document.body.removeChild(element);
-        };
-        var img = document.createElement('img');
-        img.setAttribute("border", "0");
-        img.setAttribute("width", "18");
-        img.setAttribute("height", "21");
-        img.setAttribute("src", Download);
-        img.setAttribute("style", "cursor: pointer");
-
-        var span = document.createElement('span');
-        span.appendChild(img);
-        eDiv.appendChild(span);
-        return eDiv;
-    },
-
-    //Coloca icono de descarga en el grid
-    // y se ejecuta laa acción para descargar documento en el grod de Declaraciones
     /// @param {object} params - parámetro 
     CellRendererDp: function (params) {
         var eDiv = document.createElement('div');
@@ -747,7 +716,7 @@ const util = {
         return eDiv;
     },
 
-    //Coloca icono de descarga en el grid
+//Coloca icono de descarga en el grid
     // y se ejecuta laa acción para descargar documento en el grod de Declaraciones
     /// @param {object} params - parámetro 
     CellRendererDup: function (params) {
@@ -782,6 +751,37 @@ const util = {
             params.column.colId.includes("ompromiso")) {
             return eDiv;
         }
+    },
+    //Coloca icono de descarga en el grid
+    // y se ejecuta laa acción para descargar documento en el grod de Declaraciones
+    /// @param {object} params - parámetro 
+    CellRendererD: function (params) {
+        _id = params.data._id;
+        var eDiv = document.createElement('div');
+        eDiv.className = "file-container";
+        eDiv.setAttribute("id", "down_" + _id);
+        //Función utilooizada ára llamar el archivo en base64
+        //Convertirlo a pdf y descargarlo
+        eDiv.onclick = async function () {
+            let resp = await calls.getDeclarationDocumentById(_id);
+            var element = document.createElement('a');
+            element.setAttribute('href', resp);
+            element.style.display = 'none';
+            document.body.appendChild(element);
+            element.click();
+            document.body.removeChild(element);
+        };
+        var img = document.createElement('img');
+        img.setAttribute("border", "0");
+        img.setAttribute("width", "18");
+        img.setAttribute("height", "21");
+        img.setAttribute("src", Download);
+        img.setAttribute("style", "cursor: pointer");
+
+        var span = document.createElement('span');
+        span.appendChild(img);
+        eDiv.appendChild(span);
+        return eDiv;
     },
 
     /// Ayuda a determinar la manera default en que se presenta la columna Archivo

@@ -78,6 +78,7 @@ const calls = {
 		);
 	},
 
+
 	/// Start a process to request information from Xero to build
 	/// Insert data when change status to "Archivados" or "Recibidos":
 	/// @param {id} id_invoice_xero - idXero
@@ -194,6 +195,9 @@ const calls = {
 				console.log("request fail");
 				return false;
 			}
+		})
+		.catch((err) => {
+			console.log(err);
 		});
 	},
 
@@ -687,7 +691,27 @@ const calls = {
 			}).catch((err) => {
 				console.log(err);
 			});
-	}
+	},
+	
+	getBankStatements:(id_conversion) => {
+		const fetchConfig = {
+		    method: 'GET',
+		    headers: {
+			'Accept': 'application/json',
+			'Content-Type': 'application/json'
+		    }
+		};
+    
+		return fetch(`/getBankStatements?conversionId=${id_conversion}`, fetchConfig)
+		    .then(res => res.json())
+		    .then(data => {
+			  return {
+				data: data
+			  }
+		    }).catch(err => {
+			  console.log(err)
+		    })
+	  }
 };
 
 export default calls;
