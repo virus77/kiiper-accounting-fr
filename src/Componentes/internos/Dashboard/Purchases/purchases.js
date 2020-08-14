@@ -36,7 +36,7 @@ class Purchases extends Component {
 								field: "amount",
 								headerClass: "dashboardGridColumn",
 								cellClass: "dashboardGridCellBusiness",
-								comparator: util.currencyComparator 
+								comparator: util.currencyComparator
 							},
 						],
 					},
@@ -53,7 +53,7 @@ class Purchases extends Component {
 					data: {
 						datasets: [
 							{
-								data: [0.3,0.1,0.1,0.5],
+								data: [0.3, 0.1, 0.1, 0.5],
 								backgroundColor: [
 									"#44CDDB",
 									"#9680ED",
@@ -62,7 +62,7 @@ class Purchases extends Component {
 								],
 							},
 						],
-						labels: ["Vigentes","1 mes","3 meses","+3 meses"],
+						labels: ["Vigentes", "1 mes", "3 meses", "+3 meses"],
 					},
 					options: {
 						maintainAspectRatio: false,
@@ -109,7 +109,7 @@ class Purchases extends Component {
 								field: "amount",
 								headerClass: "dashboardGridColumn",
 								cellClass: "dashboardGridCellBusiness",
-								comparator: util.currencyComparator 
+								comparator: util.currencyComparator
 							},
 						],
 					},
@@ -202,7 +202,7 @@ class Purchases extends Component {
 
 				// Setting labels for providers chart
 				const providersChartLabels = data.map((provider) => {
-					return provider.ContactName.substring(0,10) + "..";
+					return provider.ContactName.substring(0, 10) + "..";
 				});
 
 				// Setting values for providers table

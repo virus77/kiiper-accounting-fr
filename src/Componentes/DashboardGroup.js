@@ -46,7 +46,7 @@ class DashboardGroup extends Component {
 						field: "amount",
 						headerClass: "dashboardGridColumn",
 						cellClass: "dashboardGroupGridCellBank",
-						comparator: util.currencyComparator 
+						comparator: util.currencyComparator
 					},
 					{
 						headerName: "Antigüedad",
@@ -134,11 +134,12 @@ class DashboardGroup extends Component {
 	}
 
 	render() {
+		let orgSelect = this.props.orgIdSelected;
 		return (
-			<div className="report-container" style={{ display: "flex", padding:0 }}>
+			<div className="report-container" style={{ display: "flex", padding: 0 }}>
 				<div style={{ width: "50%" }}>
 					<div style={{ height: "100%" }}>
-						<Card style={{borderStyle:"none", height: "100%"}}>
+						<Card style={{ borderStyle: "none", height: "100%" }}>
 							<Card.Body>
 								<Card.Title>Conciliación bancaria</Card.Title>
 								<div
@@ -165,7 +166,7 @@ class DashboardGroup extends Component {
 				</div>
 				<div style={{ width: "50%" }}>
 					<div>
-						<Card style={{borderStyle:"none"}}>
+						<Card style={{ borderStyle: "none" }}>
 							<Card.Body>
 								<Card.Title>Ventas</Card.Title>
 								<Sales dashboardType="group" dashboardtableHeight="280px" />
@@ -173,10 +174,10 @@ class DashboardGroup extends Component {
 						</Card>
 					</div>
 					<div>
-						<Card style={{borderStyle:"none"}}>
+						<Card style={{ borderStyle: "none" }}>
 							<Card.Body>
 								<Card.Title>Compras</Card.Title>
-								<Purchases dashboardType="group" dashboardtableHeight="280px" />
+								<Purchases dashboardType="group" orgIdSelected={orgSelect} dashboardtableHeight="280px" />
 							</Card.Body>
 						</Card>
 					</div>

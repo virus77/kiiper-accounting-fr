@@ -119,89 +119,17 @@ class Ventas extends Component {
 	};
 
 	//Función utilizada para mover los datos de un estatus a otro
-	onMoveData = async (name, val) => {
-		let arrayToSend = "";
-
-		switch (name) {
-			case "Pendientes":
-				// Getting ros selected and building a JSON to send
-				arrayToSend = this.onFillstate(
-					this.refs.agGrid.api.getSelectedRows(),
-					name
-				);
-
-				if (arrayToSend.length > 0) {
-					// Moving pending vouchers to received
-					let result = await calls.setDataWidthHoldings(
-						this.state.Tipo,
-						arrayToSend
-					);
-					if (result === true) {
-						this.setState({
-							show: val,
-							texto:
-								"El comprobante de retención ha sido registrado en Xero y cambió su estatus a 'recibido'.",
-						});
-						this.onRemoveSelected();
-						this.setState({ activeItem: name });
-					}
-				}
-				break;
-
-			case "Archivados":
-			case "Recibidos":
-				// Getting ros selected and building a JSON to send
-				arrayToSend = this.onFillstate(
-					this.refs.agGrid.api.getSelectedRows(),
-					name
-				);
-
-				if (arrayToSend.length > 0) {
-					// Moving received or stored vouchers to cancelled
-					let result1 = await calls.setDataVoidWidthHoldings(arrayToSend);
-					if (result1 === true) {
-						this.setState({
-							show: val,
-							texto:
-								"El comprobante de retención ha sido anulado en Xero y cambió su estatus a ‘anulado’.",
-						});
-						this.onRemoveSelected();
-						this.setState({ activeItem: name });
-					}
-				} else this.setState({ activeItem: name, show: false });
-				break;
-			case "Anulados":
-				// Getting ros selected and building a JSON to send
-				arrayToSend = this.onFillstate(
-					this.refs.agGrid.api.getSelectedRows(),
-					name
-				);
-
-				if (arrayToSend.length > 0) {
-					// Moving received or stored vouchers to cancelled
-					let result2 = await calls.setDataReissueWidthHoldings(arrayToSend);
-
-					if (result2 === true) {
-						this.setState({
-							show: val,
-							texto:
-								"El comprobante de retención ha sido anulado en Xero y cambió su estatus.",
-						});
-						this.onRemoveSelected();
-						this.setState({ activeItem: name });
-					}
-				} else this.setState({ activeItem: name, show: false });
-				break;
-			default:
-				this.setState({ show: false });
-				break;
-		}
+	onMoveData = (name, val) => {
+		this.onFillstate(
+			this.refs.agGrid.api.getSelectedRows(),
+			name, val
+		);
 	};
 
 	/// Llena el estado dependiendo delestatus seleccionado
 	/// @param {object} gridSelectedRows - Object of selected items in grid
 	/// @param {string} statusName - name of status
-	onFillstate = (gridSelectedRows, statusName) => {
+	onFillstate = async (gridSelectedRows, statusName, val) => {
 		let arrayToSend = [];
 
 		// Start proccess to gather all information from grid items selected /
@@ -217,79 +145,144 @@ class Ventas extends Component {
 				selectedRow.approval_date !== "" ? selectedRow.approval_date : "";
 
 			// Finding file uploaded to voucher
-			let voucherFile = document.querySelector(`[id=lbl_${withHoldingId}]`);
-			voucherFile = voucherFile ? voucherFile.innerHTML : "";
+			let voucherFile = document.querySelector(`[id=file_${withHoldingId}]`);
+			this.fileToBase64(voucherFile).then(async (result) => {
+				// Formatting voucher number
+				let voucherNumber = selectedRow.Comprobante
+					? selectedRow.Comprobante
+					: "";
 
-			// Formatting voucher number
-			let voucherNumber = selectedRow.Comprobante
-				? selectedRow.Comprobante
-				: "";
+				// --------------------------------------
 
-			// --------------------------------------
+				// Defining JSON oject to add to list of voucher to send
+				// in voucher view action button
+				switch (statusName) {
+					// Pending voucher
+					case "Pendientes":
+						switch (true) {
+							// When voucher date was not captured in column field
+							case !voucherDate:
+								this.setState({
+									show: true,
+									texto: `La fecha de comprobante está vacía en ${clientName}.`,
+								});
+								return false;
 
-			// Defining JSON oject to add to list of voucher to send
-			// in voucher view action button
-			switch (statusName) {
-				// Pending voucher
-				case "Pendientes":
-					switch (true) {
-						// When voucher date was not captured in column field
-						case !voucherDate:
-							this.setState({
-								show: true,
-								texto: `La fecha de comprobante está vacía en ${clientName}.`,
-							});
-							return false;
+							// When voucher date was not captured in column field
+							case !voucherNumber:
+								this.setState({
+									show: true,
+									texto: `El número de comprobante está vacío en ${clientName}.`,
+								});
+								return false;
 
-						// When voucher date was not captured in column field
-						case !voucherNumber:
-							this.setState({
-								show: true,
-								texto: `El número de comprobante está vacío en ${clientName}.`,
-							});
-							return false;
+							case !voucherFile:
+								this.setState({
+									show: true,
+									texto: `El documento está vacío en ${clientName}.`,
+								});
+								return false;
 
-						case !voucherFile:
-							this.setState({
-								show: true,
-								texto: `El documento está vacío en ${clientName}.`,
-							});
-							return false;
+							default:
+								// Storing data from items selected in Ventas grid
+								arrayToSend.push({
+									withholdingId: withHoldingId,
+									retentionPercentage: retentionPercentage,
+									withholdingNumber: voucherNumber,
+									withholdingDate: voucherDate,
+									withholdingFile: result,
+								});
 
-						default:
-							// Storing data from items selected in Ventas grid
-							arrayToSend.push({
-								withholdingId: withHoldingId,
-								retentionPercentage: retentionPercentage,
-								withholdingNumber: voucherNumber,
-								withholdingDate: voucherDate,
-								withholdingFile: voucherFile,
-							});
-							break;
-					}
-					break;
+								// Getting ros selected and building a JSON to send
+								if (arrayToSend.length > 0) {
+									// Moving pending vouchers to received
+									let result = await calls.setDataWidthHoldings(
+										this.state.Tipo,
+										arrayToSend
+									);
+									if (result === true) {
+										this.setState({
+											show: val,
+											texto:
+												"El comprobante de retención ha sido registrado en Xero y cambió su estatus a 'recibido'.",
+										});
+										this.onRemoveSelected();
+										this.setState({ activeItem: statusName });
+									}
+								}
+								break;
+						}
+						break;
 
-				case "Recibidos": // Received voucher
-				case "Archivados": // Stored voucher
-					// Storing data from items selected in Sales grid
-					arrayToSend.push({
-						_id: withHoldingId,
-					});
-					break;
+					case "Recibidos": // Received voucher
+					case "Archivados": // Stored voucher
+						// Storing data from items selected in Sales grid
+						arrayToSend.push({
+							_id: withHoldingId,
+						});
 
-				case "Anulados": // Stored voucher
-					// Storing data from items selected in Sales grid
-					arrayToSend.push({
-						withholdingId: withHoldingId,
-					});
-					break;
-					
-				default:
-					break;
-			}
+						// Getting ros selected and building a JSON to send
+
+						if (arrayToSend.length > 0) {
+							// Moving received or stored vouchers to cancelled
+							let result1 = await calls.setDataVoidWidthHoldings(arrayToSend);
+							if (result1 === true) {
+								this.setState({
+									show: val,
+									texto:
+										"El comprobante de retención ha sido anulado en Xero y cambió su estatus a ‘anulado’.",
+								});
+								this.onRemoveSelected();
+								this.setState({ activeItem: statusName });
+							}
+						}
+						else {
+							this.setState({ activeItem: statusName, show: false });
+						}
+						break;
+
+					case "Anulados": // Stored voucher
+						// Storing data from items selected in Sales grid
+						arrayToSend.push({
+							withholdingId: withHoldingId,
+						});
+						// Getting ros selected and building a JSON to send
+
+						if (arrayToSend.length > 0) {
+							// Moving received or stored vouchers to cancelled
+							let result2 = await calls.setDataReissueWidthHoldings(arrayToSend);
+
+							if (result2 === true) {
+								this.setState({
+									show: val,
+									texto:
+										"El comprobante de retención ha sido anulado en Xero y cambió su estatus.",
+								});
+								this.onRemoveSelected();
+								this.setState({ activeItem: statusName });
+							}
+						} else this.setState({ activeItem: statusName, show: false });
+						break;
+
+					default:
+						this.setState({ show: false });
+						break;
+				}
+			});
 		});
+	};
 
-		return arrayToSend;
+	fileToBase64 = (inputF) => {
+		var fileToLoad = inputF.files[0];
+		return new Promise(resolve => {
+			var reader = new FileReader();
+			// Read file content on file loaded event
+			reader.onload = function (event) {
+				resolve(event.target.result);
+			};
+			// Convert data to base64 
+			reader.readAsDataURL(fileToLoad);
+		});
 	};
 
 	/// Clear selected elements in the grid

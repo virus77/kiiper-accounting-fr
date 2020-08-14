@@ -141,7 +141,9 @@ const calls = {
 			method: "POST",
 			body: JSON.stringify(arrayWithholding),
 			headers: {
-				"Content-type": "application/json; charset=UTF-8",
+				"Accept": "application/json",
+				"Content-Type": "application/json",
+				'X-Mashape-Key': 'API_KEY',
 				"Access-Control-Allow-Origin": "*",
 			},
 		}).then((res) => {
@@ -327,7 +329,7 @@ const calls = {
 						type: "xeroOrgName",
 						name: res.xeroOrgName,
 						id: res.organisationId,
-						specialContrib: res.isSpecialContrib						
+						specialContrib: res.isSpecialContrib
 					};
 				});
 				return organizations;

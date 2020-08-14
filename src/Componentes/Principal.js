@@ -147,6 +147,7 @@ export default function Dashboard(props) {
 	var rw_2_input = "";
 
 	var group = fillDropDownListGroup(props);
+
 	const [event, eventKey] = React.useState(-1);
 	const handleListItemClick = (event, index) => {
 		eventKey(index);
@@ -180,6 +181,11 @@ export default function Dashboard(props) {
 
 	//Cambia el estatus del evento del clic en el DeopDownList
 	let handleClick = async (item) => {
+
+		if (item.type === "xeroGroupName") {
+			setorgIdSelected(item.id);
+		}
+		
 		//Obtiene el elemento div del ddl principal
 		rw_2_input = document
 			.querySelector("[id*=rw_]")
@@ -221,8 +227,8 @@ export default function Dashboard(props) {
 
 	// Manages admin panel view
 	const onAdminPanelClick = () => {
-		if(orgNameSelected){
-			if(!adminPanel) {
+		if (orgNameSelected) {
+			if (!adminPanel) {
 				showAdminPanel(true);
 			}
 			else {

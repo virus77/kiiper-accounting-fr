@@ -196,7 +196,6 @@ const util = {
                                         itemValue = util.formatMoney(retentionAmount);
                                     }
                                     else {
-
                                         // If retention amount did not come from Xero
                                         // Invoice total tax
                                         let invoiceTotalTax = item.invoice_total_tax;
@@ -561,11 +560,8 @@ const util = {
             {
                 headerName: 'No. Factura', field: 'NoFactura', xeroField: 'invoice_number', width: 125, cellClass: "grid-cell-Left",
                 headerCheckboxSelection: function (params) {
-                    return params.columnApi.getRowGroupColumns().length === 0;
-                },
-                headerStyle: params => {
-                    if (statusName2 === "Anulados")
-                        return params.data.reissued === true ? { 'pointer-events': 'none' } : '';
+                    if (statusName2 !== "Anulados")
+                        return params.columnApi.getRowGroupColumns().length === 0;
                 },
                 checkboxSelection: function (params) {
                     return params.columnApi.getRowGroupColumns().length === 0;
@@ -683,27 +679,27 @@ const util = {
         inputF.setAttribute("name", "theName");
         inputF.className = "file-upload";
         inputF.setAttribute("id", 'file_' + params.data.withHoldingId);
-        inputF.onchange = async function () {
+        /*inputF.onchange = async function () {
             // Select the very first file from list 
             var fileToLoad = inputF.files[0];
+
             // FileReader function for read the file. 
             var fileReader = new FileReader();
             var base64;
             // Onload of file read the file content 
             fileReader.onload = function (fileLoadedEvent) {
                 base64 = fileLoadedEvent.target.result;
-                var TEXTAREA = document.createElement('TEXTAREA');
-                TEXTAREA.setAttribute("style", "display: none");
-                TEXTAREA.style.display = 'none';
-                TEXTAREA.setAttribute("id", "lbl_" + params.data.withHoldingId);
-                TEXTAREA.innerHTML = base64;
-                document.body.appendChild(TEXTAREA);
-                // Print data in console 
-                console.log(base64);
+                var textarea = document.createElement('textarea');
+                textarea.setAttribute("style", "display: none");
+                textarea.style.display = 'none';
+                textarea.setAttribute("name", "text");
+                textarea.setAttribute("id", "lbl_" + params.data.withHoldingId);
+                textarea.innerHTML = base64;
+                document.body.appendChild(textarea);
             };
             // Convert data to base64 
             fileReader.readAsDataURL(fileToLoad);
-        };
+        };*/
         eDivIn.appendChild(inputF);
 
         eDiv.appendChild(eDivIn);
