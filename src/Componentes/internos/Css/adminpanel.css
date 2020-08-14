@@ -202,12 +202,12 @@
 }
 
 /** Form group */
-.formSubGroup {
+.settingsPanel .formSubGroup {
 	flex: 1;
 }
 
 /** Form group title */
-.formGroupTitle {
+.settingsPanel .formGroupTitle {
 	font-family: "Goldplay", sans-serif;
 	font-weight: 500;
 	margin: 2em 0;
@@ -215,36 +215,36 @@
 }
 
 /** Form field container */
-.formFieldContainer {
+.settingsPanel .formFieldContainer {
 	display: flex;
 	padding: 0.7em 0;
 	border-bottom: 0.5px solid #e8e8e8;
 }
 
 /** Form field container label and input */
-.formFieldContainer > div.formFieldItem {
+.settingsPanel .formFieldContainer > div.formFieldItem {
 	flex: 1;
 	display: flex;
 	align-items: center;
 }
 
 /** Form label container */
-.formFieldLabel {
+.settingsPanel .formFieldLabel {
 	max-width: 180px;
 }
 
 /** Form input container */
-.formFieldInput {
+.settingsPanel .formFieldInput {
 	margin-left: 20px;
 }
 
 /** Form group */
-.formSubGroup .formFieldLabel {
+.settingsPanel .formSubGroup .formFieldLabel {
 	max-width: 100px;
 }
 
 /** Form field label */
-.formFieldLabel label {
+.settingsPanel .formFieldLabel label {
 	font-weight: 400 !important;
 	font-size: 0.9em;
 	margin-bottom: 0;
@@ -253,7 +253,7 @@
 /* Toggle switch styles ---------------------------------------------- */
 
 /** Toggle switch */
-.sc-AxjAm {
+.settingsPanel .sc-AxjAm {
 	height: 20px !important;
 	width: 40px !important;
 	cursor: pointer;
@@ -261,14 +261,14 @@
 }
 
 /** Toggle switch background */
-.sc-AxjAm:hover {
+.settingsPanel .sc-AxjAm:hover {
 	outline-offset: 2px;
 	outline-style: auto;
 	outline-color: #44cddb;
 }
 
 /** Toggle switch little ball */
-.sc-AxjAm:after {
+.settingsPanel .sc-AxjAm:after {
 	height: 15px !important;
 	width: 15px !important;
 }
@@ -276,7 +276,7 @@
 /* Form actions styles ----------------------------------------------- */
 
 /** Form actions */
-.formActions {
+.settingsPanel .formActions {
 	border-top: 1px solid #e6defd;
 	display: flex;
 	justify-content: flex-end;
@@ -285,7 +285,7 @@
 }
 
 /** Form actions */
-.formActions button {
+.settingsPanel .formActions button {
 	padding: 10px 30px;
 	border-radius: 10px;
 	border-style: none;
@@ -296,29 +296,29 @@
 }
 
 /** Form actions buttons hover effect*/
-.formActions button:hover {
+.settingsPanel .formActions button:hover {
 	cursor: pointer;
 }
 
 /** Form confirm button */
-.formConfirmButton {
+.settingsPanel .formConfirmButton {
 	background-color: #232c51;
 	color: #fff;
 }
 
 /** Form confirm button hover effect*/
-.formConfirmButton:hover {
+.settingsPanel .formConfirmButton:hover {
 	background-color: #7158e2;
 }
 
 /** Form cancel button */
-.formCancelButton {
+.settingsPanel .formCancelButton {
 	background-color: #fff;
 	color: #7158e2;
 	border: 1px solid #e6defd !important;
 }
 
 /** Form cancel button hover effect*/
-.formCancelButton:hover {
+.settingsPanel .formCancelButton:hover {
 	background-color: #e6defd;
 }

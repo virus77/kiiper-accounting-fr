@@ -21,7 +21,7 @@ class FileTransformationInformation extends Component {
 			existFileTransformation: false,
 			transformedFile: [],
 			formatPartial: "",
-			formatMonth: ""
+			formatMonth: "",
 		};
 	}
 
@@ -109,8 +109,9 @@ class FileTransformationInformation extends Component {
 		];
 		var _rowData;
 		this.setState({
-			formatPartial: util.bankType(this.props.bankData[0].name)[0].formatPartial,
-			formatMonth: util.bankType(this.props.bankData[0].name)[0].formatMonth
+			formatPartial: util.bankType(this.props.bankData[0].name)[0]
+				.formatPartial,
+			formatMonth: util.bankType(this.props.bankData[0].name)[0].formatMonth,
 		});
 		calls
 			.getConversions(
@@ -177,11 +178,10 @@ class FileTransformationInformation extends Component {
 									)
 								}
 							/>
-							<h3>Convertir movimientos bancarios (parcial)</h3>
-							<br />
-							<br />
-							<div>Siga estas instrucciones para transformar el archivo:</div>
-							<div>
+							<div className="transformationInstructions">
+								<h3>Convertir movimientos bancarios (parcial)</h3>
+								<div>Siga estas instrucciones para transformar el archivo:</div>
+
 								<ul className="descriptionUnorderedList">
 									<li>
 										Diríjase a la<strong>&nbsp;página web del banco</strong>
@@ -202,30 +202,33 @@ class FileTransformationInformation extends Component {
 										Presione el botón<strong>&nbsp;Convertir</strong>
 									</li>
 								</ul>
-								<div className="container-button-load">
-									{/* Component InpuFile para cambiar el estilo default del control input de tipo file */}
-									<InputFile id="fileStatement" onClick={(event) => this.onChangeHandler(event)} />
-									<button
-										type="button"
-										className="button-pill-blue"
-										onClick={this.onClickHandler}
-									>
-										<div className="text"> Convertir </div>
-									</button>
-								</div>
-								{this.state.existFileTransformation ? (
-									<div className="file-path">
-										{" "}
-										El archivo ha sido transformado exitosamente
-									</div>
-								) : null}
-								<CSVLink
-									data={this.state.transformedFile}
-									filename={`${this.props.bankData[0].name}-transformado.csv`}
-									ref={this.csvLink}
-									className="hidden"
-								></CSVLink>
 							</div>
+							<div className="container-button-load">
+								{/* Component InpuFile para cambiar el estilo default del control input de tipo file */}
+								<InputFile
+									id="fileStatement"
+									onClick={(event) => this.onChangeHandler(event)}
+								/>
+								<button
+									type="button"
+									className="button-pill-blue"
+									onClick={this.onClickHandler}
+								>
+									<div className="text"> Convertir </div>
+								</button>
+							</div>
+							{this.state.existFileTransformation ? (
+								<div className="file-path">
+									{" "}
+									El archivo ha sido transformado exitosamente
+								</div>
+							) : null}
+							<CSVLink
+								data={this.state.transformedFile}
+								filename={`${this.props.bankData[0].name}-transformado.csv`}
+								ref={this.csvLink}
+								className="hidden"
+							></CSVLink>
 						</div>,
 
 						/** Conversion panel for bank statements */
@@ -240,11 +243,10 @@ class FileTransformationInformation extends Component {
 									)
 								}
 							/>
-							<h3>Convertir estados de cuenta (mensual)</h3>
-							<br />
-							<br />
-							<div>Siga estas instrucciones para transformar el archivo:</div>
-							<div>
+							<div className="transformationInstructions">
+								<h3>Convertir estados de cuenta (mensual)</h3>
+								<div>Siga estas instrucciones para transformar el archivo:</div>
+
 								<ul className="descriptionUnorderedList">
 									<li>
 										Diríjase a la<strong>&nbsp;página web del banco</strong>
@@ -264,56 +266,55 @@ class FileTransformationInformation extends Component {
 										Presione el botón<strong>&nbsp;Convertir</strong>
 									</li>
 								</ul>
-
-								<div className="container-button-load">
-									{/* Component InpuFile para cambiar el estilo default del control input de tipo file */}
-									<InputFile id="fileBank" onChange={this.onChangeHandler} />
-									<button
-										type="button"
-										className="button-pill-blue"
-										onClick={this.onClickHandler}
-									>
-										<div className="text"> Convertir </div>
-									</button>
-								</div>
-								{this.state.existFileTransformation ? (
-									<div className="file-path">
-										{" "}
-										El archivo ha sido transformado exitosamente
-									</div>
-								) : null}
-								<CSVLink
-									data={this.state.transformedFile}
-									filename={`${this.props.bankData[0].name}-transformado.csv`}
-									ref={this.csvLink}
-									className="hidden"
-								></CSVLink>
 							</div>
+							<div className="container-button-load">
+								{/* Component InpuFile para cambiar el estilo default del control input de tipo file */}
+								<InputFile id="fileBank" onChange={this.onChangeHandler} />
+								<button
+									type="button"
+									className="button-pill-blue"
+									onClick={this.onClickHandler}
+								>
+									<div className="text"> Convertir </div>
+								</button>
+							</div>
+							{this.state.existFileTransformation ? (
+								<div className="file-path">
+									{" "}
+									El archivo ha sido transformado exitosamente
+								</div>
+							) : null}
+							<CSVLink
+								data={this.state.transformedFile}
+								filename={`${this.props.bankData[0].name}-transformado.csv`}
+								ref={this.csvLink}
+								className="hidden"
+							></CSVLink>
 						</div>,
 					]
 				) : (
-						<div
-							id="banksTransacctionsGrid"
-							className="container-transformation ag-theme-alpine"
-							style={{
-								minHeight: "calc(100vh - 217px)",
-								padding: 0,
-								borderStyle: "none",
-								width: "100%",
+					<div
+						id="banksTransacctionsGrid"
+						className="container-transformation ag-theme-alpine"
+						style={{
+							minHeight: "calc(100vh - 217px)",
+							padding: 0,
+							borderStyle: "none",
+							width: "100%",
+						}}
+					>
+						<AgGridReact
+							columnDefs={this.state.columnDefs}
+							rowData={this.state.rowData}
+							onCellFocused={(e) => {
+								this.onRowSelected(e.rowIndex, this.state.rowData[e.rowIndex]);
 							}}
-						>
-							<AgGridReact
-								columnDefs={this.state.columnDefs}
-								rowData={this.state.rowData}
-								onCellFocused={(e) => {
-									this.onRowSelected(e.rowIndex, this.state.rowData[e.rowIndex]);
-								}}
-								defaultColDef={{
-									flex: 1,
-								}}
-							></AgGridReact>
-						</div>
-					)}
+							defaultColDef={{
+								flex: 1,
+							}}
+						></AgGridReact>
+					</div>
+				)}
 			</div>
 		);
 	}
