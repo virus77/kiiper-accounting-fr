@@ -20,6 +20,8 @@ class FileTransformationInformation extends Component {
 			defaultColDef: { width: 250 },
 			existFileTransformation: false,
 			transformedFile: [],
+			formatPartial: "",
+			formatMonth: ""
 		};
 	}
 
@@ -106,6 +108,10 @@ class FileTransformationInformation extends Component {
 			},
 		];
 		var _rowData;
+		this.setState({
+			formatPartial: util.bankType(this.props.bankData[0].name)[0].formatPartial,
+			formatMonth: util.bankType(this.props.bankData[0].name)[0].formatMonth
+		});
 		calls
 			.getConversions(
 				this.props.orgIdSelected,
