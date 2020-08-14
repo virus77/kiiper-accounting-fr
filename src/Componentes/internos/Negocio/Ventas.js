@@ -134,143 +134,132 @@ class Ventas extends Component {
 
 		// Start proccess to gather all information from grid items selected /
 		// Gathering items selected information
-		gridSelectedRows.forEach((selectedRow, rowIndex) => {
+		gridSelectedRows.forEach(async (selectedRow, rowIndex) => {
 			// Voucher data to be send or used in validation
 			const clientName = selectedRow.Contacto;
 			const retentionPercentage = selectedRow.Retencion;
 			const withHoldingId = selectedRow.withHoldingId;
+			let voucherFile = document.querySelector(`[id=file_${withHoldingId}]`);
 
 			// Finding date added to voucher
-			let voucherDate =
-				selectedRow.approval_date !== "" ? selectedRow.approval_date : "";
+			let voucherDate = selectedRow.approval_date !== "" ? selectedRow.approval_date : "";
 
-			// Finding file uploaded to voucher
-			let voucherFile = document.querySelector(`[id=file_${withHoldingId}]`);
-			this.fileToBase64(voucherFile).then(async (result) => {
-				// Formatting voucher number
-				let voucherNumber = selectedRow.Comprobante
-					? selectedRow.Comprobante
-					: "";
+			// Formatting voucher number
+			let voucherNumber = selectedRow.Comprobante
+				? selectedRow.Comprobante
+				: "";
 
-				// --------------------------------------
+			// --------------------------------------
 
-				// Defining JSON oject to add to list of voucher to send
-				// in voucher view action button
-				switch (statusName) {
-					// Pending voucher
-					case "Pendientes":
-						switch (true) {
-							// When voucher date was not captured in column field
-							case !voucherDate:
-								this.setState({
-									show: true,
-									texto: `La fecha de comprobante está vacía en ${clientName}.`,
-								});
-								return false;
+			// Defining JSON oject to add to list of voucher to send
+			// in voucher view action button
+			switch (statusName) {
+				// Pending voucher
+				case "Pendientes":
+					switch (true) {
+						// When voucher date was not captured in column field
+						case !voucherDate:
+							this.setState({
+								show: true,
+								texto: `La fecha de comprobante está vacía en ${clientName}.`,
+							});
+							return false;
 
-							// When voucher date was not captured in column field
-							case !voucherNumber:
-								this.setState({
-									show: true,
-									texto: `El número de comprobante está vacío en ${clientName}.`,
-								});
-								return false;
+						// When voucher number was not captured in column field
+						case !voucherNumber:
+							this.setState({
+								show: true,
+								texto: `El número de comprobante está vacío en ${clientName}.`,
+							});
+							return false;
 
-							case !voucherFile:
-								this.setState({
-									show: true,
-									texto: `El documento está vacío en ${clientName}.`,
-								});
-								return false;
+						// When voucher file was not captured in column field
+						case !voucherFile:
+							this.setState({
+								show: true,
+								texto: `El documento está vacío en ${clientName}.`,
+							});
+							return false;
 
-							default:
-								// Storing data from items selected in Ventas grid
-								arrayToSend.push({
-									withholdingId: withHoldingId,
-									retentionPercentage: retentionPercentage,
-									withholdingNumber: voucherNumber,
-									withholdingDate: voucherDate,
-									withholdingFile: result,
-								});
+						default:
+							// Finding file uploaded to voucher
+							if (voucherFile != "")
+								this.fileToBase64(voucherFile).then(async (result) => {
+									// Storing data from items selected in Ventas grid
+									arrayToSend.push({
+										withholdingId: withHoldingId,
+										retentionPercentage: retentionPercentage,
+										withholdingNumber: voucherNumber,
+										withholdingDate: voucherDate,
+										withholdingFile: result,
+									});
 
-								// Getting ros selected and building a JSON to send
-								if (arrayToSend.length > 0) {
-									// Moving pending vouchers to received
-									let result = await calls.setDataWidthHoldings(
-										this.state.Tipo,
-										arrayToSend
-									);
-									if (result === true) {
-										this.setState({
-											show: val,
-											texto:
-												"El comprobante de retención ha sido registrado en Xero y cambió su estatus a 'recibido'.",
-										});
-										this.onRemoveSelected();
-										this.setState({ activeItem: statusName });
+									// Getting ros selected and building a JSON to send
+									if (arrayToSend.length > 0) {
+										// Moving pending vouchers to received
+										let result = await calls.setDataWidthHoldings(
+											this.state.Tipo,
+											arrayToSend
+										);
+										if (result === true) {
+											this.setState({
+												show: val,
+												texto:
+													"El comprobante de retención ha sido registrado en Xero y cambió su estatus a 'recibido'.",
+											});
+											this.onRemoveSelected();
+											this.setState({ activeItem: statusName });
+										}
 									}
-								}
-								break;
-						}
-						break;
-
-					case "Recibidos": // Received voucher
-					case "Archivados": // Stored voucher
-						// Storing data from items selected in Sales grid
-						arrayToSend.push({
-							_id: withHoldingId,
-						});
-
-						// Getting ros selected and building a JSON to send
-
-						if (arrayToSend.length > 0) {
-							// Moving received or stored vouchers to cancelled
-							let result1 = await calls.setDataVoidWidthHoldings(arrayToSend);
-							if (result1 === true) {
-								this.setState({
-									show: val,
-									texto:
-										"El comprobante de retención ha sido anulado en Xero y cambió su estatus a ‘anulado’.",
 								});
-								this.onRemoveSelected();
-								this.setState({ activeItem: statusName });
-							}
-						}
-						else {
-							this.setState({ activeItem: statusName, show: false });
-						}
-						break;
+							break;
+					}
+				case "Recibidos": // Received voucher
+				case "Archivados": // Stored voucher
+					// Storing data from items selected in Sales grid
+					arrayToSend.push({
+						_id: withHoldingId,
+					});
 
-					case "Anulados": // Stored voucher
-						// Storing data from items selected in Sales grid
-						arrayToSend.push({
-							withholdingId: withHoldingId,
+					// Getting ros selected and building a JSON to send
+
+					if (arrayToSend.length > 0) {
+						// Moving received or stored vouchers to cancelled
+						let result1 = await calls.setDataVoidWidthHoldings(arrayToSend);
+						if (result1 === true) {
+							this.setState({
+								show: val,
+								texto:
+									"El comprobante de retención ha sido anulado en Xero y cambió su estatus a ‘anulado’.",
+							});
+							this.onRemoveSelected();
+							this.setState({ activeItem: statusName });
+						}
+					}
+					else {
+						this.setState({ activeItem: statusName, show: false });
+					}
+					break;
+				case "Anulados": // Stored voucher
+					// Moving received or stored vouchers to cancelled
+					let result2 = await calls.setDataReissueWidthHoldings(withHoldingId);
+					if (result2 === true || result2 === false || result2 === undefined) {
+						this.setState({
+							show: val,
+							texto:
+								"El comprobante de retención ha sido anulado en Xero y cambió su estatus.",
 						});
-						// Getting ros selected and building a JSON to send
+						this.onRemoveSelected();
+						this.setState({ activeItem: statusName });
+					}
 
-						if (arrayToSend.length > 0) {
-							// Moving received or stored vouchers to cancelled
-							let result2 = await calls.setDataReissueWidthHoldings(arrayToSend);
-
-							if (result2 === true) {
-								this.setState({
-									show: val,
-									texto:
-										"El comprobante de retención ha sido anulado en Xero y cambió su estatus.",
-								});
-								this.onRemoveSelected();
-								this.setState({ activeItem: statusName });
-							}
-						} else this.setState({ activeItem: statusName, show: false });
-						break;
-
-					default:
-						this.setState({ show: false });
-						break;
-				}
-			});
+					break;
+				default:
+					this.setState({ show: false });
+					break;
+			}
 		});
-	};
+	}
 
 	fileToBase64 = (inputF) => {
 		var fileToLoad = inputF.files[0];
@@ -331,7 +320,7 @@ class Ventas extends Component {
 	//Función onchange del grid
 	onSelectionChanged = (event) => {
 		/* var rowCount = event.api.getSelectedNodes().length;
-        window.alert('selection changed, ' + rowCount + ' rows selected');*/
+		window.alert('selection changed, ' + rowCount + ' rows selected');*/
 	};
 
 	render() {

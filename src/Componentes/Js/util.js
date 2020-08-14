@@ -622,14 +622,14 @@ const util = {
             {
                 headerName: 'Status', field: 'status', xeroField: 'status', hide: statusName === "Aprobados" ? false : true, calculated: true, width: 140, sortable: true, type: 'rightAligned',
                 valueGetter: function (params) {
-                    return 1;
+                    return 3;
                 }
             },
-            { headerName: 'Cuenta Xero', field: 'cuentaXero', xeroField: 'tax_balance', formulaName: 'tax_balance', type: 'rightAligned', hide: statusName !== "Por Generar" ? false : true, calculated: true, width: 120, sortable: true },
-            { headerName: 'Auxiliar', field: 'Auxiliar', xeroField: 'auxiliar', calculated: true, width: 110, sortable: true, type: 'rightAligned', cellRenderer: this.CellRendererD },
-            { headerName: 'Compromiso', field: 'compromiso', xeroField: 'compromiso', type: 'rightAligned', hide: !seeCommitmentColumn.includes(statusName), calculated: true, width: 110, sortable: true, cellClass: "grid-cell-centered", },
-            { headerName: 'Pago', field: 'Pago', xeroField: 'pago', type: 'rightAligned', hide: !seePaymentColumn.includes(statusName), calculated: true, width: 110, sortable: true, cellClass: "grid-cell-centered", },
-            { headerName: 'Certificado', field: 'Certificado', xeroField: 'certificado', type: 'rightAligned', hide: !seeCertificateColumn.includes(statusName), calculated: true, width: 110, sortable: true, cellClass: "grid-cell-centered", },
+            { headerName: 'Cuenta Xero', field: 'cuentaXero', xeroField: 'tax_balance', formulaName: 'tax_balance', type: 'rightAligned', hide: statusName === "PorGenerar" || statusName === "PorAprobar" ? false : true, calculated: true, width: 120, sortable: true },
+            { headerName: 'Auxiliar', field: 'Auxiliar', xeroField: 'auxiliar', calculated: true, width: 110, sortable: true, cellRenderer: this.CellRendererDp, type: 'rightAligned' },
+            { headerName: 'Compromiso', field: 'compromiso', xeroField: 'compromiso', hide: !seeCommitmentColumn.includes(statusName), calculated: true, width: 110, sortable: true, type: 'rightAligned', cellClass: "grid-cell-centered", cellRenderer: this.CellRendererDup },
+            { headerName: 'Pago', field: 'Pago', xeroField: 'pago', hide: !seePaymentColumn.includes(statusName), calculated: true, width: 110, sortable: true, type: 'rightAligned', cellClass: "grid-cell-centered", },
+            { headerName: 'Certificado', field: 'Certificado', xeroField: 'certificado', hide: !seeCertificateColumn.includes(statusName), calculated: true, width: 110, sortable: true, type: 'rightAligned', cellClass: "grid-cell-centered", cellRenderer: this.CellRendererDup },
         ]
         return (columnDefs)
     },
@@ -679,29 +679,7 @@ const util = {
         inputF.setAttribute("name", "theName");
         inputF.className = "file-upload";
         inputF.setAttribute("id", 'file_' + params.data.withHoldingId);
-        /*inputF.onchange = async function () {
-            // Select the very first file from list 
-            var fileToLoad = inputF.files[0];
-
-            // FileReader function for read the file. 
-            var fileReader = new FileReader();
-            var base64;
-            // Onload of file read the file content 
-            fileReader.onload = function (fileLoadedEvent) {
-                base64 = fileLoadedEvent.target.result;
-                var textarea = document.createElement('textarea');
-                textarea.setAttribute("style", "display: none");
-                textarea.style.display = 'none';
-                textarea.setAttribute("name", "text");
-                textarea.setAttribute("id", "lbl_" + params.data.withHoldingId);
-                textarea.innerHTML = base64;
-                document.body.appendChild(textarea);
-            };
-            // Convert data to base64 
-            fileReader.readAsDataURL(fileToLoad);
-        };*/
         eDivIn.appendChild(inputF);
-
         eDiv.appendChild(eDivIn);
         return eDiv;
     },
@@ -741,15 +719,14 @@ const util = {
     //Coloca icono de descarga en el grid
     // y se ejecuta laa acción para descargar documento en el grod de Declaraciones
     /// @param {object} params - parámetro 
-    CellRendererD: function (params) {
-        _id = params.data._id;
+    CellRendererDp: function (params) {
         var eDiv = document.createElement('div');
         eDiv.className = "file-container";
-        eDiv.setAttribute("id", "down_" + _id);
+        eDiv.setAttribute("id", "down_" + params.data._id);
         //Función utilooizada ára llamar el archivo en base64
         //Convertirlo a pdf y descargarlo
         eDiv.onclick = async function () {
-            let resp = await calls.getDeclarationDocumentById(_id);
+            let resp = await calls.getDeclarationDocumentById(params.data._id);
             var element = document.createElement('a');
             element.setAttribute('href', resp);
             element.style.display = 'none';
@@ -768,6 +745,43 @@ const util = {
         span.appendChild(img);
         eDiv.appendChild(span);
         return eDiv;
+    },
+
+    //Coloca icono de descarga en el grid
+    // y se ejecuta laa acción para descargar documento en el grod de Declaraciones
+    /// @param {object} params - parámetro 
+    CellRendererDup: function (params) {
+
+        var eDiv = document.createElement('div');
+        eDiv.className = "file-container";
+
+        var eDivIn = document.createElement('div');
+        eDivIn.className = "custom-file-upload";
+
+        var img = document.createElement('img');
+        img.setAttribute("border", "0");
+        img.setAttribute("width", "18");
+        img.setAttribute("height", "21");
+        img.setAttribute("src", Upload);
+        img.setAttribute("style", "cursor: pointer");
+        eDivIn.appendChild(img);
+
+        var inputF = document.createElement('input');
+        inputF.setAttribute("type", "file");
+        inputF.setAttribute("name", "theName");
+        inputF.className = "file-upload";
+        inputF.setAttribute("id", 'file_' + params.data._id);
+        eDivIn.appendChild(inputF);
+        eDiv.appendChild(eDivIn);
+
+        if (params.data.invoice_subtotal === "0,00" &&
+            params.column.colId.includes("ertificado")) {
+            return eDiv;
+        }
+        else if (params.data.invoice_subtotal !== "0,00" &&
+            params.column.colId.includes("ompromiso")) {
+            return eDiv;
+        }
     },
 
     /// Ayuda a determinar la manera default en que se presenta la columna Archivo

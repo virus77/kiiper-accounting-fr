@@ -47,6 +47,7 @@ import AdminPanel from "./internos/AdminPanel.js";
 //#region estilo
 const drawerWidth = 240;
 var organizations = [];
+var lastGroupSel = "";
 const useStyles = makeStyles((theme) => ({
 	root: {
 		display: "flex",
@@ -182,10 +183,6 @@ export default function Dashboard(props) {
 	//Cambia el estatus del evento del clic en el DeopDownList
 	let handleClick = async (item) => {
 
-		if (item.type === "xeroGroupName") {
-			setorgIdSelected(item.id);
-		}
-		
 		//Obtiene el elemento div del ddl principal
 		rw_2_input = document
 			.querySelector("[id*=rw_]")
@@ -194,6 +191,7 @@ export default function Dashboard(props) {
 		if (typeof item.type === "string") {
 			if (item.type === "xeroGroupName") {
 				eventKey(-2);
+				lastGroupSel = item.name;
 				organizations = await returnOrganizations(item.id);
 				organizations = organizations.concat(group.filter(g => g.name !== item.name));
 			} else
@@ -219,8 +217,8 @@ export default function Dashboard(props) {
 				.querySelector("[id*=rw_]")
 				.getElementsByTagName("div")[0];
 
-			eventKey(-1);
-			setValue("");
+			eventKey(-2);
+			setValue(lastGroupSel);
 			rw_2_input.style = "background-color: #232c51 !important; border-color: #232c51 !important;";
 		}
 	};
@@ -389,7 +387,7 @@ export default function Dashboard(props) {
 											event === 3.1 ||
 											event === 3.2 ? (
 												<div className={classes.toolbarIcon}>
-													<IconButton onClick={(event) => handleClick(-1)}>
+													<IconButton onClick={(event) => handleClick(-2)}>
 														<ChevronLeftIcon />
 													</IconButton>
 												</div>

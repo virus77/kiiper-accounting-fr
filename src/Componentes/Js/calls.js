@@ -78,7 +78,6 @@ const calls = {
 		);
 	},
 
-
 	/// Start a process to request information from Xero to build
 	/// Insert data when change status to "Archivados" or "Recibidos":
 	/// @param {id} id_invoice_xero - idXero
@@ -106,24 +105,24 @@ const calls = {
 	/// Start a process to request information from Xero to build
 	/// Insert data when change status to "Anulados"
 	/// @param {WithholdingsArr} id_invoice_xero - idXero
-	setDataReissueWidthHoldings: async (WithholdingsArr) => {
-		WithholdingsArr.map(async (array) => {
-			return await fetch("/reissueWithholding", {
-				method: "POST",
-				body: JSON.stringify(array),
-				headers: {
-					"Content-type": "application/json; charset=UTF-8",
-					"Access-Control-Allow-Origin": "*",
-				},
-			}).then((res) => {
-				if (res.ok) {
-					console.log("request sucess");
-					return true;
-				} else {
-					console.log("request fail");
-					return false;
-				}
-			});
+	setDataReissueWidthHoldings: async (_Id) => {
+
+		var param = { withholdingId: _Id };
+		return await fetch("/reissueWithholding", {
+			method: "POST",
+			body: JSON.stringify(param),
+			headers: {
+				"Content-type": "application/json; charset=UTF-8",
+				"Access-Control-Allow-Origin": "*",
+			},
+		}).then((res) => {
+			if (res.ok) {
+				console.log("request sucess");
+				return true;
+			} else {
+				console.log("request fail");
+				return false;
+			}
 		});
 	},
 

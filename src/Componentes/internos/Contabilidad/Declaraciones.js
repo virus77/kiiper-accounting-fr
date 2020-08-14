@@ -125,120 +125,26 @@ class Declaraciones extends Component {
 
     //Función utilizada para mover los datos de un estatus a otro
     onMoveData = async (name, val) => {
-
-        let arrayToSend = "";
-
-        switch (name) {
-            case "PorGenerar":
-                // Getting ros selected and building a JSON to send
-                arrayToSend = this.onFillstate(this.refs.agGrid.api.getSelectedRows(), name);
-
-                if (arrayToSend.length > 0) {
-                    const retencionType = (this.state.event) === 1 ? 'ISLR' : 'IVA';
-
-                    let result1 = await calls.generateStatement(arrayToSend);
-                    if (result1 === true || result1 === false) {
-                        this.setState({ show: true, texto: `La declaracion de retención de ${retencionType} ha sido enviada a aprobación.` })
-                        this.onRemoveSelected();
-                        this.setState({ activeItem: name })
-                    }
-                }
-                else
-                    this.setState({ activeItem: name, show: false })
-                break;
-            case "PorAprobar":
-                // Getting ros selected and building a JSON to send
-                arrayToSend = this.onFillstate(this.refs.agGrid.api.getSelectedRows(), name);
-                this.handleShowModal();
-                if (arrayToSend.length > 0) {
-                    const retencionType = (this.state.event) === 1 ? 'ISLR' : 'IVA';
-                    if (val) {
-                        let result1 = await calls.approveStatement(arrayToSend);
-                        if (result1 === true || result1 === false) {
-                            this.setState({ show: true, texto: `La declaracion de retención de ${retencionType} ha sido aprobada.` });
-                            this.onRemoveSelected();
-                            this.setState({ activeItem: name })
-                        }
-                    } else {
-                        let result1 = await calls.denyStatement(arrayToSend);
-                        if (result1 === true || result1 === false) {
-                            this.setState({ show: true, texto: `La declaracion de retención de ${retencionType} ha sido rechaza.` })
-                            this.onRemoveSelected();
-                            this.setState({ activeItem: name })
-                        }
-                    }
-                }
-                else
-                    this.setState({ activeItem: name, show: false })
-                break;
-            case "Aprobados":
-                // Getting ros selected and building a JSON to send
-                arrayToSend = this.onFillstate(this.refs.agGrid.api.getSelectedRows(), name);
-
-                if (arrayToSend.length > 0) {
-                    const retencionType = (this.state.event) === 1 ? 'ISLR' : 'IVA';
-                    // Moving received or stored vouchers to cancelled
-                    let result1 = await calls.declareStatement(arrayToSend);
-                    if (result1 === true || result1 === false) {
-                        this.setState({ show: true, texto: `La declaración de retención de ${retencionType} ha sido enviada a aprobación y envíamos notifcación al cliente.` })
-                        this.onRemoveSelected();
-                        this.setState({ activeItem: name })
-                    }
-                }
-                else
-                    this.setState({ activeItem: name, show: false })
-                break;
-            case "PorDeclarar":
-                // Getting ros selected and building a JSON to send
-                arrayToSend = this.onFillstate(this.refs.agGrid.api.getSelectedRows(), name);
-
-                if (arrayToSend.length > 0) {
-                    const retencionType = (this.state.event) === 1 ? 'ISLR' : 'IVA';
-                    // Moving received or stored vouchers to cancelled
-                    let result1 = await calls.registerStatement(arrayToSend);
-                    if (result1 === true || result1 === false) {
-                        this.setState({ show: true, texto: `La declaración de retención de ${retencionType} ha sido declarado en Xero y ha sido enviada a Pagados.` })
-                        this.onRemoveSelected();
-                        this.setState({ activeItem: name })
-                    }
-                }
-                else
-                    this.setState({ activeItem: name, show: false })
-                break;
-            case "PorPagar":
-                // Getting ros selected and building a JSON to send
-                arrayToSend = this.onFillstate(this.refs.agGrid.api.getSelectedRows(), name);
-                this.handleShowModalAccounts();
-                if (arrayToSend.length > 0) {
-                    const retencionType = (this.state.event) === 1 ? 'ISLR' : 'IVA';
-                    // Moving received or stored vouchers to cancelled
-                    let result1 = await calls.payStatement(arrayToSend);
-                    if (result1 === true || result1 === false) {
-                        this.setState({ show: true, texto: `La declaración de retención de ${retencionType} ha sido pagado en Xero y ha sido enviada a Pagados.` })
-                        this.onRemoveSelected();
-                        this.setState({ activeItem: name })
-                    }
-                }
-                else
-                    this.setState({ show: false });
-                break;
-            default:
-                break;
-        }
+        this.onFillstate(
+            this.refs.agGrid.api.getSelectedRows(),
+            name, val
+        );
     }
 
     /// Llena el estado dependiendo delestatus seleccionado
     /// @param {object} gridSelectedRows - Object of selected items in grid
     /// @param {string} statusName - name of status
-    onFillstate = (gridSelectedRows, statusName) => {
+    onFillstate = async (gridSelectedRows, statusName, val) => {
 
         let arrayToSend = [];
 
         // Start proccess to gather all information from grid items selected /
         // Gathering items selected information
-        gridSelectedRows.forEach(selectedRow => {
-
+        gridSelectedRows.forEach(async (selectedRow, rowIndex) => {
             const _id = selectedRow._id;
+
+            // Voucher data to be send or used in validation
+            let voucherFile = document.querySelector(`[id=file_${_id}]`);            
 
             // Defining JSON oject to add to list of voucher to send
             // in voucher view action button 
@@ -249,26 +155,103 @@ class Declaraciones extends Component {
                     arrayToSend.push({
                         id_statement: _id
                     });
+
+                    // Getting ros selected and building a JSON to send
+                    arrayToSend = this.onFillstate(this.refs.agGrid.api.getSelectedRows(), statusName);
+
+                    if (arrayToSend.length > 0) {
+                        const retencionType = (this.state.event) === 1 ? 'ISLR' : 'IVA';
+
+                        let result1 = await calls.generateStatement(arrayToSend);
+                        if (result1 === true || result1 === false) {
+                            this.setState({ show: true, texto: `La declaracion de retención de ${retencionType} ha sido enviada a aprobación.` })
+                            this.onRemoveSelected();
+                            this.setState({ activeItem: statusName })
+                        }
+                    }
+                    else
+                        this.setState({ activeItem: statusName, show: false })
                     break;
                 case "PorAprobar":
                     // Storing data from items selected in Sales grid
                     arrayToSend.push({
                         id_statement: _id
                     });
+
+                    // Getting ros selected and building a JSON to send
+                    arrayToSend = this.onFillstate(this.refs.agGrid.api.getSelectedRows(), statusName);
+                    this.handleShowModal();
+                    if (arrayToSend.length > 0) {
+                        const retencionType = (this.state.event) === 1 ? 'ISLR' : 'IVA';
+                        if (val) {
+                            let result1 = await calls.approveStatement(arrayToSend);
+                            if (result1 === true || result1 === false) {
+                                this.setState({ show: true, texto: `La declaracion de retención de ${retencionType} ha sido aprobada.` });
+                                this.onRemoveSelected();
+                                this.setState({ activeItem: statusName })
+                            }
+                        } else {
+                            let result1 = await calls.denyStatement(arrayToSend);
+                            if (result1 === true || result1 === false) {
+                                this.setState({ show: true, texto: `La declaracion de retención de ${retencionType} ha sido rechaza.` })
+                                this.onRemoveSelected();
+                                this.setState({ activeItem: statusName })
+                            }
+                        }
+                    }
+                    else
+                        this.setState({ activeItem: statusName, show: false })
                     break;
                 case "Aprobados":
                     // Storing data from items selected in Sales grid
                     arrayToSend.push({
                         id_statement: _id
                     });
+
+                    // Getting ros selected and building a JSON to send
+                    arrayToSend = this.onFillstate(this.refs.agGrid.api.getSelectedRows(), statusName);
+
+                    if (arrayToSend.length > 0) {
+                        const retencionType = (this.state.event) === 1 ? 'ISLR' : 'IVA';
+                        // Moving received or stored vouchers to cancelled
+                        let result1 = await calls.declareStatement(arrayToSend);
+                        if (result1 === true || result1 === false) {
+                            this.setState({ show: true, texto: `La declaración de retención de ${retencionType} ha sido enviada a aprobación y envíamos notifcación al cliente.` })
+                            this.onRemoveSelected();
+                            this.setState({ activeItem: statusName })
+                        }
+                    }
+                    else
+                        this.setState({ activeItem: statusName, show: false })
                     break;
                 case "PorDeclarar":
-                    // Storing data from items selected in Sales grid
-                    arrayToSend.push({
-                        id_statement: _id,
-                        commitmentFile: selectedRow.compromiso,
-                        warrantFile: selectedRow.Certificado
-                    });
+                    // Finding file uploaded to voucher
+                    let voucherFile = document.querySelector(`[id=file_${selectedRow._id}]`);
+                    if (voucherFile != "")
+                        this.fileToBase64(voucherFile).then(async (result) => {
+
+                            // Storing data from items selected in Sales grid
+                            arrayToSend.push({
+                                id_statement: _id,
+                                commitmentFile: result
+                            });
+
+                            // Getting ros selected and building a JSON to send
+                            arrayToSend = this.onFillstate(this.refs.agGrid.api.getSelectedRows(), statusName);
+
+                            if (arrayToSend.length > 0) {
+                                const retencionType = (this.state.event) === 1 ? 'ISLR' : 'IVA';
+                                // Moving received or stored vouchers to cancelled
+                                let result1 = await calls.registerStatement(arrayToSend);
+                                if (result1 === true || result1 === false) {
+                                    this.setState({ show: true, texto: `La declaración de retención de ${retencionType} ha sido declarado en Xero y ha sido enviada a Pagados.` })
+                                    this.onRemoveSelected();
+                                    this.setState({ activeItem: statusName })
+                                }
+                            }
+                            else
+                                this.setState({ activeItem: statusName, show: false })
+                        });
                     break;
                 case "PorPagar":
                     // Storing data from items selected in Sales grid
@@ -276,13 +259,41 @@ class Declaraciones extends Component {
                         id_statement: _id,
                         paymentFile: selectedRow.pago
                     });
+
+                    // Getting ros selected and building a JSON to send
+                    arrayToSend = this.onFillstate(this.refs.agGrid.api.getSelectedRows(), statusName);
+                    this.handleShowModalAccounts();
+                    if (arrayToSend.length > 0) {
+                        const retencionType = (this.state.event) === 1 ? 'ISLR' : 'IVA';
+                        // Moving received or stored vouchers to cancelled
+                        let result1 = await calls.payStatement(arrayToSend);
+                        if (result1 === true || result1 === false) {
+                            this.setState({ show: true, texto: `La declaración de retención de ${retencionType} ha sido pagado en Xero y ha sido enviada a Pagados.` })
+                            this.onRemoveSelected();
+                            this.setState({ activeItem: statusName })
+                        }
+                    }
+                    else
+                        this.setState({ show: false });
                     break;
                 default:
+                    this.setState({ show: false });
                     break;
             }
         });
+    };
 
-        return arrayToSend;
+    fileToBase64 = (inputF) => {
+        var fileToLoad = inputF.files[0];
+        return new Promise(resolve => {
+            var reader = new FileReader();
+            // Read file content on file loaded event
+            reader.onload = function (event) {
+                resolve(event.target.result);
+            };
+            // Convert data to base64 
+            reader.readAsDataURL(fileToLoad);
+        });
     };
 
     //Función on row selected del grid

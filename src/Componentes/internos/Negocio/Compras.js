@@ -124,70 +124,22 @@ class Compras extends Component {
 
 	//Función utilizada para mover los datos de un estatus a otro
 	onMoveData = async (name, val) => {
-		let arrayToSend = "";
-
-		switch (name) {
-			case "Archivados":
-			case "Aprobados":
-			case "Recibidos":
-				// Getting ros selected and building a JSON to send
-				arrayToSend = this.onFillstate(
-					this.refs.agGrid.api.getSelectedRows(),
-					name
-				);
-
-				if (arrayToSend.length > 0) {
-					// Moving received or stored vouchers to cancelled
-					let result1 = await calls.setDataVoidWidthHoldings(arrayToSend);
-					if (result1 === true || result1 === false) {
-						this.setState({
-							show: true,
-							texto:
-								"El comprobante de retención ha sido anulado en Xero y cambió su estatus a ‘anulado’.",
-						});
-						this.onRemoveSelected();
-						this.setState({ activeItem: name });
-					}
-				} else this.setState({ activeItem: name, show: false });
-				break;
-
-			case "Anulados":
-				// Getting ros selected and building a JSON to send
-				arrayToSend = this.onFillstate(
-					this.refs.agGrid.api.getSelectedRows(),
-					name
-				);
-
-				if (arrayToSend.length > 0) {
-					// Moving received or stored vouchers to cancelled
-					let result2 = await calls.setDataReissueWidthHoldings(arrayToSend);
-					if (result2 === true || result2 === false || result2 === undefined) {
-						this.setState({
-							show: true,
-							texto:
-								"El comprobante de retención ha sido anulado en Xero y cambió su estatus.",
-						});
-						this.onRemoveSelected();
-						this.setState({ activeItem: name });
-					}
-				} else this.setState({ activeItem: name, show: false });
-				break;
-
-			default:
-				this.setState({ show: false });
-				break;
-		}
+		this.onFillstate(
+			this.refs.agGrid.api.getSelectedRows(),
+			name, val
+		);
 	};
 
 	/// Llena el estado dependiendo delestatus seleccionado
 	/// @param {object} gridSelectedRows - Object of selected items in grid
 	/// @param {string} statusName - name of status
-	onFillstate = (gridSelectedRows, statusName) => {
+	onFillstate = async (gridSelectedRows, statusName, val) => {
 		let arrayToSend = [];
 
 		// Start proccess to gather all information from grid items selected /
 		// Gathering items selected information
-		gridSelectedRows.forEach((selectedRow) => {
+		gridSelectedRows.forEach(async (selectedRow) => {
+			
 			// Voucher data to be send or used in validation
 			const withHoldingId = selectedRow.withHoldingId;
 
@@ -201,21 +153,42 @@ class Compras extends Component {
 					arrayToSend.push({
 						_id: withHoldingId,
 					});
+
+					if (arrayToSend.length > 0) {
+						// Moving received or stored vouchers to cancelled
+						let result1 = await calls.setDataVoidWidthHoldings(arrayToSend);
+						if (result1 === true || result1 === false) {
+							this.setState({
+								show: val,
+								texto:
+									"El comprobante de retención ha sido anulado en Xero y cambió su estatus a ‘anulado’.",
+							});
+							this.onRemoveSelected();
+							this.setState({ activeItem: statusName });
+						}
+					} else this.setState({ activeItem: statusName, show: false });
+
 					break;
 
 				case "Anulados": // Stored voucher
-					// Storing data from items selected in Sales grid
-					arrayToSend.push({
-						withholdingId: withHoldingId,
-					});
+					// Moving received or stored vouchers to cancelled
+					let result2 = await calls.setDataReissueWidthHoldings(withHoldingId);
+					if (result2 === true || result2 === false || result2 === undefined) {
+						this.setState({
+							show: val,
+							texto:
+								"El comprobante de retención ha sido anulado en Xero y cambió su estatus.",
+						});
+						this.onRemoveSelected();
+						this.setState({ activeItem: statusName });
+					}
 					break;
 
 				default:
+					this.setState({ show: false });
 					break;
 			}
 		});
-
-		return arrayToSend;
 	};
 
 	//Función on row selected del grid

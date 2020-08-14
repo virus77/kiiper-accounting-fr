@@ -1,5 +1,5 @@
 import React, { Component } from "react";
-import InputFileStyle from "../Css/BanksConvert/inputfile.css";
+import "../Css/BanksConvert/inputfile.css";
 
 ///  Componente InputFile para cambiar el estilo del botón
 /// default del input de tipo file que da el explorador web
