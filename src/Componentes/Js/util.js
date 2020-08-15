@@ -560,8 +560,13 @@ const util = {
             {
                 headerName: 'No. Factura', field: 'NoFactura', xeroField: 'invoice_number', width: 125, cellClass: "grid-cell-Left",
                 headerCheckboxSelection: function (params) {
-                    if (statusName2 !== "Anulados")
-                        return params.columnApi.getRowGroupColumns().length === 0;
+                    switch (statusName2) {
+                        case "Anulados":
+                        case "Recibidos":
+                            break;
+                        default:
+                            return params.columnApi.getRowGroupColumns().length === 0;
+                    }
                 },
                 checkboxSelection: function (params) {
                     return params.columnApi.getRowGroupColumns().length === 0;
@@ -716,7 +721,7 @@ const util = {
         return eDiv;
     },
 
-//Coloca icono de descarga en el grid
+    //Coloca icono de descarga en el grid
     // y se ejecuta laa acción para descargar documento en el grod de Declaraciones
     /// @param {object} params - parámetro 
     CellRendererDup: function (params) {
@@ -752,6 +757,7 @@ const util = {
             return eDiv;
         }
     },
+
     //Coloca icono de descarga en el grid
     // y se ejecuta laa acción para descargar documento en el grod de Declaraciones
     /// @param {object} params - parámetro 
@@ -783,6 +789,39 @@ const util = {
         eDiv.appendChild(span);
         return eDiv;
     },
+
+        //Coloca icono de descarga en el grid
+    // y se ejecuta laa acción para descargar documento en el grod de Declaraciones
+    /// @param {object} params - parámetro 
+    CellRendererP: function (params) {
+        _id = params.data._id;
+        var eDiv = document.createElement('div');
+        eDiv.className = "file-container";
+        eDiv.setAttribute("id", "down_" + _id);
+        //Función utilooizada ára llamar el archivo en base64
+        //Convertirlo a pdf y descargarlo
+        eDiv.onclick = async function () {
+            let resp = await calls.getDeclarationDocumentById(_id);
+            var element = document.createElement('a');
+            element.setAttribute('href', resp);
+            element.style.display = 'none';
+            document.body.appendChild(element);
+            element.click();
+            document.body.removeChild(element);
+        };
+        var img = document.createElement('img');
+        img.setAttribute("border", "0");
+        img.setAttribute("width", "18");
+        img.setAttribute("height", "21");
+        img.setAttribute("src", Download);
+        img.setAttribute("style", "cursor: pointer");
+
+        var span = document.createElement('span');
+        span.appendChild(img);
+        eDiv.appendChild(span);
+        return eDiv;
+    },
+
 
     /// Ayuda a determinar la manera default en que se presenta la columna Archivo
     fileColumnRenderer: function (params) {
