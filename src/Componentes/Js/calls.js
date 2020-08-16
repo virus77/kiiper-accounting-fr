@@ -198,9 +198,9 @@ const calls = {
 				return false;
 			}
 		})
-		.catch((err) => {
-			console.log(err);
-		});
+			.catch((err) => {
+				console.log(err);
+			});
 	},
 
 	getConversions: (id_organisation, id_bank_xero) => {
@@ -694,26 +694,26 @@ const calls = {
 				console.log(err);
 			});
 	},
-	
-	getBankStatements:(id_conversion) => {
+
+	getBankStatements: (id_conversion) => {
 		const fetchConfig = {
-		    method: 'GET',
-		    headers: {
-			'Accept': 'application/json',
-			'Content-Type': 'application/json'
-		    }
+			method: 'GET',
+			headers: {
+				'Accept': 'application/json',
+				'Content-Type': 'application/json'
+			}
 		};
-    
+
 		return fetch(`/getBankStatements?conversionId=${id_conversion}`, fetchConfig)
-		    .then(res => res.json())
-		    .then(data => {
-			  return {
-				data: data
-			  }
-		    }).catch(err => {
-			  console.log(err)
-		    })
-	  }
+			.then(res => res.json())
+			.then(data => {
+				return {
+					data: data
+				}
+			}).catch(err => {
+				console.log(err)
+			})
+	}
 };
 
 export default calls;

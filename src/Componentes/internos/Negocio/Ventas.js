@@ -183,7 +183,7 @@ class Ventas extends Component {
 
 						default:
 							// Finding file uploaded to voucher
-							if (voucherFile != "")
+							if (voucherFile !== "")
 								this.fileToBase64(voucherFile).then(async (result) => {
 									// Storing data from items selected in Ventas grid
 									arrayToSend.push({
@@ -252,7 +252,6 @@ class Ventas extends Component {
 						this.onRemoveSelected();
 						this.setState({ activeItem: statusName });
 					}
-
 					break;
 				default:
 					this.setState({ show: false });

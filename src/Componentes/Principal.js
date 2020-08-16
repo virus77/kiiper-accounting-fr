@@ -604,7 +604,7 @@ export default function Dashboard(props) {
 							<Grid container spacing={2}>
 								<div className="breadcrumbClass">
 									<div id="moduleTitle">
-										<Title>Dashboard Grupos</Title>
+										<Title>Dashboard</Title>
 									</div>
 									<span id="breadcrumbPath">&gt; {Value}</span>
 								</div>

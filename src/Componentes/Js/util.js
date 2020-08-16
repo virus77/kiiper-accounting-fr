@@ -14,11 +14,11 @@ import 'jquery-ui/ui/widgets/datepicker';
 import Download from '../../Imagenes/downloadDocument.svg';
 import Upload from '../../Imagenes/uploadDocument.svg';
 import updateElement from "../../Imagenes/updateElement.svg";
+import check from '../../Imagenes/kiiper_check.svg';
 
 // Declaring momenty object
 var moment = require('moment'); // require
 
-var withHoldingId = "";
 var _id = "";
 var statusName2 = "";
 const util = {
@@ -587,7 +587,7 @@ const util = {
             { headerName: 'No. Comprobante', field: 'Comprobante', xeroField: 'correlative', width: 150, sortable: true, cellClass: "grid-cell-cenLeft", type: 'rightAligned' },
             { headerName: '', field: 'file', width: 30, cellRenderer: this.CellRendererP },
             {
-                headerName: 'Remitido', field: 'Remitido', xeroField: 'Remitido', hide: statusName2 === "Anulados" ? false : true, width: 88, sortable: true, cellClass: "grid-cell-centered",
+                headerName: 'Remitido', field: 'Remitido', xeroField: 'Remitido', hide: statusName2 === "Anulados" ? false : true, width: 88, sortable: true, cellClass: "grid-cell-centered", cellRenderer: this.CellRendererCheck,
                 valueGetter: function (params) {
                     return params.data.reissued === true ? "Sí" : 'No';
                 }
@@ -623,6 +623,8 @@ const util = {
             { headerName: 'Fecha Límite', field: 'FechaLimite', xeroField: 'due_date', filter: 'agTextColumnFilter', width: 150, sortable: true, comparator: util.dateComparator },
             { headerName: 'Base sujeta a retención', field: 'invoice_subtotal', xeroField: 'statement_total_amount', formulaName: 'statement_total_amount', width: 175, sortable: true, type: 'rightAligned' },
             { headerName: 'Total retenido', field: 'Retencion', xeroField: 'statement_total_tax', formulaName: 'statement_total_tax', calculated: true, width: 120, sortable: true, type: 'rightAligned', comparator: util.currencyComparator },
+            { headerName: 'Aprobación cliente', field: 'AprobacionCliente', xeroField: 'AprobacionCliente', width: 150, sortable: true, type: 'rightAligned', cellRenderer: this.CellRendererCheck },
+            { headerName: 'Aprobación GCA', field: 'AprobacionGCA', xeroField: 'AprobacionGCA', width: 150, sortable: true, type: 'rightAligned', cellRenderer: this.CellRendererCheck },
             //{ headerName: 'Aprobado por', field: 'AprobadoPor', xeroField: 'aprobado_por', type: 'rightAligned', hide: statusName === "Aprobados" ? false : true, calculated: true, width: 120, sortable: true, cellClass: "grid-cell-centered" },
             {
                 headerName: 'Status', field: 'status', xeroField: 'status', hide: statusName === "Aprobados" ? false : true, calculated: true, width: 140, sortable: true, type: 'rightAligned',
@@ -790,7 +792,7 @@ const util = {
         return eDiv;
     },
 
-        //Coloca icono de descarga en el grid
+    //Coloca icono de descarga en el grid
     // y se ejecuta laa acción para descargar documento en el grod de Declaraciones
     /// @param {object} params - parámetro 
     CellRendererP: function (params) {
@@ -822,6 +824,23 @@ const util = {
         return eDiv;
     },
 
+    //Coloca icono de descarga en el grid
+    // y se ejecuta laa acción para descargar documento en el grod de Declaraciones
+    /// @param {object} params - parámetro 
+    CellRendererCheck: function (params) {
+
+        var eDiv = document.createElement('div');
+        eDiv.className = "file-container";
+        var img = document.createElement('img');
+        img.setAttribute("border", "0");
+        img.setAttribute("width", "18");
+        img.setAttribute("height", "21");
+        img.setAttribute("src", check);
+        eDiv.appendChild(img);
+
+        if (params.data.reissued === true || params.column.colId.includes("Aprobación"))
+            return eDiv;
+    },
 
     /// Ayuda a determinar la manera default en que se presenta la columna Archivo
     fileColumnRenderer: function (params) {
