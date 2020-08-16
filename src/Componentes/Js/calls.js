@@ -535,7 +535,9 @@ const calls = {
 			method: "POST",
 			body: JSON.stringify(param),
 			headers: {
-				"Content-type": "application/json; charset=UTF-8",
+				"Accept": "application/json",
+				"Content-Type": "application/json",
+				'X-Mashape-Key': 'API_KEY',
 				"Access-Control-Allow-Origin": "*",
 			},
 		}).then((res) => {
@@ -561,7 +563,9 @@ const calls = {
 			method: "POST",
 			body: JSON.stringify(param),
 			headers: {
-				"Content-type": "application/json; charset=UTF-8",
+				"Accept": "application/json",
+				"Content-Type": "application/json",
+				'X-Mashape-Key': 'API_KEY',
 				"Access-Control-Allow-Origin": "*",
 			},
 		}).then((res) => {

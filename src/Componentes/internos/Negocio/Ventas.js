@@ -158,7 +158,7 @@ class Ventas extends Component {
 				case "Pendientes":
 					switch (true) {
 						// When voucher date was not captured in column field
-						case !voucherDate:
+						case voucherDate === "":
 							this.setState({
 								show: true,
 								texto: `La fecha de comprobante está vacía en ${clientName}.`,
@@ -166,7 +166,7 @@ class Ventas extends Component {
 							return false;
 
 						// When voucher number was not captured in column field
-						case !voucherNumber:
+						case voucherNumber === "":
 							this.setState({
 								show: true,
 								texto: `El número de comprobante está vacío en ${clientName}.`,
@@ -174,7 +174,7 @@ class Ventas extends Component {
 							return false;
 
 						// When voucher file was not captured in column field
-						case !voucherFile:
+						case voucherFile.value === "":
 							this.setState({
 								show: true,
 								texto: `El documento está vacío en ${clientName}.`,
@@ -221,29 +221,22 @@ class Ventas extends Component {
 						_id: withHoldingId,
 					});
 
-					// Getting ros selected and building a JSON to send
-
-					if (arrayToSend.length > 0) {
-						// Moving received or stored vouchers to cancelled
-						let result1 = await calls.setDataVoidWidthHoldings(arrayToSend);
-						if (result1 === true) {
-							this.setState({
-								show: val,
-								texto:
-									"El comprobante de retención ha sido anulado en Xero y cambió su estatus a ‘anulado’.",
-							});
-							this.onRemoveSelected();
-							this.setState({ activeItem: statusName });
-						}
-					}
-					else {
-						this.setState({ activeItem: statusName, show: false });
+					// Moving received or stored vouchers to cancelled
+					let result1 = await calls.setDataVoidWidthHoldings(arrayToSend);
+					if (result1 === true) {
+						this.setState({
+							show: val,
+							texto:
+								"El comprobante de retención ha sido anulado en Xero y cambió su estatus a ‘anulado’.",
+						});
+						this.onRemoveSelected();
+						this.setState({ activeItem: statusName });
 					}
 					break;
 				case "Anulados": // Stored voucher
 					// Moving received or stored vouchers to cancelled
 					let result2 = await calls.setDataReissueWidthHoldings(withHoldingId);
-					if (result2 === true || result2 === false || result2 === undefined) {
+					if (result2 === true) {
 						this.setState({
 							show: val,
 							texto:
