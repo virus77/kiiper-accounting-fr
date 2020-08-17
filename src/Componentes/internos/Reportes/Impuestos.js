@@ -151,19 +151,20 @@ class BookTable extends Component {
 	//#region Métodos de ciclo de vida
 	componentDidMount() {
 		// Getting data from Xero and building data grid
-		this.onFillGrid("", "", "", this.state.bookType === "Ventas" ? 1 : 2);
+		this.onFillGrid("", "", "", this.props.bookType === "Ventas" ? 1 : 2);
 	}
 
 	//#region Métodos de ciclo de vida
-	onFillGrid(Valor, x, y, tipo) {
+	onFillGrid(Valor, x, y) {
 		// Getting data from Xero and building data grid
-		util.getAndBuildGridDataReports(this.props.orgIdSelected, Valor, x, y, tipo).then(result => {
-			// Setting component state
-			this.setState({
-				rowData: result.structure.gridItems,
-				columnDefs: result.structure.headersTemplate
-			})
-		});
+		util.getAndBuildGridDataReports(this.props.orgIdSelected, Valor, x, y)
+			.then(result => {
+				// Setting component state
+				this.setState({
+					rowData: result.structure.gridItems,
+					columnDefs: result.structure.headersTemplate
+				})
+			});
 	}
 
 	/// Funcion utilizada para obtener el periodo y enviar los parámetros
@@ -298,8 +299,8 @@ class BookTable extends Component {
 				<hr className="separator" />
 
 				{/** Tabla de datos de libros generados por periodo */}
-				<div id={`myGrid${bookType}`} className="aggridReport ag-theme-alpine">
-					<AgGridReact columnDefs={columnDefs} rowData={rowData}></AgGridReact>
+				<div key={`myGrid${bookType}`} className="aggridReport ag-theme-alpine">
+					<AgGridReact id={bookType} columnDefs={columnDefs} rowData={rowData}></AgGridReact>
 				</div>
 
 				{/** Cuadro de diálogo para mostrar la opción de generar un libro por un periodo específico */}

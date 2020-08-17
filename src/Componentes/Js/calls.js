@@ -111,7 +111,7 @@ const calls = {
 	setDataReissueWidthHoldings: async (_Id) => {
 
 		var param = { withholdingId: _Id };
-		return await fetch("/reissueWithholding", {
+		return (await fetch("/reissueWithholding", {
 			method: "POST",
 			body: JSON.stringify(param),
 			headers: {
@@ -126,7 +126,8 @@ const calls = {
 				console.log("request fail");
 				return false;
 			}
-		});
+		})
+		)
 	},
 
 	/// Start a process to send information to Xero to
@@ -257,7 +258,7 @@ const calls = {
 	/// Petición para obtener cuentas bancarias de una empresa en Xero
 	/// @param {text} taxbookId - id que regresa getSalesBook or getPurchaseBook
 	/// @param {text} endPoint - Ruta de acceso al Endpoint dependiendo si es compras o venntas
-	getDocumentByTaxbookId: (valor, endPoint) => {
+	getDocumentByTaxbookId: (endPoint, valor) => {
 		let taxbookId = valor;
 		taxbookId = taxbookId.replace(/['"]+/g, "");
 

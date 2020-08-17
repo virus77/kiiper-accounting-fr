@@ -19,8 +19,9 @@ import check from '../../Imagenes/kiiper_check.svg';
 // Declaring momenty object
 var moment = require('moment'); // require
 
-var _id = "";
 var statusName2 = "";
+var withHoldingId = "";
+
 const util = {
     /// Start a process to request information from Xero to build
     /// the structure data to render in the grid of the component Ventas and Compras
@@ -81,7 +82,7 @@ const util = {
         );
     },
 
-    getAndBuildGridDataReports: async (orgIdSelected, call, startDate, endDate, tipoLibro) => {
+    getAndBuildGridDataReports: async (orgIdSelected, call, startDate, endDate) => {
 
         if (call === "") {
             var d = new Date();
@@ -106,10 +107,8 @@ const util = {
                     "",
                     "",
                     "",
-                    "FiscalBooks",
-                    orgIdSelected,
-                    tipoLibro);
-
+                    "FiscalBooks");
+                withHoldingId = orgIdSelected;
                 return { structure: structure }
             })
         );
@@ -120,7 +119,7 @@ const util = {
     /// @param {array} items - data requested from server
     /// @param {string} taxInfo - tax info with id and name
     /// @param {boolean} isAnEditableGrid - If the grid will have editable columns
-    fillWorkspaceGrid: (items, taxInfo, isAnEditableGrid, kindOfPeople, statusName, section, orgIdSelected, tipoLibro) => {
+    fillWorkspaceGrid: (items, taxInfo, isAnEditableGrid, kindOfPeople, statusName, section) => {
 
         let gridItems = [];
         let headersTemplate = [];
@@ -132,7 +131,7 @@ const util = {
                 break;
 
             case "FiscalBooks":
-                headersTemplate = util.returnHeaderFiscalBooks(orgIdSelected, tipoLibro);
+                headersTemplate = util.returnHeaderFiscalBooks();
                 break;
 
             default:
@@ -611,9 +610,10 @@ const util = {
             { headerName: 'statementId', field: '_id', xeroField: '_id', hide: true },
             //#endregion hidden rows
             {
-                headerName: 'Nombre', field: 'Nombre', valueGetter: function (params) {
+                headerName: 'Nombre', field: 'Nombre', width: 250,
+                valueGetter: function (params) {
                     return "ret_IVA_GCA Developers_202006";
-                }, width: 250,
+                },
                 headerCheckboxSelection: function (params) {
                     return params.columnApi.getRowGroupColumns().length === 0;
                 },
@@ -643,25 +643,13 @@ const util = {
     },
 
     /// Crea el header del componente de FiscalBooks
-    returnHeaderFiscalBooks: function (orgIdSelected, tipoLibro) {
+    returnHeaderFiscalBooks: function () {
         var columnDefs = [
-            {
-                headerName: 'withHolding Id', field: 'withHoldingId', xeroField: 'withHoldingId', hide: true,
-                valueGetter: function () {
-                    return orgIdSelected;
-                }
-            },
             { headerName: '_id', field: '_id', xeroField: '_id', hide: true, },
-            {
-                headerName: 'Tipo de Libro', field: 'TipoLibro', xeroField: 'TipoLibro', hide: true,
-                valueGetter: function () {
-                    return tipoLibro;
-                },
-            },
-            { headerName: "Fecha inicio", field: "init_date", xeroField: "init_date", flex: 1, cellClass: "grid-cell-cenLeft", comparator: util.dateComparator },
-            { headerName: "Fecha fin", field: "end_date", xeroField: "end_date", flex: 1, cellClass: "grid-cell-cenLeft", comparator: util.dateComparator },
-            { headerName: "Archivo", field: "file", flex: 1, cellRenderer: this.fileColumnRenderer, cellClass: "grid-cell-cenLeft" },
-            { headerName: "Actualizar", field: "updateFile", flex: 1, cellRenderer: this.updateFileColumnRenderer, cellClass: "grid-cell-cenLeft" },
+            { headerName: "Fecha inicio", field: "init_date", xeroField: "init_date", flex: 1, headerClass: "centerHeader", cellClass: "grid-cell-cenLeft", comparator: util.dateComparator },
+            { headerName: "Fecha fin", field: "end_date", xeroField: "end_date", flex: 1, headerClass: "centerHeader", cellClass: "grid-cell-cenLeft", comparator: util.dateComparator },
+            { headerName: "Archivo", field: "file", flex: 1, cellRenderer: this.fileColumnRenderer, headerClass: "centerHeader", cellClass: "grid-cell-cenLeft" },
+            { headerName: "Actualizar", field: "updateFile", flex: 1, cellRenderer: this.updateFileColumnRenderer, headerClass: "centerHeader", cellClass: "grid-cell-cenLeft" },
         ]
         return (columnDefs)
     },
@@ -725,7 +713,7 @@ const util = {
     },
 
     //Coloca icono de descarga en el grid
-    // y se ejecuta laa acción para descargar documento en el grod de Declaraciones
+    // y se ejecuta laa acción para descargar documento en el grid de Declaraciones
     /// @param {object} params - parámetro 
     CellRendererDup: function (params) {
 
@@ -762,17 +750,16 @@ const util = {
     },
 
     //Coloca icono de descarga en el grid
-    // y se ejecuta laa acción para descargar documento en el grod de Declaraciones
+    // y se ejecuta laa acción para descargar documento en el grid de Declaraciones
     /// @param {object} params - parámetro 
     CellRendererD: function (params) {
-        _id = params.data._id;
         var eDiv = document.createElement('div');
         eDiv.className = "file-container";
-        eDiv.setAttribute("id", "down_" + _id);
+        eDiv.setAttribute("id", "down_" + params.data._id);
         //Función utilooizada ára llamar el archivo en base64
         //Convertirlo a pdf y descargarlo
         eDiv.onclick = async function () {
-            let resp = await calls.getDeclarationDocumentById(_id);
+            let resp = await calls.getDeclarationDocumentById(params.data._id);
             var element = document.createElement('a');
             element.setAttribute('href', resp);
             element.style.display = 'none';
@@ -794,17 +781,16 @@ const util = {
     },
 
     //Coloca icono de descarga en el grid
-    // y se ejecuta laa acción para descargar documento en el grod de Declaraciones
+    // y se ejecuta laa acción para descargar documento en el grid de Declaraciones
     /// @param {object} params - parámetro 
     CellRendererP: function (params) {
-        _id = params.data._id;
         var eDiv = document.createElement('div');
         eDiv.className = "file-container";
-        eDiv.setAttribute("id", "down_" + _id);
+        eDiv.setAttribute("id", "down_" + params.data._id);
         //Función utilooizada ára llamar el archivo en base64
         //Convertirlo a pdf y descargarlo
         eDiv.onclick = async function () {
-            let resp = await calls.getDeclarationDocumentById(_id);
+            let resp = await calls.getDeclarationDocumentById(params.data._id);
             var element = document.createElement('a');
             element.setAttribute('href', resp);
             element.style.display = 'none';
@@ -826,10 +812,30 @@ const util = {
     },
 
     //Coloca icono de descarga en el grid
-    // y se ejecuta laa acción para descargar documento en el grod de Declaraciones
+    // y se ejecuta laa acción para descargar documento en el grid de Bancos
+    /// @param {object} params - parámetro 
+    CellRendererBanks: function (params) {
+        var eDiv = document.createElement('div');
+        eDiv.className = "file-container";
+        eDiv.setAttribute("id", "down_" + params.data.id_conversion);
+        var img = document.createElement('img');
+        img.setAttribute("border", "0");
+        img.setAttribute("width", "18");
+        img.setAttribute("height", "21");
+        img.setAttribute("src", Download);
+        img.setAttribute("style", "cursor: pointer");
+        var span = document.createElement('span');
+        span.setAttribute("style", "margin-left: 20px");
+        span.appendChild(img);
+        eDiv.appendChild(span);
+        if (params.data.download !== false)
+            return eDiv;
+    },
+
+    //Coloca icono de descarga en el grid
+    // y se ejecuta laa acción para descargar documento en el grid de Declaraciones
     /// @param {object} params - parámetro 
     CellRendererCheck: function (params) {
-
         var eDiv = document.createElement('div');
         eDiv.className = "file-container";
         var img = document.createElement('img');
@@ -850,8 +856,9 @@ const util = {
         fileIcon.className = "fileColumnIcon";
         fileIcon.title = "Descargar reporte";
         fileIcon.addEventListener("click", () => {
-            // Accion al dar click
-            calls.getDocumentByTaxbookId(params.data._id);
+            // Accion al dar click}
+            let endpoint = params.agGridReact.props.id === "Ventas" ? "/generateSalesBook" : "/generatePurchasesBook"
+            calls.getDocumentByTaxbookId(endpoint, params.data._id);
         });
 
         return fileIcon;
@@ -862,30 +869,12 @@ const util = {
         let fileIcon = document.createElement("img");
         fileIcon.src = updateElement;
         fileIcon.className = "fileColumnIcon";
-        fileIcon.title = "Descargar reporte";
+        fileIcon.title = "Actualizar reporte";
         fileIcon.addEventListener("click", () => {
-            // Accion al dar click
-            switch (params.data.Tipo) {
-                case 1:
-                    calls.getBook(
-                        params.data.withHoldingId,
-                        params.data.TipoLibro,
-                        params.data.init_date.format("DD/MM/YYYY"),
-                        params.data.end_date.format("DD/MM/YYYY"),
-                        "/salesBook");
-                    break;
-
-                case 2:
-                    calls.getBook(
-                        params.data.withHoldingId,
-                        params.data.TipoLibro,
-                        params.data.init_date.format("DD/MM/YYYY"),
-                        params.data.end_date.format("DD/MM/YYYY"),
-                        "/purchasesBook");
-                    break;
-                default:
-                    break;
-            }
+            calls.getFiscalBooks(
+                withHoldingId,
+                params.data.init_date,
+                params.data.end_date)
         });
 
         return fileIcon;

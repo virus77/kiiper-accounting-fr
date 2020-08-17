@@ -22,8 +22,8 @@ class InputFile extends Component {
 		if (fileName) label.innerHTML = fileName;
 		else label.innerHTML = labelVal;
 
-		if (this.props.onClick) {
-			this.props.onClick(event);
+		if (this.props.onChange) {
+			this.props.onChange(event);
 		}
 	};
 

@@ -135,11 +135,12 @@ class Compras extends Component {
 	/// @param {string} statusName - name of status
 	onFillstate = async (gridSelectedRows, statusName, val) => {
 		let arrayToSend = [];
+		let result1 = "";
 
 		// Start proccess to gather all information from grid items selected /
 		// Gathering items selected information
 		gridSelectedRows.forEach(async (selectedRow) => {
-			
+
 			// Voucher data to be send or used in validation
 			const withHoldingId = selectedRow.withHoldingId;
 
@@ -154,26 +155,23 @@ class Compras extends Component {
 						_id: withHoldingId,
 					});
 
-					if (arrayToSend.length > 0) {
-						// Moving received or stored vouchers to cancelled
-						let result1 = await calls.setDataVoidWidthHoldings(arrayToSend);
-						if (result1 === true || result1 === false) {
-							this.setState({
-								show: val,
-								texto:
-									"El comprobante de retención ha sido anulado en Xero y cambió su estatus a ‘anulado’.",
-							});
-							this.onRemoveSelected();
-							this.setState({ activeItem: statusName });
-						}
-					} else this.setState({ activeItem: statusName, show: false });
-
+					// Moving received or stored vouchers to cancelled
+					result1 = await calls.setDataVoidWidthHoldings(arrayToSend);
+					if (result1 === true) {
+						this.setState({
+							show: val,
+							texto:
+								"El comprobante de retención ha sido anulado en Xero y cambió su estatus a ‘anulado’.",
+						});
+						this.onRemoveSelected();
+						this.setState({ activeItem: statusName });
+					}
 					break;
 
 				case "Anulados": // Stored voucher
 					// Moving received or stored vouchers to cancelled
-					let result2 = await calls.setDataReissueWidthHoldings(withHoldingId);
-					if (result2 === true || result2 === false || result2 === undefined) {
+					result1 = await calls.setDataReissueWidthHoldings(withHoldingId);
+					if (result1 === true) {
 						this.setState({
 							show: val,
 							texto:

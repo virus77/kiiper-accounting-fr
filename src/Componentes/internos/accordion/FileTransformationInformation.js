@@ -1,11 +1,19 @@
 import React, { Component } from "react";
-import "../Css/styles.scss";
+
+
+//Utilerias
 import calls from "../../Js/calls";
 import util from "../../Js/util";
+
+//Componentes
 import { AgGridReact } from "ag-grid-react";
 import { CSVLink } from "react-csv";
 import InputFile from "./InputFile";
 
+//CSS
+import "../Css/styles.scss";
+
+//Imágenes
 import Busqueda from "../../../Imagenes/searchBankRecords.svg";
 
 class FileTransformationInformation extends Component {
@@ -95,16 +103,7 @@ class FileTransformationInformation extends Component {
 				field: "download",
 				cellStyle: { textAlign: "center" },
 				width: 200,
-				cellRendererFramework: (props) => {
-					return props.value === false ? null : (
-						<button>
-							{" "}
-							<span>
-								<i className="fa fa-download"></i>
-							</span>{" "}
-						</button>
-					);
-				},
+				cellRenderer: util.CellRendererBanks
 			},
 		];
 		var _rowData;
@@ -293,28 +292,34 @@ class FileTransformationInformation extends Component {
 						</div>,
 					]
 				) : (
-					<div
-						id="banksTransacctionsGrid"
-						className="container-transformation ag-theme-alpine"
-						style={{
-							minHeight: "calc(100vh - 217px)",
-							padding: 0,
-							borderStyle: "none",
-							width: "100%",
-						}}
-					>
-						<AgGridReact
-							columnDefs={this.state.columnDefs}
-							rowData={this.state.rowData}
-							onCellFocused={(e) => {
-								this.onRowSelected(e.rowIndex, this.state.rowData[e.rowIndex]);
+						<div
+							id="banksTransacctionsGrid"
+							className="container-transformation ag-theme-alpine"
+							style={{
+								minHeight: "calc(100vh - 217px)",
+								padding: 0,
+								borderStyle: "none",
+								width: "100%",
 							}}
-							defaultColDef={{
-								flex: 1,
-							}}
-						></AgGridReact>
-					</div>
-				)}
+						>
+							<AgGridReact
+								columnDefs={this.state.columnDefs}
+								rowData={this.state.rowData}
+								onCellFocused={(e) => {
+									this.onRowSelected(e.rowIndex, this.state.rowData[e.rowIndex]);
+								}}
+								defaultColDef={{
+									flex: 1,
+								}}
+							></AgGridReact>
+							<CSVLink
+								data={this.state.transformedFile}
+								filename={`${this.props.bankData[0].name}-transformado.csv`}
+								ref={this.csvLink}
+								className="hidden"
+							></CSVLink>
+						</div>
+					)}
 			</div>
 		);
 	}
