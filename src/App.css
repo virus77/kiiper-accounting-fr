@@ -125,7 +125,7 @@ p {
 }
 
 /*Botón inicial*/
-#xeroSyncAnchor {
+.xeroSyncAnchor {
 	background-color: #232c51;
 	cursor: pointer;
 	padding: 10px 30px;
@@ -135,8 +135,18 @@ p {
 	color: #fff;
 }
 
+/*Botón inicial*/
+.xeroSyncAnchorDis {
+	background-color: #7158e2;
+	padding: 10px 30px;
+	border: none;
+	border-radius: 10px;
+	font-size: 0.9em;
+	color: #fff;
+}
+
 /* Change the value to with anchors hover color*/
-#xeroSyncAnchor:hover {
+.xeroSyncAnchor:hover {
 	background-color: #7158e2;
 }
 

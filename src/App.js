@@ -48,6 +48,8 @@ class App extends Component {
 	accesToXero = async () => {
 		// Fetch URL with parameters
 		document.getElementById("Spinner").style.display = "block";
+		document.getElementById("xeroSyncAnchor").className = "xeroSyncAnchorDis";
+
 		let email = document.getElementById("ctrlEmail").value;
 		let password = document.getElementById("ctrlPassword").value;
 		//let _urlFisico = "https://login.xero.com/identity/user/login?ReturnUrl=%2Fidentity%2Fconnect%2Fauthorize%2Fcallback%3Fclient_id%3DD6BBEFA31BAF4160BCC8F8BF8434D5FC%26scope%3Dopenid%2520profile%2520email%2520accounting.transactions%2520accounting.settings%2520accounting.contacts%2520accounting.attachments%2520accounting.reports.read%2520offline_access%26response_type%3Dcode%26redirect_uri%3Dhttps%253A%252F%252Fkiiper-accounting.herokuapp.com%252Fcallback";
@@ -63,21 +65,24 @@ class App extends Component {
 			contentType: "application/json; charset=utf-8",
 			success: async function (data) {
 				if (data !== null) {
-					var accestoken =  data.d;
+					var accestoken = data.d;
 					if (accestoken.includes("j:")) {
 						accestoken = accestoken.replace("j:", "");
 						let consentUrl = await calls.getFinalCallback(accestoken);
 						window.open(consentUrl, "_self");
 						document.getElementById("Spinner").style.display = "none";
+						document.getElementById("xeroSyncAnchor").className = "xeroSyncAnchor";
 					} else {
 						alert(accestoken);
 						document.getElementById("Spinner").style.display = "none";
+						document.getElementById("xeroSyncAnchor").className = "xeroSyncAnchor";
 					}
 				}
 			},
 			error: function (a, b, error) {
 				alert(error);
 				document.getElementById("Spinner").style.display = "none";
+				document.getElementById("xeroSyncAnchor").className = "xeroSyncAnchor";
 			},
 		});
 	};
@@ -145,6 +150,7 @@ class App extends Component {
 										</span>
 										<span
 											id="xeroSyncAnchor"
+											className="xeroSyncAnchor"
 											onClick={() => this.accesToXero()}
 										>
 											Iniciar sesión
